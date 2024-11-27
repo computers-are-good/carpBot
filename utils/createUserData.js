@@ -2,9 +2,10 @@ const fs = require("fs");
 const path = require('node:path');
 
 module.exports = {
-	createUserData: function(userId) {
+	createUserData: function(userId, username) {
         const userData = {
             level: 1,
+            username: username,
             expRequired: 12,
             inventory: [],
             moneyOnHand: 0,

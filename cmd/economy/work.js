@@ -11,12 +11,8 @@ module.exports = {
 		.setDescription('Work to make some money!'),
 	async execute(interaction) {
         const dataPath = path.join(__dirname, `../../userdata/${interaction.user.id}`)
-
-        console.log(interaction);
-        if (!fs.existsSync(dataPath)) {
-            createUserData(interaction.user.id);
-        }
-        const userInfo = JSON.parse(fs.readFileSync(dataPath));
+        userInfo = await economyUtils.prefix(interaction);
+        
         let expToGain = Math.ceil((1.25 - Math.random()* 0.5) * Math.pow(userInfo.level, 0.5) * 2 + 4);
         let { newLevel, newExpRequired} = calculateLevelUp(userInfo.level, userInfo.expRequired, expToGain);
         let moneyGained = Math.ceil(((1.25 - Math.random()* 0.5) * Math.pow(userInfo.level, 0.5) + 1) * 100);
@@ -24,7 +20,7 @@ module.exports = {
 
         let stringToWrite = 
 `
-User ${interaction.user.username} has done some work. 
+User ${userInfo.username} has done some work. 
 They have gained ${economyUtils.formatMoney(moneyGained)}.
 They now have ${economyUtils.formatMoney(userInfo.moneyOnHand)} in their wallet.`
 

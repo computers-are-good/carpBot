@@ -15,11 +15,8 @@ module.exports = {
 		.setDescription('Buys something from the shop!'),
 	async execute(interaction) {
         const dataPath = path.join(__dirname, `../../userdata/${interaction.user.id}`)
+        userInfo = await economyUtils.prefix(interaction);
 
-        if (!fs.existsSync(dataPath)) {
-            createUserData(interaction.user.id);
-        }
-        const userInfo = JSON.parse(fs.readFileSync(dataPath));
         let itemToBuy = interaction.options.getString("item");
         let quantity =  1;
         let parsedQuantity = parseInt(interaction.options.getString("quantity"))

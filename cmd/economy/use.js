@@ -14,11 +14,7 @@ module.exports = {
         .addStringOption(option => option.setName("quantity").setDescription("How many you want to use")),
 	async execute(interaction) {
         const dataPath = path.join(__dirname, `../../userdata/${interaction.user.id}`)
-
-        if (!fs.existsSync(dataPath)) {
-            createUserData(interaction.user.id);
-        }
-        let userInfo = JSON.parse(fs.readFileSync(dataPath));
+        userInfo = await economyUtils.prefix(interaction);
 
         let itemToUse = interaction.options.getString("item");
         let quantity = 1;
