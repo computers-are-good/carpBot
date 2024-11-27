@@ -138,6 +138,23 @@ module.exports = {
                 }
             }
         },
+        1007: {
+            name: "Coin",
+            category: ["object"],
+            description: "Flip a coin!",
+            cost: 500,
+            oneOff: true,
+            addToInventory: true,
+            scripts: {
+                onUse: function(userInfo, metadata) {
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: Math.random() < 0.5 ? "Heads" : "Tails"
+                    }
+                }
+            }
+        },
         9991: {
             name: "Money sink",
             category: ["testing"],
