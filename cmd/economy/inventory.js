@@ -24,7 +24,6 @@ module.exports = {
         const row = new ActionRowBuilder()
             .addComponents(previous, next);
             
-
         let inventory = userInfo.inventory;
 
         if (inventory.length == 0) {
@@ -35,8 +34,18 @@ module.exports = {
             let stringToReply = ""
             for (let i = 0; i < pageSize; i++) {
                 if (i + pageOffset >= inventory.length) break;
-                let object = shopItems[userInfo.inventory[i + pageOffset].Id];
-                stringToReply += `${object.emoji ? object.emoji : ""} **${object.name}** (owned: ${userInfo.inventory[i].quantity}) (${economyUtils.formatMoney(object.cost)}):\nCategories: ${object.category.join(", ")}\n${object.description}\n\n`;
+                let inventoryObject = userInfo.inventory[i + pageOffset];
+                let shopObject = shopItems[inventoryObject.Id];
+                let metadataString = "\n`";
+                if (shopObject.metadataToDisplay) {
+                    for (let metadataTag of shopObject.metadataToDisplay) {
+                        if (inventoryObject.metadata[metadataTag]) metadataString += `${metadataTag}: ${inventoryObject.metadata[metadataTag]}`;
+                    }
+                    metadataString += "`";
+                } else {
+                    metadataString = "";
+                }
+                stringToReply += `${shopObject.emoji ? shopObject.emoji : ""} **${shopObject.name}** (owned: ${userInfo.inventory[i].quantity})${metadataString}\n${shopObject.description}\n\n`;
             }
             return stringToReply;
         }

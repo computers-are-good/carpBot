@@ -8,6 +8,7 @@ module.exports = {
             category: ["object"],
             description: "It's a D20. It's pretty shiny!",
             cost: 500,
+            metadataToDisplay: ["Colour"],
             emoji: "🎲",
             oneOff: true,
             addToInventory: true,
@@ -16,7 +17,7 @@ module.exports = {
                     console.log(this)
                 },
                 generateMetadata: function() {
-                    return {colour:  Math.random() < 0.5 ? "White" : "Black"}
+                    return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
                 },
                 onUse: function(userInfo, metadata) {
                     return {
@@ -33,6 +34,7 @@ module.exports = {
             description: "It's a D12. It's pretty shiny!",
             cost: 500,
             emoji: "🎲",
+            metadataToDisplay: ["colour"],
             oneOff: true,
             addToInventory: true,
             scripts: {
@@ -57,6 +59,7 @@ module.exports = {
             description: "It's a D10. It's pretty shiny!",
             cost: 500,
             oneOff: true,
+            metadataToDisplay: ["colour"],
             emoji: "🎲",
             addToInventory: true,
             scripts: {
@@ -81,6 +84,7 @@ module.exports = {
             description: "It's a D8. It's pretty shiny!",
             cost: 500,
             emoji: "🎲",
+            metadataToDisplay: ["colour"],
             oneOff: true,
             addToInventory: true,
             scripts: {
@@ -105,6 +109,7 @@ module.exports = {
             description: "It's a D6. It's pretty shiny!",
             cost: 500,
             emoji: "🎲",
+            metadataToDisplay: ["colour"],
             oneOff: true,
             addToInventory: true,
             scripts: {
@@ -129,6 +134,7 @@ module.exports = {
             description: "It's a D4. It's pretty shiny!",
             cost: 500,
             oneOff: true,
+            metadataToDisplay: ["colour"],
             emoji: "🎲",
             addToInventory: true,
             scripts: {

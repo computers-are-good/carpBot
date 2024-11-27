@@ -69,7 +69,7 @@ module.exports = {
                     updateButtons();
                 }
             } catch (e) {
-                await response.edit({ content: stringToReply, components: [] })
+                await response.edit({ content: stringToReply, components: [] });
             }
 
         }
