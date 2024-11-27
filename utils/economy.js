@@ -10,7 +10,7 @@ module.exports = {
         if (val <= 99) return `$0.${val}`;
         let arr = val.toString().split('');
         arr.splice(arr.length - 2, 0, ".");
-        return `$${arr.join("")}`
+        return `$${arr.join("")}`;
     },
     prefix: function (interaction) {
         return new Promise((acc, rej) => {

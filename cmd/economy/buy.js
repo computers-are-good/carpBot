@@ -23,7 +23,7 @@ module.exports = {
         if (parsedQuantity && parsedQuantity !== NaN) quantity = parsedQuantity;
 
         if (!itemToBuy) {
-            await interaction.reply("Please specify something to buy! Use /shopitems (COMING SOON) to see what is available");
+            await interaction.reply("Please specify something to buy! Use /shop to see what is available");
             return;
         }
 

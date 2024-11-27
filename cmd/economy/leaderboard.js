@@ -11,7 +11,7 @@ function createLeaderboard() {
         users: []
     }
     for (let file of dir) {
-        if (file !== "leaderboard.json") {
+        if (file !== "leaderboard.json" && file !== "usernames.json") {
             let userData = JSON.parse(fs.readFileSync(path.join(dirpath, file)).toString("UTF-8"));
             let totalBalance = userData.moneyOnHand + userData.moneyBankAccount;
 
@@ -39,7 +39,7 @@ module.exports = {
         } else {
             leaderboard = JSON.parse(fs.readFileSync(path.join(__dirname, "../../userdata/leaderboard.json")).toString("UTF-8"))
         }
-        if (new Date().getTime() > leaderboard.lastUpdated + 3600000) {
+        if (new Date().getTime() > leaderboard.lastUpdated + 360000) {
             leaderboard = createLeaderboard();
         }
         let string = "The leaderboard is updated every hour.";
