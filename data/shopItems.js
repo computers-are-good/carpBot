@@ -5,6 +5,7 @@ module.exports = {
             category: ["object"],
             description: "It's a D20. It's pretty shiny!",
             cost: 500,
+            emoji: "🎲",
             oneOff: true,
             addToInventory: true,
             scripts: {
@@ -28,6 +29,7 @@ module.exports = {
             category: ["object"],
             description: "It's a D12. It's pretty shiny!",
             cost: 500,
+            emoji: "🎲",
             oneOff: true,
             addToInventory: true,
             scripts: {
@@ -52,6 +54,7 @@ module.exports = {
             description: "It's a D10. It's pretty shiny!",
             cost: 500,
             oneOff: true,
+            emoji: "🎲",
             addToInventory: true,
             scripts: {
                 onBuy: function(userData) {
@@ -74,6 +77,7 @@ module.exports = {
             category: ["object"],
             description: "It's a D8. It's pretty shiny!",
             cost: 500,
+            emoji: "🎲",
             oneOff: true,
             addToInventory: true,
             scripts: {
@@ -97,6 +101,7 @@ module.exports = {
             category: ["object"],
             description: "It's a D6. It's pretty shiny!",
             cost: 500,
+            emoji: "🎲",
             oneOff: true,
             addToInventory: true,
             scripts: {
@@ -121,6 +126,7 @@ module.exports = {
             description: "It's a D4. It's pretty shiny!",
             cost: 500,
             oneOff: true,
+            emoji: "🎲",
             addToInventory: true,
             scripts: {
                 onBuy: function(userData) {
@@ -143,6 +149,7 @@ module.exports = {
             category: ["object"],
             description: "Flip a coin!",
             cost: 100,
+            emoji: "🪙",
             oneOff: true,
             addToInventory: true,
             scripts: {
@@ -160,6 +167,7 @@ module.exports = {
             category: ["object", "consumable"],
             description: "10% Chance to give you $20",
             cost: 300,
+            emoji: "🎫",
             oneOff: false,
             addToInventory: true,
             scripts: {
@@ -193,6 +201,7 @@ module.exports = {
             category: ["testing"],
             description: "Gives you money",
             cost: 0,
+            emoji: "💀",
             addToInventory: false,
             scripts: {
                 onBuy: function(userData) {
@@ -205,6 +214,7 @@ module.exports = {
             category: ["testing"],
             description: "Gives you a lot of money",
             cost: 0,
+            emoji: "💀",
             addToInventory: false,
             scripts: {
                 onBuy: function(userData) {
