@@ -53,8 +53,9 @@ module.exports = {
             }
         }
 
-        if (shopItems[item].oneOff == true && quantity > 1) {
-            await interaction.reply(`This item can only be brought once, but you have tried to buy ${quantity} of it.`)
+        if (shopItems[itemId].oneOff == true && quantity > 1) {
+            await interaction.reply(`This item can only be brought once, but you have tried to buy ${quantity} of it.`);
+            return;
         }
 
         //finally, we can buy the item if all criteria is met
