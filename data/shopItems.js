@@ -155,6 +155,27 @@ module.exports = {
                 }
             }
         },
+        2001: {
+            name: "Scratch ticket",
+            category: ["object", "consumable"],
+            description: "10% Chance to give you $20",
+            cost: 300,
+            oneOff: false,
+            addToInventory: true,
+            scripts: {
+                onUse: function(userInfo, metadata) {
+                    let won = Math.random() < 0.1;
+                    if (won) {
+                        userInfo.moneyOnHand += 2000;
+                    }
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: won ? "You won $20" : "Better learn gambling isn't a good way to make money... You lost."
+                    }
+                }
+            }
+        },
         9991: {
             name: "Money sink",
             category: ["testing"],

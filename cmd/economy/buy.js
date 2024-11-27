@@ -1,24 +1,24 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
-const {createUserData} = require(path.join(__dirname, "../../utils/createUserData"));
-const {shopItems} = require(path.join(__dirname, "../../data/shopItems"))
+const { createUserData } = require(path.join(__dirname, "../../utils/createUserData"));
+const { shopItems } = require(path.join(__dirname, "../../data/shopItems"))
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
-const {developerIds} = require(path.join(__dirname, "../../configs.json"))
+const { developerIds } = require(path.join(__dirname, "../../configs.json"))
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('buy')
-        .addStringOption( option => option.setName("item").setDescription("Item to buy"))
+    data: new SlashCommandBuilder()
+        .setName('buy')
+        .addStringOption(option => option.setName("item").setDescription("Item to buy"))
         .addStringOption(option => option.setName("quantity").setDescription("How much you want to buy"))
-		.setDescription('Buys something from the shop!'),
-	async execute(interaction) {
+        .setDescription('Buys something from the shop!'),
+    async execute(interaction) {
         const dataPath = path.join(__dirname, `../../userdata/${interaction.user.id}`)
         userInfo = await economyUtils.prefix(interaction);
 
         let itemToBuy = interaction.options.getString("item");
-        let quantity =  1;
+        let quantity = 1;
         let parsedQuantity = parseInt(interaction.options.getString("quantity"))
         if (parsedQuantity && parsedQuantity !== NaN) quantity = parsedQuantity;
 
@@ -72,13 +72,15 @@ module.exports = {
                         await interaction.reply("This item can only be brought once");
                         return;
                     }
-                    if (metaDataNeedsToBeGenerated && scriptingUtils.deepEqual(userInfo.inventory[item].metadata, itemMetadata)) {
+                    if (!metaDataNeedsToBeGenerated) {
+                        userInfo.inventory[item].quantity += quantity;
+                        addedToInventory = true;
+                    } else if (scriptingUtils.deepEqual(userInfo.inventory[item].metadata, itemMetadata)) {
                         userInfo.inventory[item].quantity += quantity;
                         addedToInventory = true;
                     }
                 }
             }
-            console.log(addedToInventory)
 
             if (!addedToInventory) {
                 let objToPush = {
@@ -92,11 +94,12 @@ module.exports = {
             }
 
         }
-        for (let i = 0; i < quantity; i++)
-            itemData.scripts.onBuy(userInfo);
+        if (itemData.scripts.onBuy)
+            for (let i = 0; i < quantity; i++)
+                itemData.scripts.onBuy(userInfo);
 
         fs.writeFileSync(dataPath, JSON.stringify(userInfo));
 
-		await interaction.reply(`You have brought ${quantity}x ${itemData.name} (ID ${itemId})`);
-	},
+        await interaction.reply(`You have brought ${quantity}x ${itemData.name} (ID ${itemId})`);
+    },
 };
