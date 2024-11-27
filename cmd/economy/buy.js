@@ -66,6 +66,10 @@ module.exports = {
 
             for (let item in userInfo.inventory) {
                 if (userInfo.inventory[item].Id == itemId) {
+                    if (itemData.oneOff) {
+                        await interaction.reply("This item can only be brought once");
+                        return;
+                    }
                     if (metaDataNeedsToBeGenerated && scriptingUtils.deepEqual(userInfo.inventory[item].metadata, itemMetadata)) {
                         userInfo.inventory[item].quantity += quantity;
                         addedToInventory = true;
