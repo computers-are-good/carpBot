@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require('node:path');
-const {createUserData} = require(path.join(__dirname, "/createUserData"));
+const { createUserData } = require(path.join(__dirname, "/createUserData"));
 
 
 module.exports = {
@@ -26,9 +26,30 @@ module.exports = {
                 rej("Looks like your data is corrupted. Oops.");
             }
             if (userInfo.username != interaction.user.username) userInfo.username = interaction.user.username;
-    
-            acc(userInfo);
-        })
 
+            acc(userInfo);
+        });
+    },
+    grantEffect: function (userInfo, effect, duration) {
+        for (let userEffect in userInfo.effects) {
+            if (userInfo.effects[userEffect].name == effect) {
+                userInfo.effects[userEffect].validUntil += duration * 1000;
+                return userInfo;
+            }
+        }
+        userInfo.effects.push({
+            name: effect,
+            validUntil: new Date().getTime() + duration * 1000
+        });
+        return userInfo;
+    },
+    hasEffect: function (userInfo, effect) {
+        //delete expired effects
+        let now = new Date().getTime();
+        userInfo.effects = userInfo.effects.filter(a => a.validUntil > now);
+        for (let userEffect in userInfo.effects) {
+            if (userInfo.effects[userEffect].name == effect) return {userInfo: userInfo, hasEffect: true, durationRemaining: Math.floor((userInfo.effects[userEffect].validUntil - now ) / 1000)};
+        }
+        return {userInfo: userInfo, hasEffect: false, durationRemaining: 0};
     }
-};
+}

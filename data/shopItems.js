@@ -1,3 +1,6 @@
+const path = require('node:path');
+const economyUtils = require(path.join(__dirname, "../utils/economy"));
+
 module.exports = {
     shopItems: {
         1001: {
@@ -180,6 +183,25 @@ module.exports = {
                         userInfo: userInfo,
                         metadata: metadata,
                         messageToUser: won ? "You won $20" : "Better learn gambling isn't a good way to make money... You lost."
+                    }
+                }
+            }
+        },
+        2002: {
+            name: "Coffee",
+            category: ["object", "consumable"],
+            description: "For the next 60 seconds, earn an additional $1.50 when you work.",
+            cost: 1000,
+            emoji: "☕",
+            oneOff: false,
+            addToInventory: true,
+            scripts: {
+                onUse: function(userInfo, metadata) {
+                    userInfo = economyUtils.grantEffect(userInfo, "coffee", 60);
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: "You drank coffee."
                     }
                 }
             }

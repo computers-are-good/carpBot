@@ -6,7 +6,7 @@ module.exports = {
         const userData = {
             level: 1,
             username: username,
-            expRequired: 12,
+            expRequired: 15,
             inventory: [],
             moneyOnHand: 0,
             moneyBankAccount: 0,

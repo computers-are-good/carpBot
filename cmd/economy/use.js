@@ -55,10 +55,12 @@ module.exports = {
                 if (shopItems[itemId].category.includes("consumable")) {
                     userInfo.inventory[item].quantity -= quantity;
                 }
+                fs.writeFileSync(dataPath, JSON.stringify(userInfo));
                 await interaction.reply(stringToReply);
                 return;
             }
         }
+
 
         await interaction.reply("User does not have this item in their inventory.")
     },
