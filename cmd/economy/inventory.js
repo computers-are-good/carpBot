@@ -36,6 +36,7 @@ module.exports = {
                 if (i + pageOffset >= inventory.length) break;
                 let inventoryObject = userInfo.inventory[i + pageOffset];
                 let shopObject = shopItems[inventoryObject.Id];
+                if (!shopObject.dispayInInventory) continue;
                 let metadataString = "\n`";
                 if (shopObject.metadataToDisplay) {
                     for (let metadataTag of shopObject.metadataToDisplay) {
@@ -45,7 +46,7 @@ module.exports = {
                 } else {
                     metadataString = "";
                 }
-                stringToReply += `${shopObject.emoji ? shopObject.emoji : ""} **${shopObject.name}** (owned: ${userInfo.inventory[i].quantity})${metadataString}\n${shopObject.description}\n\n`;
+                stringToReply += `${shopObject.emoji ? shopObject.emoji : ""} **${shopObject.name}** ${userInfo.inventory[i].quantity > 1 ? `(owned: ${userInfo.inventory[i].quantity})` : ""}${metadataString}\n${shopObject.description}\n\n`;
             }
             return stringToReply;
         }
