@@ -18,6 +18,9 @@ module.exports = {
             friends: [],
 
         }
-        fs.writeFileSync(path.join(__dirname, `../userdata/${userId}`), JSON.stringify(userData))
+        let usernames = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/usernames.json`)).toString("UTF-8"));
+        usernames[userId] = username;
+        fs.writeFileSync(path.join(__dirname, `../userdata/usernames.json`), JSON.stringify(usernames));
+        fs.writeFileSync(path.join(__dirname, `../userdata/${userId}`), JSON.stringify(userData));
     }
 };

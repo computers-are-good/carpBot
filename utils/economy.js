@@ -25,8 +25,12 @@ module.exports = {
             } catch {
                 rej("Looks like your data is corrupted. Oops.");
             }
-            if (userInfo.username != interaction.user.username) userInfo.username = interaction.user.username;
-
+            if (userInfo.username != interaction.user.username) {
+                userInfo.username = interaction.user.username;
+                let usernames = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/${usernames}`)).toString("UTF-8"));
+                usernames[userId] = interaction.user.username;
+                fs.writeFileSync(path.join(__dirname, `../userdata/${usernames}`), JSON.stringify(usernames));
+            }
             acc(userInfo);
         });
     },
@@ -48,8 +52,8 @@ module.exports = {
         let now = new Date().getTime();
         userInfo.effects = userInfo.effects.filter(a => a.validUntil > now);
         for (let userEffect in userInfo.effects) {
-            if (userInfo.effects[userEffect].name == effect) return {userInfo: userInfo, hasEffect: true, durationRemaining: Math.floor((userInfo.effects[userEffect].validUntil - now ) / 1000)};
+            if (userInfo.effects[userEffect].name == effect) return { userInfo: userInfo, hasEffect: true, durationRemaining: Math.floor((userInfo.effects[userEffect].validUntil - now) / 1000) };
         }
-        return {userInfo: userInfo, hasEffect: false, durationRemaining: 0};
+        return { userInfo: userInfo, hasEffect: false, durationRemaining: 0 };
     }
 }
