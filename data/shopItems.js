@@ -142,7 +142,7 @@ module.exports = {
             name: "Coin",
             category: ["object"],
             description: "Flip a coin!",
-            cost: 500,
+            cost: 100,
             oneOff: true,
             addToInventory: true,
             scripts: {
