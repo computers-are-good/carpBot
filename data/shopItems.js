@@ -4,7 +4,7 @@ module.exports = {
             name: "D20",
             category: ["object"],
             description: "It's a D20. It's pretty shiny!",
-            cost: 5000,
+            cost: 500,
             addToInventory: true,
             scripts: {
                 onBuy: function(userData) {
@@ -12,6 +12,123 @@ module.exports = {
                 },
                 generateMetadata: function() {
                     return {colour:  Math.random() < 0.5 ? "White" : "Black"}
+                },
+                onUse: function(userInfo, metadata) {
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: `The ${metadata.colour} D20 got a ${Math.ceil(Math.random() * 20)}`
+                    }
+                }
+            }
+        },
+        1002: {
+            name: "D12",
+            category: ["object"],
+            description: "It's a D12. It's pretty shiny!",
+            cost: 500,
+            addToInventory: true,
+            scripts: {
+                onBuy: function(userData) {
+                    console.log(this)
+                },
+                generateMetadata: function() {
+                    return {colour:  Math.random() < 0.5 ? "White" : "Black"}
+                },
+                onUse: function(userInfo, metadata) {
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: `The ${metadata.colour} D12 got a ${Math.ceil(Math.random() * 12)}`
+                    }
+                }
+            }
+        },
+        1003: {
+            name: "D10",
+            category: ["object"],
+            description: "It's a D10. It's pretty shiny!",
+            cost: 500,
+            addToInventory: true,
+            scripts: {
+                onBuy: function(userData) {
+                    console.log(this)
+                },
+                generateMetadata: function() {
+                    return {colour:  Math.random() < 0.5 ? "White" : "Black"}
+                },
+                onUse: function(userInfo, metadata) {
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: `The ${metadata.colour} D10 got a ${Math.ceil(Math.random() * 10)}`
+                    }
+                }
+            }
+        },
+        1004: {
+            name: "D8",
+            category: ["object"],
+            description: "It's a D8. It's pretty shiny!",
+            cost: 500,
+            addToInventory: true,
+            scripts: {
+                onBuy: function(userData) {
+                    console.log(this)
+                },
+                generateMetadata: function() {
+                    return {colour:  Math.random() < 0.5 ? "White" : "Black"}
+                },
+                onUse: function(userInfo, metadata) {
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: `The ${metadata.colour} D8 got a ${Math.ceil(Math.random() * 8)}`
+                    }
+                }
+            }
+        },
+        1004: {
+            name: "D6",
+            category: ["object"],
+            description: "It's a D6. It's pretty shiny!",
+            cost: 500,
+            addToInventory: true,
+            scripts: {
+                onBuy: function(userData) {
+                    console.log(this)
+                },
+                generateMetadata: function() {
+                    return {colour:  Math.random() < 0.5 ? "White" : "Black"}
+                },
+                onUse: function(userInfo, metadata) {
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: `The ${metadata.colour} D6 got a ${Math.ceil(Math.random() * 6)}`
+                    }
+                }
+            }
+        },
+        1005: {
+            name: "D4",
+            category: ["object"],
+            description: "It's a D4. It's pretty shiny!",
+            cost: 500,
+            addToInventory: true,
+            scripts: {
+                onBuy: function(userData) {
+                    console.log(this)
+                },
+                generateMetadata: function() {
+                    return {colour:  Math.random() < 0.5 ? "White" : "Black"}
+                },
+                onUse: function(userInfo, metadata) {
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: `The ${metadata.colour} D4 got a ${Math.ceil(Math.random() * 4)}`
+                    }
                 }
             }
         },
