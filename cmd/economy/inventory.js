@@ -6,12 +6,10 @@ const { shopItems } = require(path.join(__dirname, "../../data/shopItems"))
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('shop')
-        .setDescription('Browse items for sale!')
-        .addStringOption(option => option.setName("category").setDescription("Category")),
+        .setName('inventory')
+        .setDescription('See the items in your inventory'),
     async execute(interaction) {
         userInfo = await economyUtils.prefix(interaction);
-        const category = interaction.options.getString("category");
 
         const previous = new ButtonBuilder()
             .setCustomId('Previous')
@@ -25,28 +23,26 @@ module.exports = {
 
         const row = new ActionRowBuilder()
             .addComponents(previous, next);
+            
 
+        let inventory = userInfo.inventory;
 
-        let objectsFittingCriteria = [];
-        for (let item in shopItems) {
-            if (shopItems[item].category.includes("testing")) continue;
-            if (!category) {
-                objectsFittingCriteria.push(shopItems[item]);
-            } else if (category && shopItems[item].category.includes(category)) {
-                objectsFittingCriteria.push(shopItems[item]);
-            }
+        if (inventory.length == 0) {
+            await interaction.reply("Your inventory is empty.");
+            return;
         }
         function outputString(pageSize, pageOffset) {
-            let stringToReply = "";
+            let stringToReply = ""
             for (let i = 0; i < pageSize; i++) {
-                if (i + pageOffset >= objectsFittingCriteria.length) break;
-                let object = objectsFittingCriteria[i + pageOffset];
-                stringToReply += `${object.emoji ? object.emoji : ""} **${object.name}** (${economyUtils.formatMoney(object.cost)}):\nCategories: ${object.category.join(", ")}\n${object.description}\n\n`;
+                if (i + pageOffset >= inventory.length) break;
+                let object = shopItems[userInfo.inventory[i + pageOffset].Id];
+                stringToReply += `${object.emoji ? object.emoji : ""} **${object.name}** (owned: ${userInfo.inventory[i].quantity}) (${economyUtils.formatMoney(object.cost)}):\nCategories: ${object.category.join(", ")}\n${object.description}\n\n`;
             }
             return stringToReply;
         }
         let pageOffset = 0;
-        let stringToReply = outputString(5, pageOffset)
+        let stringToReply = outputString(5, pageOffset);
+
         let response = await interaction.reply({
             content: stringToReply,
             components: [row],
@@ -63,7 +59,7 @@ module.exports = {
                     buttons.update({ content: stringToReply, components: [row] });
                     updateButtons();
                 } else if (buttons.customId === 'Next') {
-                    pageOffset = Math.min(pageOffset + 5, objectsFittingCriteria.length - objectsFittingCriteria.length % 5);
+                    pageOffset = Math.min(pageOffset + 5, inventory.length - inventory.length % 5);
                     stringToReply = outputString(5, pageOffset);
                     buttons.update({ content: stringToReply, components: [row] });
                     updateButtons();

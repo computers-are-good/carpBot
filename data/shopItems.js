@@ -132,9 +132,6 @@ module.exports = {
             emoji: "🎲",
             addToInventory: true,
             scripts: {
-                onBuy: function(userData) {
-                    console.log(this)
-                },
                 generateMetadata: function() {
                     return {colour:  Math.random() < 0.5 ? "White" : "Black"}
                 },
