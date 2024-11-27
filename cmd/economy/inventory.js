@@ -25,18 +25,17 @@ module.exports = {
             .addComponents(previous, next);
             
         let inventory = userInfo.inventory;
-
         if (inventory.length == 0) {
             await interaction.reply("Your inventory is empty.");
             return;
         }
         function outputString(pageSize, pageOffset) {
-            let stringToReply = ""
+            let stringToReply = "";
             for (let i = 0; i < pageSize; i++) {
                 if (i + pageOffset >= inventory.length) break;
                 let inventoryObject = userInfo.inventory[i + pageOffset];
                 let shopObject = shopItems[inventoryObject.Id];
-                if (!shopObject.dispayInInventory) continue;
+                if (!shopObject.displayInInventory) continue;
                 let metadataString = "\n`";
                 if (shopObject.metadataToDisplay) {
                     for (let metadataTag of shopObject.metadataToDisplay) {
@@ -54,7 +53,7 @@ module.exports = {
         let stringToReply = outputString(5, pageOffset);
 
         let response = await interaction.reply({
-            content: stringToReply,
+            content: stringToReply ?? "Empty inventory",
             components: [row],
         });
 
@@ -66,16 +65,16 @@ module.exports = {
                 if (buttons.customId === 'Previous') {
                     pageOffset = Math.max(0, pageOffset - 5);
                     stringToReply = outputString(5, pageOffset);
-                    buttons.update({ content: stringToReply, components: [row] });
+                    buttons.update({ content: stringToReply ?? "Empty inventory", components: [row] });
                     updateButtons();
                 } else if (buttons.customId === 'Next') {
                     pageOffset = Math.min(pageOffset + 5, inventory.length - inventory.length % 5);
                     stringToReply = outputString(5, pageOffset);
-                    buttons.update({ content: stringToReply, components: [row] });
+                    buttons.update({ content: stringToReply ?? "Empty inventory", components: [row] });
                     updateButtons();
                 }
             } catch (e) {
-                await response.edit({ content: stringToReply, components: [] })
+                await response.edit({ content: stringToReply ?? "Empty inventory", components: [] })
             }
 
         }

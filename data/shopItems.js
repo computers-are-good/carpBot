@@ -1,6 +1,7 @@
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../utils/economy"));
 const scriptingUtils = require(path.join(__dirname, "../utils/scripting"));
+const {calculateLevelUp} = require(path.join(__dirname, "../utils/calculateLevelUp"));
 
 module.exports = {
     shopItems: {
@@ -15,9 +16,6 @@ module.exports = {
             oneOff: true,
             addToInventory: true,
             scripts: {
-                onBuy: function(userData) {
-                    console.log(this)
-                },
                 generateMetadata: function() {
                     return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
                 },
@@ -41,11 +39,8 @@ module.exports = {
             oneOff: true,
             addToInventory: true,
             scripts: {
-                onBuy: function(userData) {
-                    console.log(this)
-                },
                 generateMetadata: function() {
-                    return {colour:  Math.random() < 0.5 ? "White" : "Black"}
+                    return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
                 },
                 onUse: function(userInfo, metadata) {
                     return {
@@ -67,11 +62,8 @@ module.exports = {
             emoji: "🎲",
             addToInventory: true,
             scripts: {
-                onBuy: function(userData) {
-                    console.log(this)
-                },
                 generateMetadata: function() {
-                    return {colour:  Math.random() < 0.5 ? "White" : "Black"}
+                    return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
                 },
                 onUse: function(userInfo, metadata) {
                     return {
@@ -93,11 +85,8 @@ module.exports = {
             oneOff: true,
             addToInventory: true,
             scripts: {
-                onBuy: function(userData) {
-                    console.log(this)
-                },
                 generateMetadata: function() {
-                    return {colour:  Math.random() < 0.5 ? "White" : "Black"}
+                    return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
                 },
                 onUse: function(userInfo, metadata) {
                     return {
@@ -119,11 +108,8 @@ module.exports = {
             oneOff: true,
             addToInventory: true,
             scripts: {
-                onBuy: function(userData) {
-                    console.log(this)
-                },
                 generateMetadata: function() {
-                    return {colour:  Math.random() < 0.5 ? "White" : "Black"}
+                    return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
                 },
                 onUse: function(userInfo, metadata) {
                     return {
@@ -146,7 +132,7 @@ module.exports = {
             addToInventory: true,
             scripts: {
                 generateMetadata: function() {
-                    return {colour:  Math.random() < 0.5 ? "White" : "Black"}
+                    return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
                 },
                 onUse: function(userInfo, metadata) {
                     return {
@@ -181,9 +167,9 @@ module.exports = {
             category: ["object", "income"],
             displayInInventory: false,
             description: "Buy a house and rent it out to earn some money on the side! Collect rent with `/collectrent`",
-            cost: 100,
+            cost: 5000000,
             metadataToDisplay: ["Address"],
-            emoji: "🪙",
+            emoji: "🏠",
             oneOff: false,
             addToInventory: true,
             scripts: {
@@ -199,7 +185,7 @@ module.exports = {
             name: "Scratch ticket",
             displayInInventory: true,
             category: ["object", "consumable"],
-            description: "10% Chance to give you $20",
+            description: "10% Chance to give you $20.",
             cost: 300,
             emoji: "🎫",
             oneOff: false,
@@ -238,6 +224,33 @@ module.exports = {
                 }
             }
         },
+        2003: {
+            name: "Small EXP Potion",
+            displayInInventory: true,
+            category: ["object", "consumable"],
+            description: "Gain 250 exp.",
+            cost: 5000,
+            emoji: "🧋",
+            oneOff: false,
+            addToInventory: true,
+            scripts: {
+                onUse: function(userInfo, metadata) {
+                    let results = calculateLevelUp(userInfo.level, userInfo.expRequired, 250);
+                    let outputString = ""
+                    if (userInfo.level != results.newLevel) {
+                        outputString = `Congratulations! Levelled up (${userInfo.level} -> ${results.newLevel})`;
+                    }
+                    userInfo.level = results.newLevel;
+                    userInfo.expRequired = results.newExpRequired;
+
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: outputString
+                    }
+                }
+            }
+        },
         9991: {
             name: "Money sink",
             category: ["testing"],
@@ -246,9 +259,6 @@ module.exports = {
             cost: 2000,
             addToInventory: false,
             scripts: {
-                onBuy: function(userData) {
-                    console.log(this)
-                }
             }
         },
         9992: {

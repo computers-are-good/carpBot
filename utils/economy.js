@@ -14,7 +14,7 @@ module.exports = {
     },
     prefix: function (interaction) {
         return new Promise((acc, rej) => {
-            const dataPath = path.join(__dirname, `../userdata/${interaction.user.id}`)
+            const dataPath = path.join(__dirname, `../userdata/${interaction.user.id}`);
 
             if (!fs.existsSync(dataPath)) {
                 createUserData(interaction.user.id, interaction.user.username);

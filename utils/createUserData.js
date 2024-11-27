@@ -12,6 +12,8 @@ module.exports = {
             moneyBankAccount: 0,
             megaGem: 0,
             passiveMode: false,
+            lastGotRobbed: 0,
+            lastRobbedSomeone: 0,
             effects: [],
             friends: [],
 

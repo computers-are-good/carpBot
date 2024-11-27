@@ -58,16 +58,13 @@ module.exports = {
         //finally, we can buy the item if all criteria is met
         const itemData = shopItems[itemId]
         userInfo.moneyOnHand -= itemData.cost;
-        if (itemData.addToInventory) {
-            let itemMetadata
-            let metaDataNeedsToBeGenerated = (shopItems[itemId].scripts.generateMetadata != undefined)
-            if (metaDataNeedsToBeGenerated) {
-                itemMetadata = shopItems[itemId].scripts.generateMetadata();
-            }
+        async function addItem(Id, quantity, metadata) {
+            let metaDataNeedsToBeGenerated = false;
+            if (metadata) metaDataNeedsToBeGenerated = true;
             let addedToInventory = false;
 
             for (let item in userInfo.inventory) {
-                if (userInfo.inventory[item].Id == itemId) {
+                if (userInfo.inventory[item].Id == Id) {
                     if (itemData.oneOff) {
                         await interaction.reply("This item can only be brought once");
                         return;
@@ -75,7 +72,7 @@ module.exports = {
                     if (!metaDataNeedsToBeGenerated) {
                         userInfo.inventory[item].quantity += quantity;
                         addedToInventory = true;
-                    } else if (scriptingUtils.deepEqual(userInfo.inventory[item].metadata, itemMetadata)) {
+                    } else if (scriptingUtils.deepEqual(userInfo.inventory[item].metadata, metadata)) {
                         userInfo.inventory[item].quantity += quantity;
                         addedToInventory = true;
                     }
@@ -88,10 +85,22 @@ module.exports = {
                     quantity: quantity
                 }
                 if (metaDataNeedsToBeGenerated) {
-                    objToPush.metadata = itemMetadata;
+                    objToPush.metadata = metadata;
                 }
                 userInfo.inventory.push(objToPush);
             }
+        }
+        if (itemData.addToInventory) {
+            let metaDataNeedsToBeGenerated = (shopItems[itemId].scripts.generateMetadata != undefined);
+            if (metaDataNeedsToBeGenerated) {
+                for (let i = 0; i < quantity; i++) { //each item may need to have metadata generated separately
+                    let itemMetadata = shopItems[itemId].scripts.generateMetadata();
+                    addItem(itemId, 1, itemMetadata);
+                }
+            } else {
+                addItem(itemId, quantity);
+            }
+
 
         }
         if (itemData.scripts.onBuy)
