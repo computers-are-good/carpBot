@@ -101,6 +101,7 @@ module.exports = {
                     updateButtons();
                 } else if (buttons.customId === 'Next') {
                     pageOffset = Math.min(pageOffset + 5, items.length - 1);
+                    if (pageOffset < 4) pageOffset = 0;
                     stringToReply = outputString(5, pageOffset);
                     buttons.update({ content: stringToReply, components: [row] });
                     updateButtons();
@@ -110,6 +111,44 @@ module.exports = {
             }
         }
         updateButtons();
+    },
+    confirmation: async function(interaction, msg) {
+        return new Promise(async (res, rej) => {
+            const previous = new ButtonBuilder()
+            .setCustomId('Confirm')
+            .setLabel('Confirm')
+            .setStyle(ButtonStyle.Primary);
+
+        const next = new ButtonBuilder()
+            .setCustomId('Cancel')
+            .setLabel('Cancel')
+            .setStyle(ButtonStyle.Secondary);
+
+		const row = new ActionRowBuilder().addComponents(previous, next);
+		let response = await interaction.reply({
+			content: msg,
+			components: [row]
+		});
+
+        const collectorFilter = i => i.user.id === interaction.user.id;
+        try {
+			buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 5_000 });
+			if (buttons.customId === 'Confirm') {
+				await response.edit({ content: "Action confirmed.", components: [] });
+				res({
+                    confirmed:true,
+                    response: response});
+			} else if (buttons.customId === 'Cancel') {
+				await response.edit({ content: "Action cancelled.", components: [] });
+                res({
+                    confirmed:false,
+                    response: response});
+			}
+		} catch (e) {
+			await response.edit({ content: "Timed out.", components: [] });
+			rej();
+		}
+        });
 
     }
 }

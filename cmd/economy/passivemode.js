@@ -1,4 +1,3 @@
-const { time } = require('console');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
@@ -9,40 +8,23 @@ module.exports = {
 		.setName('passivemode')
 		.setDescription('Toggles passive mode.'),
 	async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+		userInfo = await economyUtils.prefix(interaction);
 
-		const confirm = new ButtonBuilder()
-            .setCustomId('Confirm')
-            .setLabel('Confirm')
-            .setStyle(ButtonStyle.Primary);
-
-        const cancel = new ButtonBuilder()
-            .setCustomId('Cancel')
-            .setLabel('Cancel')
-            .setStyle(ButtonStyle.Secondary);
-
-        const row = new ActionRowBuilder().addComponents(cancel, confirm);
-
-		const collectorFilter = i => i.user.id === interaction.user.id;
-		let response = await interaction.reply({content: `Passive mode is currently ${userInfo.passiveMode ? "enabled" : "disabled"}.\nDo you want to ${userInfo.passiveMode ? "disable" : "enable"} passive mode?`, components: [row]});
-		try {
-			buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
-			if (buttons.customId === 'Confirm') {
-				const now = new Date().getTime();
+		economyUtils.confirmation(interaction, `Passive mode is currently ${userInfo.passiveMode ? "enabled" : "disabled"}.\nDo you want to ${userInfo.passiveMode ? "disable" : "enable"} passive mode?`).then(async val => {
+			let { confirmed, response } = val;
+			const now = new Date().getTime();
+			if (confirmed) {
 				if (now - userInfo.lastTogglePassiveMode > 86400000) {
 					userInfo.passiveMode = !userInfo.passiveMode;
 					userInfo.lastTogglePassiveMode = now;
 					fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
-					await buttons.update({content: `Passive mode is now ${userInfo.passiveMode ? "enabled" : "disabled"}`, components: []}); 
+					await response.edit(`Passive mode is now ${userInfo.passiveMode ? "enabled" : "disabled"}.`);
 				} else {
-					await buttons.update({content: "Please wait at least a day before toggling passive mode.", components: []});
+					await response.edit("Please wait at least a day before toggling passive mode.");
 				}
-			} else if (buttons.customId === 'Cancel') {
-				await buttons.update({ content: "Cancelled.", components: [] });
+			} else {
+				response.edit({ content: `Passive mode remains ${userInfo.passiveMode ? "enabled" : "disabled"}`, components: [] });
 			}
-		} catch (e) {
-			console.log(e)
-			await response.edit({ content: "Response timed out.", components: [] });
-		}
+		});
 	},
 };

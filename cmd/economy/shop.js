@@ -13,20 +13,6 @@ module.exports = {
         userInfo = await economyUtils.prefix(interaction);
         const category = interaction.options.getString("category");
 
-        const previous = new ButtonBuilder()
-            .setCustomId('Previous')
-            .setLabel('Previous Page')
-            .setStyle(ButtonStyle.Secondary);
-
-        const next = new ButtonBuilder()
-            .setCustomId('Next')
-            .setLabel('Next Page')
-            .setStyle(ButtonStyle.Secondary);
-
-        const row = new ActionRowBuilder()
-            .addComponents(previous, next);
-
-
         let objectsFittingCriteria = [];
         let stringsToDisplay = [];
         for (let item in shopItems) {
