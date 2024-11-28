@@ -253,6 +253,26 @@ module.exports = {
                 }
             }
         },
+        2004: {
+            name: "Green Tea",
+            displayInInventory: true,
+            category: ["object", "consumable"],
+            description: "For the next 60 seconds, gain +20% EXP when you work.",
+            cost: 1000,
+            emoji: "🌿",
+            oneOff: false,
+            addToInventory: true,
+            scripts: {
+                onUse: function(userInfo, metadata) {
+                    userInfo = grantEffect(userInfo, "greenTea", 60);
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: "You drank some green tea."
+                    }
+                }
+            }
+        },
         9991: {
             name: "Money sink",
             category: ["testing"],

@@ -38,14 +38,31 @@ module.exports = {
         });
     },
 
-    hasEffect: function (userInfo, effect) {
+    hasEffect: function (userInfo, effects) {
         //delete expired effects
+        let toReturn = {
+            userInfo: userInfo,
+            effects: {},
+            effectDurations: {}
+        }
         let now = new Date().getTime();
         userInfo.effects = userInfo.effects.filter(a => a.validUntil > now);
-        for (let userEffect in userInfo.effects) {
-            if (userInfo.effects[userEffect].name == effect) return { userInfo: userInfo, hasEffect: true, durationRemaining: Math.floor((userInfo.effects[userEffect].validUntil - now) / 1000) };
+        for (let effect of effects) {
+            let effectFound = false;
+            for (let userEffect in userInfo.effects) {
+                if (userInfo.effects[userEffect].name == effect) {
+                    effectFound = true;
+                    toReturn.effects[effect] = true;
+                    toReturn.effectDurations[effect] = Math.floor((userInfo.effects[userEffect].validUntil - now) / 1000);
+                    break;
+                } 
+            }
+            if (!effectFound) {
+                toReturn.effects[effect] = false;
+                toReturn.effectDurations[effect] = 0
+            }
         }
-        return { userInfo: userInfo, hasEffect: false, durationRemaining: 0 };
+        return toReturn;
     },
     saveData: function (userId, userInfo) {
         fs.writeFileSync(path.join(__dirname, `../userdata/${userId}`), JSON.stringify(userInfo));

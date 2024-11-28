@@ -6,7 +6,6 @@ const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 function moneyRequiredLevelUp(currentLevel) {
 	return (40 * Math.pow((currentLevel + 4), 3) + 25000) * 100
 }
-console.log(moneyRequiredLevelUp(1))
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('upgradehouse')

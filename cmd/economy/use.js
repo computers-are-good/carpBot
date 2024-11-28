@@ -50,7 +50,6 @@ module.exports = {
                     returnObj = shopItems[itemId].scripts.onUse(userInfo, userInfo.inventory[item].metadata);
                     userInfo = returnObj.userInfo;
                     userInfo.inventory[item].metadata = returnObj.metadata;
-                    console.log(userInfo.effects)
                     if (returnObj.messageToUser) stringToReply += `\n${returnObj.messageToUser}`;
                 }
                 if (shopItems[itemId].category.includes("consumable")) {
