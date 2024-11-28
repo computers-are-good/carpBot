@@ -2,9 +2,9 @@ const { SlashCommandBuilder } = require('discord.js');
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 function moneyRequiredLevelUp(currentLevel) {
-	return 50 * Math.pow(currentLevel + 4, 2) + 25000
+	return (40 * Math.pow((currentLevel + 4), 3) + 25000) * 100
 }
-
+console.log(moneyRequiredLevelUp(1))
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('upgradehouse')

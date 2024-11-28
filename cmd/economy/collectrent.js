@@ -14,12 +14,13 @@ module.exports = {
 		let now = new Date().getTime();
 		for (let item of userInfo.inventory) {
 			if (item.Id == 1008) {
-				totalTimeElapsed += (now - item.metadata.lastCollected) * item.quantity * item.level;
+				totalTimeElapsed += (now - item.metadata.lastCollected) * item.quantity * item.metadata.level;
 				item.metadata.lastCollected = now;
 			}
 		}
 		let moneyGained = Math.ceil(totalTimeElapsed / 50);
-		userInfo.moneyOnHand += moneyGained;
+		if (typeof moneyGained == "number")
+			userInfo.moneyOnHand += moneyGained;
 
 		const dataPath = path.join(__dirname, `../../userdata/${interaction.user.id}`)
 		fs.writeFileSync(dataPath, JSON.stringify(userInfo));
