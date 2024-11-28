@@ -1,4 +1,6 @@
 const { Events } = require('discord.js');
+const path = require('node:path');
+const fs = require("fs");
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -12,6 +14,13 @@ module.exports = {
 			return;
 		}
 
+		if (fs.existsSync(path.join(__dirname, "../userdata/banned.json"))) {
+			let banlist = JSON.parse(fs.readFileSync(path.join(__dirname, "../userdata/banned.json")));
+			if (banlist.includes(interaction.user.id)) {
+				//await interaction.reply("You are banned.");
+				return;
+			}
+		}
 		try {
 			await command.execute(interaction);
 		} catch (error) {

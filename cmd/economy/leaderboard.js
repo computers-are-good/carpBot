@@ -11,7 +11,7 @@ function createLeaderboard() {
         users: []
     }
     for (let file of dir) {
-        if (file !== "leaderboard.json" && file !== "usernames.json") {
+        if (!file.endsWith(".json")) {
             let userData = JSON.parse(fs.readFileSync(path.join(dirpath, file)).toString("UTF-8"));
             let totalBalance = userData.moneyOnHand + userData.moneyBankAccount;
 
