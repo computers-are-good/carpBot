@@ -1,6 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
+
 function moneyRequiredLevelUp(currentLevel) {
 	return (40 * Math.pow((currentLevel + 4), 3) + 25000) * 100
 }
@@ -18,7 +20,7 @@ module.exports = {
 		if (house == "list") {
 			let listToDisplay = [];
 			houses.forEach(e => {
-				listToDisplay.push(`${e.metadata.Address}: level ${e.metadata.level}`);
+				listToDisplay.push(`${scriptingUtils.choice(["🏡","🏠","🏘️","🏚️"])} ${e.metadata.Address}: level ${e.metadata.level}`);
 			});
 			economyUtils.displayList(interaction, listToDisplay);
 			return;

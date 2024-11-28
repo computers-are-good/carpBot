@@ -94,8 +94,9 @@ module.exports = {
                     buttons.update({ content: stringToReply, components: [row] });
                     updateButtons();
                 } else if (buttons.customId === 'Next') {
-                    pageOffset = Math.min(pageOffset + 5, items.length - 1);
+                    pageOffset = Math.min(pageOffset + 5, items.length - items.length % 5);
                     if (pageOffset < 4) pageOffset = 0;
+                    if (pageOffset == items.length) pageOffset -= 5;
                     stringToReply = outputString(5, pageOffset);
                     buttons.update({ content: stringToReply, components: [row] });
                     updateButtons();
@@ -187,8 +188,6 @@ module.exports = {
             } else {
                 addItem(itemId, quantity);
             }
-
-
         }
         if (itemData.scripts.onBuy)
             for (let i = 0; i < quantity; i++)

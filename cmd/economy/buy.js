@@ -68,6 +68,21 @@ module.exports = {
             }
         }
 
+        //If you have 20 houses, you can't buy no more
+        if (itemId == 1008) {
+            let houseCount = 0;
+            for (let i in userInfo.inventory) {
+                if (userInfo.inventory[i].Id == 1008) {
+                    houseCount++
+                }
+            }
+            if (houseCount + quantity > 20) {
+                await interaction.reply("You can only have a maximum of 20 houses.");
+                return;
+            }
+        }
+
+
         userInfo.moneyOnHand -= itemData.cost * quantity;
         userInfo = economyUtils.addToInventory(userInfo, itemId, quantity);
 
