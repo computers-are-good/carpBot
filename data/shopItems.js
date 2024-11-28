@@ -1,5 +1,6 @@
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../utils/economy"));
+const {grantEffect} = require(path.join(__dirname, "../utils/grantEffect.js"))
 const scriptingUtils = require(path.join(__dirname, "../utils/scripting"));
 const {calculateLevelUp} = require(path.join(__dirname, "../utils/calculateLevelUp"));
 
@@ -216,7 +217,7 @@ module.exports = {
             addToInventory: true,
             scripts: {
                 onUse: function(userInfo, metadata) {
-                    userInfo = economyUtils.grantEffect(userInfo, "coffee", 60);
+                    userInfo = grantEffect(userInfo, "coffee", 60);
                     return {
                         userInfo: userInfo,
                         metadata: metadata,

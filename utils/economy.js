@@ -3,6 +3,7 @@ const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = re
 const path = require('node:path');
 const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
 const { createUserData } = require(path.join(__dirname, "/createUserData"));
+const scriptingUtils = require(path.join(__dirname, "/scripting"))
 
 
 module.exports = {
@@ -36,19 +37,7 @@ module.exports = {
             acc(userInfo);
         });
     },
-    grantEffect: function (userInfo, effect, duration) {
-        for (let userEffect in userInfo.effects) {
-            if (userInfo.effects[userEffect].name == effect) {
-                userInfo.effects[userEffect].validUntil += duration * 1000;
-                return userInfo;
-            }
-        }
-        userInfo.effects.push({
-            name: effect,
-            validUntil: new Date().getTime() + duration * 1000
-        });
-        return userInfo;
-    },
+
     hasEffect: function (userInfo, effect) {
         //delete expired effects
         let now = new Date().getTime();
