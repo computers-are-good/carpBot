@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
 const path = require('node:path');
+const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
 const { createUserData } = require(path.join(__dirname, "/createUserData"));
 
 
@@ -57,20 +58,20 @@ module.exports = {
         }
         return { userInfo: userInfo, hasEffect: false, durationRemaining: 0 };
     },
-    saveData: function(userId, userInfo) {
+    saveData: function (userId, userInfo) {
         fs.writeFileSync(path.join(__dirname, `../userdata/${userId}`), JSON.stringify(userInfo));
 
     },
     displayList: async function (interaction, items) {
         const previous = new ButtonBuilder()
-        .setCustomId('Previous')
-        .setLabel('Previous Page')
-        .setStyle(ButtonStyle.Secondary);
+            .setCustomId('Previous')
+            .setLabel('Previous Page')
+            .setStyle(ButtonStyle.Secondary);
 
         const next = new ButtonBuilder()
-        .setCustomId('Next')
-        .setLabel('Next Page')
-        .setStyle(ButtonStyle.Secondary);
+            .setCustomId('Next')
+            .setLabel('Next Page')
+            .setStyle(ButtonStyle.Secondary);
 
         const row = new ActionRowBuilder().addComponents(previous, next);
 
@@ -116,43 +117,93 @@ module.exports = {
         }
         updateButtons();
     },
-    confirmation: async function(interaction, msg) {
+    confirmation: async function (interaction, msg) {
         return new Promise(async (res, rej) => {
             const confirm = new ButtonBuilder()
-            .setCustomId('Confirm')
-            .setLabel('Confirm')
-            .setStyle(ButtonStyle.Primary);
+                .setCustomId('Confirm')
+                .setLabel('Confirm')
+                .setStyle(ButtonStyle.Primary);
 
-        const cancel = new ButtonBuilder()
-            .setCustomId('Cancel')
-            .setLabel('Cancel')
-            .setStyle(ButtonStyle.Secondary);
+            const cancel = new ButtonBuilder()
+                .setCustomId('Cancel')
+                .setLabel('Cancel')
+                .setStyle(ButtonStyle.Secondary);
 
-		const row = new ActionRowBuilder().addComponents(cancel, confirm);
-		let response = await interaction.reply({
-			content: msg,
-			components: [row]
-		});
+            const row = new ActionRowBuilder().addComponents(cancel, confirm);
+            let response = await interaction.reply({
+                content: msg,
+                components: [row]
+            });
 
-        const collectorFilter = i => i.user.id === interaction.user.id;
-        try {
-			buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
-			if (buttons.customId === 'Confirm') {
-				await response.edit({ content: "Action confirmed.", components: [] });
-				res({
-                    confirmed:true,
-                    response: response});
-			} else if (buttons.customId === 'Cancel') {
-				await response.edit({ content: "Action cancelled.", components: [] });
-                res({
-                    confirmed:false,
-                    response: response});
-			}
-		} catch (e) {
-			await response.edit({ content: "Timed out.", components: [] });
-			rej({confirmed: false, response: response});
-		}
+            const collectorFilter = i => i.user.id === interaction.user.id;
+            try {
+                buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
+                if (buttons.customId === 'Confirm') {
+                    await response.edit({ content: "Action confirmed.", components: [] });
+                    res({
+                        confirmed: true,
+                        response: response
+                    });
+                } else if (buttons.customId === 'Cancel') {
+                    await response.edit({ content: "Action cancelled.", components: [] });
+                    res({
+                        confirmed: false,
+                        response: response
+                    });
+                }
+            } catch (e) {
+                await response.edit({ content: "Timed out.", components: [] });
+                rej({ confirmed: false, response: response });
+            }
         });
 
+    },
+    addToInventory: function (userInfo, itemId, quantity, metadataParameters) {
+        const itemData = shopItems[itemId];
+        async function addItem(Id, quantity, metadata) {
+            let metaDataNeedsToBeGenerated = false;
+            if (metadata) metaDataNeedsToBeGenerated = true;
+            let addedToInventory = false;
+
+            for (let item in userInfo.inventory) {
+                if (userInfo.inventory[item].Id == Id) {
+                    if (!metaDataNeedsToBeGenerated) {
+                        userInfo.inventory[item].quantity += quantity;
+                        addedToInventory = true;
+                    } else if (scriptingUtils.deepEqual(userInfo.inventory[item].metadata, metadata)) {
+                        userInfo.inventory[item].quantity += quantity;
+                        addedToInventory = true;
+                    }
+                }
+            }
+
+            if (!addedToInventory) {
+                let objToPush = {
+                    Id: itemId,
+                    quantity: quantity
+                }
+                if (metaDataNeedsToBeGenerated) {
+                    objToPush.metadata = metadata;
+                }
+                userInfo.inventory.push(objToPush);
+            }
+        }
+        if (itemData.addToInventory) {
+            let metaDataNeedsToBeGenerated = (shopItems[itemId].scripts.generateMetadata != undefined);
+            if (metaDataNeedsToBeGenerated) {
+                for (let i = 0; i < quantity; i++) { //each item may need to have metadata generated separately
+                    let itemMetadata = shopItems[itemId].scripts.generateMetadata(metadataParameters);
+                    addItem(itemId, 1, itemMetadata);
+                }
+            } else {
+                addItem(itemId, quantity);
+            }
+
+
+        }
+        if (itemData.scripts.onBuy)
+            for (let i = 0; i < quantity; i++)
+                itemData.scripts.onBuy(userInfo);
+        return userInfo;
     }
 }

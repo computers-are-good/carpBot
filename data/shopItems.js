@@ -23,7 +23,7 @@ module.exports = {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
-                        messageToUser: `The ${metadata.colour} D20 rolled a ${Math.ceil(Math.random() * 20)}`
+                        messageToUser: `The ${metadata.Colour} D20 rolled a ${Math.ceil(Math.random() * 20)}`
                     }
                 }
             }
@@ -46,7 +46,7 @@ module.exports = {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
-                        messageToUser: `The ${metadata.colour} D12 rolled a ${Math.ceil(Math.random() * 12)}`
+                        messageToUser: `The ${metadata.Colour} D12 rolled a ${Math.ceil(Math.random() * 12)}`
                     }
                 }
             }
@@ -69,7 +69,7 @@ module.exports = {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
-                        messageToUser: `The ${metadata.colour} D10 rolled a ${Math.ceil(Math.random() * 10)}`
+                        messageToUser: `The ${metadata.Colour} D10 rolled a ${Math.ceil(Math.random() * 10)}`
                     }
                 }
             }
@@ -92,7 +92,7 @@ module.exports = {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
-                        messageToUser: `The ${metadata.colour} D8 rolled a ${Math.ceil(Math.random() * 8)}`
+                        messageToUser: `The ${metadata.Colour} D8 rolled a ${Math.ceil(Math.random() * 8)}`
                     }
                 }
             }
@@ -115,7 +115,7 @@ module.exports = {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
-                        messageToUser: `The ${metadata.colour} D6 rolled a ${Math.ceil(Math.random() * 6)}`
+                        messageToUser: `The ${metadata.Colour} D6 rolled a ${Math.ceil(Math.random() * 6)}`
                     }
                 }
             }
@@ -138,7 +138,7 @@ module.exports = {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
-                        messageToUser: `The ${metadata.colour} D4 rolled a ${Math.ceil(Math.random() * 4)}`
+                        messageToUser: `The ${metadata.Colour} D4 rolled a ${Math.ceil(Math.random() * 4)}`
                     }
                 }
             }
