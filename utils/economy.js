@@ -114,17 +114,17 @@ module.exports = {
     },
     confirmation: async function(interaction, msg) {
         return new Promise(async (res, rej) => {
-            const previous = new ButtonBuilder()
+            const confirm = new ButtonBuilder()
             .setCustomId('Confirm')
             .setLabel('Confirm')
             .setStyle(ButtonStyle.Primary);
 
-        const next = new ButtonBuilder()
+        const cancel = new ButtonBuilder()
             .setCustomId('Cancel')
             .setLabel('Cancel')
             .setStyle(ButtonStyle.Secondary);
 
-		const row = new ActionRowBuilder().addComponents(previous, next);
+		const row = new ActionRowBuilder().addComponents(cancel, confirm);
 		let response = await interaction.reply({
 			content: msg,
 			components: [row]
@@ -132,7 +132,7 @@ module.exports = {
 
         const collectorFilter = i => i.user.id === interaction.user.id;
         try {
-			buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 5_000 });
+			buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
 			if (buttons.customId === 'Confirm') {
 				await response.edit({ content: "Action confirmed.", components: [] });
 				res({
@@ -146,7 +146,7 @@ module.exports = {
 			}
 		} catch (e) {
 			await response.edit({ content: "Timed out.", components: [] });
-			rej();
+			rej({confirmed: false, response: response});
 		}
         });
 

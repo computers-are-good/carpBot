@@ -10,12 +10,12 @@ module.exports = {
 		.setDescription('Robs another player (cannot be used on players in passive mode)')
 		.addUserOption(option => option.setName("player").setDescription("Username of player to rob")),
 	async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+		userInfo = await economyUtils.prefix(interaction);
 
 		//search for the player
 		let targetPlayer = interaction.options.getUser("player");
 		let targetPlayerId = targetPlayer.id;
-		
+
 		if (!fs.existsSync(path.join(__dirname, `../../userdata/${targetPlayerId}`))) {
 			await interaction.reply("This user has not used CrapBot.");
 			return;
@@ -39,53 +39,34 @@ module.exports = {
 		if (time - targetPlayerData.lastGotRobbed < 60000) {
 			successChance = 0
 		} else {
-			successChance = Math.min(Math.ceil(successChance * ((time - targetPlayerData.lastGotRobbed) / 1000000) * 1000) / 1000, successChance);
+			successChance = Math.min(Math.ceil(successChance * ((time - targetPlayerData.lastGotRobbed) / 4000000) * 1000) / 1000, successChance);
 		}
 
-		const previous = new ButtonBuilder()
-            .setCustomId('Confirm')
-            .setLabel('Confirm')
-            .setStyle(ButtonStyle.Primary);
-
-        const next = new ButtonBuilder()
-            .setCustomId('Cancel')
-            .setLabel('Cancel')
-            .setStyle(ButtonStyle.Secondary);
-
-		const row = new ActionRowBuilder().addComponents(previous, next);
-		
-		let response = await interaction.reply({
-			content: `Preparing to rob ${targetPlayer.username} for ${economyUtils.formatMoney(moneyRobbed)} with a ${successChance} chance of success. Are you sure?`,
-			components: [row]
-		});
-
-		const collectorFilter = i => i.user.id === interaction.user.id;
-		try {
-			buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
-			if (buttons.customId === 'Confirm') {
+		economyUtils.confirmation(interaction, `Preparing to rob ${targetPlayer.username} for ${economyUtils.formatMoney(moneyRobbed)} with a ${successChance * 100}% chance of success. Are you sure?`).then(val => {
+			let { confirmed, response } = val;
+			if (confirmed) {
 				if (Math.random() < successChance) {
 					//success
 					targetPlayerData.moneyOnHand -= moneyRobbed;
 					userInfo.moneyOnHand += moneyRobbed;
-					buttons.update({content: "Successfully robbed the guy!", components: [] });
-					
+					response.edit("Successfully robbed the guy!");
 				} else {
 					targetPlayerData.moneyOnHand += moneyLostOnFail;
-					userInfo.moneyOnHand -= moneyRobbed;
-					buttons.update({ content: `You failed robbing the guy. You lost ${economyUtils.formatMoney(moneyLostOnFail)}`, components: [] });
+					userInfo.moneyOnHand -= moneyLostOnFail;
+					response.edit(`You failed robbing the guy. You lost ${economyUtils.formatMoney(moneyLostOnFail)}`);
 				}
 				targetPlayerData.lastGotRobbed = time;
 				userInfo.lastRobbedSomeone = time;
+
 				fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
 				fs.writeFileSync(path.join(__dirname, `../../userdata/${targetPlayerId}`), JSON.stringify(targetPlayerData));
-				return;
-			} else if (buttons.customId === 'Cancel') {
-				await response.edit({ content: "Action cancelled.", components: [] });
-			return;
+			} else {
+				response.edit("Robbery cancelled.");
 			}
-		} catch (e) {
-			await response.edit({ content: "Timed out.", components: [] });
-			return;
-		}
+		}, val => {
+			let {response} = val;
+			response.edit("The player was not robbed (you have timed out).")
+		});
+
 	},
 };

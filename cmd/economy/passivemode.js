@@ -23,7 +23,7 @@ module.exports = {
 					await response.edit("Please wait at least a day before toggling passive mode.");
 				}
 			} else {
-				response.edit({ content: `Passive mode remains ${userInfo.passiveMode ? "enabled" : "disabled"}`, components: [] });
+				response.edit({ content: `Passive mode remains ${userInfo.passiveMode ? "enabled" : "disabled"}.`, components: [] });
 			}
 		});
 	},
