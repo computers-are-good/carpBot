@@ -13,6 +13,7 @@ module.exports = {
             megaGem: 0,
             passiveMode: false,
             lastGotRobbed: 0,
+            lastTogglePassiveMode: 0,
             lastRobbedSomeone: 0,
             effects: [],
             friends: [],

@@ -20,6 +20,11 @@ module.exports = {
 			await interaction.reply("This user has not used CrapBot.");
 			return;
 		}
+
+		if (userInfo.passiveMode) {
+			await interaction.reply("You are in passive mode.");
+			return;
+		}
 		let targetPlayerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../../userdata/${targetPlayerId}`)).toString("UTF-8"));
 
 		if (targetPlayerData.passiveMode) {
