@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
 const path = require('node:path');
 const { createUserData } = require(path.join(__dirname, "/createUserData"));
 
@@ -55,5 +56,60 @@ module.exports = {
             if (userInfo.effects[userEffect].name == effect) return { userInfo: userInfo, hasEffect: true, durationRemaining: Math.floor((userInfo.effects[userEffect].validUntil - now) / 1000) };
         }
         return { userInfo: userInfo, hasEffect: false, durationRemaining: 0 };
+    },
+    displayList: async function (interaction, items) {
+        const previous = new ButtonBuilder()
+        .setCustomId('Previous')
+        .setLabel('Previous Page')
+        .setStyle(ButtonStyle.Secondary);
+
+        const next = new ButtonBuilder()
+        .setCustomId('Next')
+        .setLabel('Next Page')
+        .setStyle(ButtonStyle.Secondary);
+
+        const row = new ActionRowBuilder().addComponents(previous, next);
+
+        if (items.length == 0) {
+            await interaction.reply("This list is empty");
+            return;
+        }
+        const pageSize = 5;
+        let pageOffset = 0;
+        function outputString(numItems, offset) {
+            let string = ""
+            for (let i = offset; i < offset + numItems; i++) {
+                if (i > items.length - 1) {
+                    return string;
+                }
+                string += `${items[i]}\n`;
+            }
+            return string;
+        }
+        let response = await interaction.reply({
+            content: outputString(pageSize, 0),
+            components: [row]
+        });
+        const collectorFilter = i => i.user.id === interaction.user.id;
+        async function updateButtons() {
+            try {
+                buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
+                if (buttons.customId === 'Previous') {
+                    pageOffset = Math.max(0, pageOffset - pageSize);
+                    stringToReply = outputString(5, pageOffset);
+                    buttons.update({ content: stringToReply, components: [row] });
+                    updateButtons();
+                } else if (buttons.customId === 'Next') {
+                    pageOffset = Math.min(pageOffset + 5, items.length - 1);
+                    stringToReply = outputString(5, pageOffset);
+                    buttons.update({ content: stringToReply, components: [row] });
+                    updateButtons();
+                }
+            } catch (e) {
+                await response.edit({ content: "Finished displaying list.", components: [] })
+            }
+        }
+        updateButtons();
+
     }
 }

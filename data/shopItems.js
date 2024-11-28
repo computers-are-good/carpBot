@@ -176,6 +176,7 @@ module.exports = {
                 generateMetadata: function() {
                     return {
                         lastCollected: new Date().getTime(),
+                        level: 1,
                         Address: `${Math.ceil(Math.random() * 5000)} ${scriptingUtils.choice(["Clozer Drive", "Moon Street", "Heaven Road"])}`
                     }
                 }

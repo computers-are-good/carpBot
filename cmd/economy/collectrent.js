@@ -14,7 +14,7 @@ module.exports = {
 		let now = new Date().getTime();
 		for (let item of userInfo.inventory) {
 			if (item.Id == 1008) {
-				totalTimeElapsed += (now - item.metadata.lastCollected) * item.quantity;
+				totalTimeElapsed += (now - item.metadata.lastCollected) * item.quantity * item.level;
 				item.metadata.lastCollected = now;
 			}
 		}

@@ -4,7 +4,6 @@ const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 
-
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('passivemode')

@@ -28,6 +28,7 @@ module.exports = {
 
 
         let objectsFittingCriteria = [];
+        let stringsToDisplay = [];
         for (let item in shopItems) {
             if (shopItems[item].category.includes("testing")) continue;
             if (!category) {
@@ -36,44 +37,11 @@ module.exports = {
                 objectsFittingCriteria.push(shopItems[item]);
             }
         }
-        function outputString(pageSize, pageOffset) {
-            let stringToReply = "";
-            for (let i = 0; i < pageSize; i++) {
-                if (i + pageOffset >= objectsFittingCriteria.length) break;
-                let object = objectsFittingCriteria[i + pageOffset];
-                stringToReply += `${object.emoji ? object.emoji : ""} **${object.name}** (${economyUtils.formatMoney(object.cost)}):\nCategories: ${object.category.join(", ")}\n${object.description}\n\n`;
-            }
-            return stringToReply;
+        for (let i = 0; i < objectsFittingCriteria.length; i++) {
+            let object = objectsFittingCriteria[i];
+            stringsToDisplay.push(`${object.emoji ? object.emoji : ""} **${object.name}** (${economyUtils.formatMoney(object.cost)}):\nCategories: ${object.category.join(", ")}\n${object.description}\n`);
         }
-        let pageOffset = 0;
-        let stringToReply = outputString(5, pageOffset)
-        let response = await interaction.reply({
-            content: stringToReply,
-            components: [row],
-        });
 
-        const collectorFilter = i => i.user.id === interaction.user.id;
-        let buttons
-        async function updateButtons() {
-            try {
-                buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
-                if (buttons.customId === 'Previous') {
-                    pageOffset = Math.max(0, pageOffset - 5);
-                    stringToReply = outputString(5, pageOffset);
-                    buttons.update({ content: stringToReply, components: [row] });
-                    updateButtons();
-                } else if (buttons.customId === 'Next') {
-                    pageOffset = Math.min(pageOffset + 5, objectsFittingCriteria.length - objectsFittingCriteria.length % 5);
-                    stringToReply = outputString(5, pageOffset);
-                    buttons.update({ content: stringToReply, components: [row] });
-                    updateButtons();
-                }
-            } catch (e) {
-                await response.edit({ content: stringToReply, components: [] });
-            }
-
-        }
-        updateButtons();
-
-    },
-};
+        economyUtils.displayList(interaction, stringsToDisplay)
+    }
+}
