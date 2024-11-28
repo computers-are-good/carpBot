@@ -9,7 +9,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('upgradehouse')
 		.setDescription('Upgrade your houses to earn more money!')
-		.addStringOption(option => option.setName("house").setDescription("Name of house to upgrade (or list)")),
+		.addStringOption(option => option.setName("house").setDescription("Name of house to upgrade (or list)").setRequired(true)),
 	async execute(interaction) {
         userInfo = await economyUtils.prefix(interaction);
 		const house = interaction.options.getString("house");
@@ -23,22 +23,34 @@ module.exports = {
 			economyUtils.displayList(interaction, listToDisplay);
 			return;
 		}
+		let houseFound = false;
 		for (let houseToSearch of houses) {
 			if (houseToSearch.metadata.Address.toLowerCase() == house.toLowerCase()) {
-				economyUtils.confirmation(interaction, "Upgrade this house?").then(async val => {
-					let {confirmation, response} = val;
-					await response.edit("House would have been upgraded successfully")
-	
-					return;
+				houseFound = true;
+				const upgradeCost = moneyRequiredLevelUp(houseToSearch.metadata.level)
+				economyUtils.confirmation(interaction, `Upgrade this house? This costs ${economyUtils.formatMoney(upgradeCost)}`).then(async val => {
+					let {confirmed, response} = val;
+					if  (confirmed) {
+						//enough money?
+						if (userInfo.moneyOnHand > upgradeCost) {
+							userInfo.moneyOnHand -= upgradeCost;
+							houseToSearch.metadata.level++;
+							economyUtils.saveData(interaction.user.id, userInfo);
+							await response.edit(`House upgraded successfully (${houseToSearch.metadata.level - 1} -> ${houseToSearch.metadata.level}).`);
+						} else {
+							await response.edit(`Not enough money`);
+						}
+					} else {
+						await response.edit(`The house was not upgraded because you have cancelled.`)
+					}
 				},
 				
 				val => {
-
+					let {confirmed, response} = val;
+					response.edit(`House not upgraded because you have timed out.`)
 				});
-
-				return;
 			}
 		}
-		await interaction.reply("House not found!");
+		if (!houseFound) await interaction.reply("House not found!");
 	},
 };

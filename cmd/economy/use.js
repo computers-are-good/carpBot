@@ -54,6 +54,9 @@ module.exports = {
                 }
                 if (shopItems[itemId].category.includes("consumable")) {
                     userInfo.inventory[item].quantity -= quantity;
+                    if (userInfo.inventory[item].quantity <= 0) {
+                        userInfo.inventory.splice(item, 1);
+                    }
                 }
                 fs.writeFileSync(dataPath, JSON.stringify(userInfo));
                 await interaction.reply(stringToReply);

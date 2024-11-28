@@ -57,6 +57,10 @@ module.exports = {
         }
         return { userInfo: userInfo, hasEffect: false, durationRemaining: 0 };
     },
+    saveData: function(userId, userInfo) {
+        fs.writeFileSync(path.join(__dirname, `../userdata/${userId}`), JSON.stringify(userInfo));
+
+    },
     displayList: async function (interaction, items) {
         const previous = new ButtonBuilder()
         .setCustomId('Previous')
