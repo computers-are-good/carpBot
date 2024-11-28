@@ -8,12 +8,26 @@ const scriptingUtils = require(path.join(__dirname, "/scripting"))
 
 module.exports = {
     formatMoney: function (val) {
-        if (val == 0) return `$0.00`;
-        if (val <= 9) return `$0.0${val}`;
-        if (val <= 99) return `$0.${val}`;
-        let arr = val.toString().split('');
-        arr.splice(arr.length - 2, 0, ".");
-        return `$${arr.join("")}`;
+        a = val / 100;
+        a = a.toString().split('')
+        let output = []
+        let tempSliced = []
+        if (a.includes('.')) {
+            let index = a.indexOf('.')
+            let spliceCount = a.length - index
+            tempSliced = a.splice(index, spliceCount)
+            a.splice(index, spliceCount)
+        }
+        for (let i = a.length - 1; i >= 0; i--) {
+            if (Math.abs(a.length - 1 - i) % 3 == 0) {
+                output.unshift(`,`)
+                output.unshift(a[i])
+            } else {
+                output.unshift(a[i])
+            }
+        }
+        output.pop()
+        return `$${output.join('').concat(tempSliced.join(''))}`
     },
     prefix: function (interaction) {
         return new Promise((acc, rej) => {
