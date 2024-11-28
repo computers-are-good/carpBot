@@ -211,7 +211,7 @@ module.exports = {
             displayInInventory: true,
             category: ["object", "consumable"],
             description: "For the next 60 seconds, earn an additional $1.50 when you work.",
-            cost: 1000,
+            cost: 1500,
             emoji: "☕",
             oneOff: false,
             addToInventory: true,
@@ -226,7 +226,7 @@ module.exports = {
                 }
             }
         },
-        2003: {
+        2005: {
             name: "Small EXP Potion",
             displayInInventory: true,
             category: ["object", "consumable"],
@@ -253,12 +253,12 @@ module.exports = {
                 }
             }
         },
-        2004: {
+        2009: {
             name: "Green Tea",
             displayInInventory: true,
             category: ["object", "consumable"],
             description: "For the next 60 seconds, gain +20% EXP when you work.",
-            cost: 1000,
+            cost: 2500,
             emoji: "🌿",
             oneOff: false,
             addToInventory: true,
@@ -269,6 +269,26 @@ module.exports = {
                         userInfo: userInfo,
                         metadata: metadata,
                         messageToUser: "You drank some green tea."
+                    }
+                }
+            }
+        },
+        2010: {
+            name: "Red Tea",
+            displayInInventory: true,
+            category: ["object", "consumable"],
+            description: "For the next 60 seconds, gain +300% EXP when you work.",
+            cost: 20000,
+            emoji: "🍁",
+            oneOff: false,
+            addToInventory: true,
+            scripts: {
+                onUse: function(userInfo, metadata) {
+                    userInfo = grantEffect(userInfo, "redTea", 60);
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: "You drank some red tea."
                     }
                 }
             }

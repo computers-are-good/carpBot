@@ -29,7 +29,7 @@ module.exports = {
         
         let expGained = Math.ceil((1.25 - Math.random()* 0.5) * Math.pow(userInfo.level, 0.5) * 2 + 4);
         let moneyGained = Math.ceil(((1.25 - Math.random()* 0.5) * Math.pow(userInfo.level, 0.5) + 1) * 100);
-        let effect = economyUtils.hasEffect(userInfo, ["coffee", "greenTea"]);
+        let effect = economyUtils.hasEffect(userInfo, ["coffee", "greenTea", "redTea"]);
         userInfo = effect.userInfo;
         if (effect.effects.coffee) {
             moneyGained += 150;
@@ -37,6 +37,9 @@ module.exports = {
         }
         if (effect.effects.greenTea) {
             expGained = Math.ceil(expGained * 1.2);
+        }
+        if (effect.effects.redTea) {
+            expGained = Math.ceil(expGained * 3);
         }
         userInfo.moneyOnHand += moneyGained;
         let { newLevel, newExpRequired} = calculateLevelUp(userInfo.level, userInfo.expRequired, expGained);
@@ -52,7 +55,7 @@ Wallet: **${economyUtils.formatMoney(userInfo.moneyOnHand)}**`
             stringToWrite += `\nLevel up! (${userInfo.level} -> ${newLevel})`;
             userInfo.level = newLevel
         } else {
-            stringToWrite += `\nGained ${expGained} exp. (To next level: ${newExpRequired} ${effect.effects.greenTea ? `, Green tea duration remaining: ${effect.effectDurations.greenTea}s` : ""})`;
+            stringToWrite += `\nGained ${expGained} exp. (To next level: ${newExpRequired}${effect.effects.greenTea ? `, Green tea duration remaining: ${effect.effectDurations.greenTea}s` : ""}${effect.effects.redTea ? `, Red tea duration remaining: ${effect.effectDurations.redTea}s` : ""})`;
         }
 
         fs.writeFileSync(dataPath, JSON.stringify(userInfo));
