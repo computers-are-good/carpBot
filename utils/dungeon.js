@@ -31,10 +31,12 @@ module.exports = {
                         break;
                     case "prebattle":
                         const enemyStats = generateEnemyStats(itemIndex);
+                        const playerStats = userInfo.combat;
                         stringToReply = `You are about to enter battle with a ${currentStep.content.name}
-Health: ${enemyStats.health}
-Attack: ${enemyStats.attack},
-Block: ${enemyStats.block}`;
+Your stats:                Enemy stats:
+Health: ${playerStats.health}${scriptingUtils.generateSpaces(15 - playerStats.health.toString().length - 8)}| Health: ${enemyStats.health}
+Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(15 - playerStats.attack.toString().length - 8)}| Attack: ${enemyStats.attack},
+Block: ${playerStats.block}${scriptingUtils.generateSpaces(15 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}`;
                         break;                       
                 }
                 return stringToReply;

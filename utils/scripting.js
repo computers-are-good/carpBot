@@ -12,5 +12,12 @@ module.exports = {
     choice: function(arr) {
       const index = Math.floor(Math.random() * arr.length);
       return arr[index];
+    },
+    generateSpaces: function(number) {
+      let str = "";
+      for (let i = 0; i < number; i++) {
+        str += " ";
+      }
+      return str;
     }
 }

@@ -39,6 +39,6 @@ module.exports = {
                 exp: 5000,
                 money: 1000,
             }
-        }
+        },
     }
 }
