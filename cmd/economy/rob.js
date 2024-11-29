@@ -31,6 +31,10 @@ module.exports = {
 			await interaction.reply("That user is in passive mode. Please leave them alone.");
 			return;
 		}
+		if (targetPlayerId == interaction.user.id) {
+			await interaction.reply("You can't rob yourself!");
+			return;
+		}
 
 		const time = new Date().getTime();
 		let percentageToRob = 0.1;

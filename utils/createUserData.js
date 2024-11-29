@@ -9,6 +9,7 @@ module.exports = {
             expRequired: 15,
             inventory: [],
             moneyOnHand: 0,
+            lastDaily: "",
             combat: {
                 health: 100,
                 block: 10,
