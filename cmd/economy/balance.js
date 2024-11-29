@@ -11,6 +11,6 @@ module.exports = {
 	async execute(interaction) {
         userInfo = await economyUtils.prefix(interaction);
 
-		await interaction.reply(`User (LV: ${userInfo.level}, to next ${userInfo.expRequired})${interaction.user.username} has ${economyUtils.formatMoney(userInfo.moneyOnHand)} dollars in their wallet and ${economyUtils.formatMoney(userInfo.moneyBankAccount)} in their bank account`);
+		await interaction.reply(`User ${interaction.user.username} (LV: ${userInfo.level}, to next ${userInfo.expRequired}) has ${economyUtils.formatMoney(userInfo.moneyOnHand)} dollars in their wallet and ${economyUtils.formatMoney(userInfo.moneyBankAccount)} in their bank account`);
 	},
 };
