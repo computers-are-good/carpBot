@@ -17,12 +17,14 @@ module.exports = {
         .addStringOption(option => option.setName("dungeon").setDescription("Which dungeon to enter?")),
     async execute(interaction) {
         userInfo = await economyUtils.prefix(interaction);
-        const targetDungeon = interaction.options.getString("dungeon");
+        const dungeonInput = interaction.options.getString("dungeon");
+        let targetDungeon;
         const availableDungeons = listAvailableDungeons(userInfo);
             let canDoDungeon = false;
             for (let i of availableDungeons) {
-                if (i.toLowerCase() == targetDungeon.toLowerCase()) {
+                if (i.toLowerCase() == dungeonInput.toLowerCase()) {
                     canDoDungeon = true;
+                    targetDungeon = i;
                     break;
                 }
             }
@@ -58,9 +60,9 @@ module.exports = {
                             }
                             if (!previouslyCompleted) {
                                 stringToSend += `\nFirst time completion rewards:`
-                                moneyGained += targetDungeonInfo.firstCompleteRewards.exp;
-                                expGained += targetDungeonInfo.firstCompleteRewards.money;
-                                stringToSend += `\n${economyUtils.formatMoney(moneyGained)} and ${expGained} exp`;
+                                moneyGained += targetDungeonInfo.firstCompleteRewards.money;
+                                expGained += targetDungeonInfo.firstCompleteRewards.exp;
+                                stringToSend += `\n${economyUtils.formatMoney(targetDungeonInfo.firstCompleteRewards.money)} and ${targetDungeonInfo.firstCompleteRewards.exp} exp`;
     
                                 if ("item" in targetDungeonInfo.firstCompleteRewards) {
                                     stringToSend += `\nFirst time completion items:`
@@ -78,7 +80,7 @@ module.exports = {
                             if (levelUpResults.newLevel !== userInfo.level) {
                                 stringToSend += `\nCongratulations! You levelled up (${userInfo.level} -> ${levelUpResults.newLevel})`
                             } else {
-                                stringToSend += `\nYou have gained ${expGained} exp (to next level: ${levelUpResults.newExpRequired})`
+                                stringToSend += `\nExp until next level: ${levelUpResults.newExpRequired}`
                             }
                             userInfo.level = levelUpResults.newLevel;
                             userInfo.moneyOnHand += moneyGained;

@@ -13,7 +13,8 @@ const commandFolders = fs.readdirSync(foldersPath);
 const lockFiles = fs.readdirSync(path.join(__dirname, "/userdata")).filter(file => file.startsWith('.lock'));
 lockFiles.forEach(e => {
 	fs.rmSync(path.join(__dirname, `/userdata/${e}`))
-})
+});
+
 for (const folder of commandFolders) {
 	const commandsPath = path.join(foldersPath, folder);
 	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));

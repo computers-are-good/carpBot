@@ -40,5 +40,25 @@ module.exports = {
                 money: 1000,
             }
         },
+        "Green Plains": {
+            content: "All adventures must start somewhere. Outside of the city, there lies a vast green plains inviting you to explore.",
+            seriesName: "plains",
+            seriesNumber: 1,
+            requirements: {
+                level: 5
+            },
+            completeRewards: {
+                exp: 50,
+                money: 1000,
+                item: [{
+                    id: 2010,
+                    quantity: 1
+                }]
+            },
+            firstCompleteRewards: {
+                exp: 100,
+                money: 10000,
+            }
+        },
     }
 }
