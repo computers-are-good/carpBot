@@ -5,7 +5,7 @@ module.exports = {
             seriesNumber: 1,
             seriesName: "test",
             requirements: {
-                level: 3
+                level: 300
             },
             completeRewards: {
                 exp: 50,
@@ -52,8 +52,20 @@ module.exports = {
                 money: 1000,
                 item: [{
                     id: 2010,
-                    quantity: 1
-                }]
+                    quantity: [1, 3],
+                    probability: 0.5
+                },
+                {
+                    id: 2009,
+                    quantity: [1, 3],
+                    probability: 0.3
+                },
+                {
+                    id: 2002,
+                    quantity: 1,
+                    probability: 0.8
+                },
+                ]
             },
             firstCompleteRewards: {
                 exp: 100,

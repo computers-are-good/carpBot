@@ -246,7 +246,7 @@ module.exports = {
                 }
             }
             if ("requirements" in dungeonList[i]) {
-                if (dungeonList[i].level && userInfo.level < dungeonList.level) {
+                if (dungeonList[i].requirements.level && userInfo.level < dungeonList[i].requirements.level) {
                     meetCriteria = false;
                 }
             }

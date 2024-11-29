@@ -13,6 +13,9 @@ module.exports = {
       const index = Math.floor(Math.random() * arr.length);
       return arr[index];
     },
+    randIntBetween: function(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    },
     generateSpaces: function(number) {
       let str = "";
       for (let i = 0; i < number; i++) {
