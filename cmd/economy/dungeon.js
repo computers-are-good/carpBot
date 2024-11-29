@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
+const { listAvailableDungeons } = require('../../utils/economy');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { dungeon } = require(path.join(__dirname, "../../utils/dungeon"));
 const { dungeonText } = require(path.join(__dirname, "../../data/dungeontext"));
@@ -17,44 +18,7 @@ module.exports = {
     async execute(interaction) {
         userInfo = await economyUtils.prefix(interaction);
         const targetDungeon = interaction.options.getString("dungeon");
-        const availableDungeons = [];
-
-        for (let i in dungeonList) {
-            let meetCriteria = true;
-            //Have we completed the previous dungeon in the series?
-            if (dungeonList[i].seriesNumber > 1) {
-                meetCriteria = false;
-                for (let j in userInfo.dungeonsCompleted) {
-                    const dungeon = userInfo.dungeonsCompleted[j];
-                    if (dungeon.seriesName == dungeonList[i].seriesName) {
-                        meetCriteria = true;
-                        break;
-                    }
-                }
-            }
-            if ("requirements" in dungeonList[i]) {
-                if (dungeonList[i].level && userInfo.level < dungeonList.level) {
-                    meetCriteria = false;
-                }
-            }
-            if (meetCriteria) {
-                availableDungeons.push(i);
-            }
-        }
-        function dungeonCompleted(dungeonInfo) { //dungeonInfo is object from dungeonlist.js
-            for (let i in userInfo.dungeonsCompleted) {
-                if (userInfo.dungeonsCompleted[i].seriesName == dungeonInfo.seriesName && userInfo.dungeonsCompleted[i].seriesNumber == dungeonInfo.seriesNumber) return true;
-            }
-            return false;
-        }
-        if (targetDungeon == "list") {
-            let list = [];
-            for (let i of availableDungeons) {
-                let completed = dungeonCompleted(dungeonList[i]);
-                list.push(`${i}: ${dungeonList[i].content} ${completed ? "(complete)" : ""}`);
-            }
-            economyUtils.displayList(interaction, list);
-        } else {
+        const availableDungeons = listAvailableDungeons(userInfo);
             let canDoDungeon = false;
             for (let i of availableDungeons) {
                 if (i.toLowerCase() == targetDungeon.toLowerCase()) {
@@ -67,10 +31,10 @@ module.exports = {
                 const targetDungeonInfo = dungeonList[targetDungeon];
                 dataLocks.lockData(interaction.user.id);
                 try {
-                    dungeon(interaction, dungeonText.test, userInfo).then(success => {
+                    dungeon(interaction, dungeonText[targetDungeon], userInfo).then(async success => {
                         if (success.completed) {
                             let stringToSend = `Dungeon completed!`
-                            let previouslyCompleted = dungeonCompleted(targetDungeonInfo);
+                            let previouslyCompleted = economyUtils.dungeonCompleted(userInfo, targetDungeonInfo);
                             if (!previouslyCompleted)
                                 userInfo.dungeonsCompleted.push({
                                     name: targetDungeon,
@@ -114,16 +78,15 @@ module.exports = {
                             if (levelUpResults.newLevel !== userInfo.level) {
                                 stringToSend += `\nCongratulations! You levelled up (${userInfo.level} -> ${levelUpResults.newLevel})`
                             } else {
-    
+                                stringToSend += `\nYou have gained ${expGained} (to next level: ${levelUpResults.newExpRequired})`
                             }
                             userInfo.level = levelUpResults.newLevel;
                             userInfo.moneyOnHand += moneyGained;
-                            userInfo.expRequired = levelUpResults.expRequired;
+                            userInfo.expRequired = levelUpResults.newExpRequired;
     
-                            success.response.edit({ content: stringToSend, components: [] });
-    
+                            await success.response.edit({ content: stringToSend, components: [] });
                         } else {
-                            success.response.edit({ content: "Dungeon failed", components: [] });
+                            await success.response.edit({ content: "Dungeon not completed.", components: [] });
                         }
                         dataLocks.unlockData(interaction.user.id);
                         fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
@@ -138,9 +101,6 @@ module.exports = {
                     console.log(e);
                     dataLocks.unlockData(interaction.user.id);
                 }
-
-                
-            }
         }
     },
 };

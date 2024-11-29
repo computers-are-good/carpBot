@@ -4,7 +4,11 @@ module.exports = {
             {
                 type: "prebattle",
                 content: {
-                    name: "Rat"
+                    name: "Rat",
+                    enemyMultipliers: {
+                        health: 1.5,
+                        block: 0.8
+                    }
                 }
             },
             {
@@ -23,14 +27,19 @@ module.exports = {
             {
                 type: "prebattle",
                 content: {
-                    name: "Rat"
+                    name: "Rat",
+                    level: 1000,
+                    enemyMultipliers: {
+                        health: 1.5,
+                        block: 0.8
+                    }
                 }
             },
             {
                 type: "battle",
                 content: {
                     name: "Rat",
-                    level: 10,
+                    level: 1000,
                     enemyMultipliers: {
                         health: 1.5,
                         block: 0.8

@@ -5,6 +5,7 @@ const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
 const { createUserData } = require(path.join(__dirname, "/createUserData"));
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const dataLocks = require(path.join(__dirname, "/datalocks"));
+const { dungeonList } = require(path.join(__dirname, "../data/dungeonlist"));
 
 module.exports = {
     formatMoney: function (val) {
@@ -229,4 +230,36 @@ module.exports = {
                 itemData.scripts.onBuy(userInfo);
         return userInfo;
     },
+    listAvailableDungeons: function(userInfo) {
+        let availableDungeons = [];
+        for (let i in dungeonList) {
+            let meetCriteria = true;
+            //Have we completed the previous dungeon in the series?
+            if (dungeonList[i].seriesNumber > 1) {
+                meetCriteria = false;
+                for (let j in userInfo.dungeonsCompleted) {
+                    const dungeon = userInfo.dungeonsCompleted[j];
+                    if (dungeon.seriesName == dungeonList[i].seriesName) {
+                        meetCriteria = true;
+                        break;
+                    }
+                }
+            }
+            if ("requirements" in dungeonList[i]) {
+                if (dungeonList[i].level && userInfo.level < dungeonList.level) {
+                    meetCriteria = false;
+                }
+            }
+            if (meetCriteria) {
+                availableDungeons.push(i);
+            }
+        }
+        return availableDungeons;
+    },
+    dungeonCompleted: function(userInfo, dungeonInfo) { //dungeonInfo is object from dungeonlist.js
+        for (let i in userInfo.dungeonsCompleted) {
+            if (userInfo.dungeonsCompleted[i].seriesName == dungeonInfo.seriesName && userInfo.dungeonsCompleted[i].seriesNumber == dungeonInfo.seriesNumber) return true;
+        }
+        return false;
+    }
 }

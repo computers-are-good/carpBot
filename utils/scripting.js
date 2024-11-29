@@ -19,5 +19,25 @@ module.exports = {
         str += " ";
       }
       return str;
+    },
+    deepClone: function(input) {
+      let output = {}
+      for (let item in input) {
+          if (typeof input[item] !== 'object') {
+              output[item] = input[item]
+          } else {
+              if (Object.keys(input[item]).length > 0) {
+                  output[item] = cloneDB(input[item])
+              } else {
+                  output[item] = input[item]
+              }
+          }
+      }
+      return output
+    }, 
+    wait: function(ms) {
+      return new Promise(res => {
+        setTimeout(res, ms);
+      });
     }
 }
