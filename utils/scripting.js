@@ -49,7 +49,7 @@ module.exports = {
       var year = a.getFullYear();
       var month = months[a.getMonth()];
       var date = a.getDate();
-      var date = date + ' ' + month + ' ' + year + ' ';
+      var date = date + ' ' + month + ' ' + year;
       return date;
   }
 }

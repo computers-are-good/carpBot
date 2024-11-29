@@ -87,7 +87,7 @@ module.exports = {
         fs.writeFileSync(path.join(__dirname, `../userdata/${userId}`), JSON.stringify(userInfo));
 
     },
-    displayList: async function (interaction, items) {
+    displayList: async function (interaction, items, itemsPerPage) {
         const previous = new ButtonBuilder()
             .setCustomId('Previous')
             .setLabel('Previous Page')
@@ -104,7 +104,7 @@ module.exports = {
             await interaction.reply("This list is empty");
             return;
         }
-        const pageSize = 5;
+        const pageSize = itemsPerPage ?? 5;
         let pageOffset = 0;
         function outputString(numItems, offset) {
             let string = ""
@@ -126,14 +126,14 @@ module.exports = {
                 buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
                 if (buttons.customId === 'Previous') {
                     pageOffset = Math.max(0, pageOffset - pageSize);
-                    stringToReply = outputString(5, pageOffset);
+                    stringToReply = outputString(pageSize, pageOffset);
                     buttons.update({ content: stringToReply, components: [row] });
                     updateButtons();
                 } else if (buttons.customId === 'Next') {
-                    pageOffset = Math.min(pageOffset + 5, items.length - items.length % 5);
-                    if (pageOffset < 4) pageOffset = 0;
-                    if (pageOffset == items.length) pageOffset -= 5;
-                    stringToReply = outputString(5, pageOffset);
+                    pageOffset = Math.min(pageOffset + pageSize, items.length - items.length % pageSize);
+                    if (pageOffset < pageSize - 1) pageOffset = 0;
+                    if (pageOffset == items.length) pageOffset -= pageSize;
+                    stringToReply = outputString(pageSize, pageOffset);
                     buttons.update({ content: stringToReply, components: [row] });
                     updateButtons();
                 }
