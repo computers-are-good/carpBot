@@ -12,6 +12,7 @@ module.exports = {
             combat: {
                 health: 100,
                 block: 10,
+                maxHealth: 100,
                 attack: 10,
             },
             moneyBankAccount: 0,

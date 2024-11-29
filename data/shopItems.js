@@ -293,6 +293,27 @@ module.exports = {
                 }
             }
         },
+        2010: {
+            name: "Apple",
+            displayInInventory: true,
+            category: ["object", "consumable", "healing"],
+            description: "Gain 20 health",
+            cost: 20000,
+            emoji: "🍎",
+            oneOff: false,
+            addToInventory: true,
+            scripts: {
+                onUse: function(userInfo, metadata) {
+                    userInfo.combat.health += 20;
+                    if (userInfo.combat.health > userInfo.combat.maxHealth) userInfo.combat.health = userInfo.combat.maxHealth;
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: `Healed for 20 HP. You are now on ${userInfo.combat.health} HP.`
+                    }
+                }
+            }
+        },
         9991: {
             name: "Money sink",
             category: ["testing"],

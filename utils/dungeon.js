@@ -114,7 +114,8 @@ ${enemyStats.block > playerStats.attack ? "The enemy has higher block than your 
                     } else if (buttons.customId === 'Next') {
                         itemIndex++
                         if (itemIndex == script.length) {
-                            await buttons.update({ content: "You are finished", components: [] });
+                            await buttons.update({ content: "Dungeon finished! Exiting dungeon...", components: [] });
+                            await scriptingUtils.wait(2000);
                             res({
                                 completed: true,
                                 userInfo: userInfo,
@@ -124,7 +125,7 @@ ${enemyStats.block > playerStats.attack ? "The enemy has higher block than your 
                             if (script[itemIndex].type == "battle") {
                                 let won = battle(itemIndex);
                                 if (!won) {
-                                    await buttons.update({ content: "Lost battle. Exiting dungeon.", components: [] });
+                                    await buttons.update({ content: "Lost battle. Exiting dungeon...", components: [] });
                                     await scriptingUtils.wait(2000);
                                     res({
                                         completed: false,
@@ -134,12 +135,13 @@ ${enemyStats.block > playerStats.attack ? "The enemy has higher block than your 
                                     weAreFinished = true;
                                 } else {
                                     buttons.update({content: `Congratulations! You won!
-Health remaining: ${userInfo.combat.health}
-Attack: ${userInfo.combat.attack}
-Block: ${userInfo.combat.block}`, components: [row]})
+\`Health remaining: ${userInfo.combat.health}\``, components: [row]})
                                 }
                             } else {
                                 let stringToReply = processCurrentIndex(itemIndex);
+                                if (userInfo.health <= 20) {
+                                    stringToReply += "**You are low on health. Buy and use a healing item. To see healing items, go /shop healing**"
+                                }
                                 buttons.update({ content: stringToReply, components: [row] });
                             }
                         }

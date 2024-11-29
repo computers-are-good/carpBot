@@ -19,6 +19,10 @@ module.exports = {
             },
             {
                 type: "text",
+                content: "Some commands like /rob and /dungeon will lock you in. CrapBot will not respond to other commands until you finish what you're doing."
+            },
+            {
+                type: "text",
                 content: "That's all for now! We hope you have fun with CrapBot."
             },
         ],
