@@ -78,7 +78,7 @@ module.exports = {
                             if (levelUpResults.newLevel !== userInfo.level) {
                                 stringToSend += `\nCongratulations! You levelled up (${userInfo.level} -> ${levelUpResults.newLevel})`
                             } else {
-                                stringToSend += `\nYou have gained ${expGained} (to next level: ${levelUpResults.newExpRequired})`
+                                stringToSend += `\nYou have gained ${expGained} exp (to next level: ${levelUpResults.newExpRequired})`
                             }
                             userInfo.level = levelUpResults.newLevel;
                             userInfo.moneyOnHand += moneyGained;

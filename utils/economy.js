@@ -261,5 +261,13 @@ module.exports = {
             if (userInfo.dungeonsCompleted[i].seriesName == dungeonInfo.seriesName && userInfo.dungeonsCompleted[i].seriesNumber == dungeonInfo.seriesNumber) return true;
         }
         return false;
+    },
+    generateUserStats: function(userInfo) {
+        const playerStats = {};
+        playerStats.health = userInfo.combat.health;
+        playerStats.maxHealth = userInfo.combat.maxHealth + 5 * userInfo.level;
+        playerStats.attack = userInfo.combat.attack + Math.floor(userInfo.combat.attack * userInfo.level / 3);
+        playerStats.block = userInfo.combat.block + Math.floor(userInfo.combat.block * userInfo.level / 3);
+        return playerStats
     }
 }

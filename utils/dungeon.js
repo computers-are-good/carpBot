@@ -4,6 +4,7 @@ const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
 const { createUserData } = require(path.join(__dirname, "/createUserData"));
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const { monsters } = require(path.join(__dirname, "../data/monsters"));
+const economyUtils = require(path.join(__dirname, "/economy"));
 
 module.exports = {
     dungeon: async function (interaction, script, userInfo) {
@@ -22,7 +23,8 @@ module.exports = {
             const row = new ActionRowBuilder().addComponents(previous, next);
 
             let itemIndex = 0;
-            let battleWon = true;
+            const playerStats = economyUtils.generateUserStats(userInfo);
+
             function processCurrentIndex(itemIndex) {
                 let stringToReply = "";
                 let currentStep = script[itemIndex];
@@ -32,12 +34,11 @@ module.exports = {
                         break;
                     case "prebattle":
                         const enemyStats = generateEnemyStats(itemIndex);
-                        const playerStats = userInfo.combat;
                         stringToReply = `You are about to enter battle with a ${currentStep.content.name}\`
-Your stats:         | Enemy stats:        
-Health: ${playerStats.health}${scriptingUtils.generateSpaces(20 - playerStats.health.toString().length - 8)}| Health: ${enemyStats.health}${scriptingUtils.generateSpaces(20 - enemyStats.health.toString().length - 8)}
-Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(20 - playerStats.attack.toString().length - 8)}| Attack: ${enemyStats.attack}${scriptingUtils.generateSpaces(20 - enemyStats.attack.toString().length - 8)}
-Block: ${playerStats.block}${scriptingUtils.generateSpaces(20 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}${scriptingUtils.generateSpaces(20 - enemyStats.block.toString().length - 7)}
+Your stats:              | Enemy stats:        
+Health: ${playerStats.health} (max: ${playerStats.maxHealth})${scriptingUtils.generateSpaces(25 - playerStats.health.toString().length - playerStats.maxHealth.toString().length - 16)}| Health: ${enemyStats.health}${scriptingUtils.generateSpaces(20 - enemyStats.health.toString().length - 8)}
+Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(25 - playerStats.attack.toString().length - 8)}| Attack: ${enemyStats.attack}${scriptingUtils.generateSpaces(20 - enemyStats.attack.toString().length - 8)}
+Block: ${playerStats.block}${scriptingUtils.generateSpaces(25 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}${scriptingUtils.generateSpaces(20 - enemyStats.block.toString().length - 7)}
 \`
 ${enemyStats.block > playerStats.attack ? "The enemy has higher block than your attack. **You will not win the fight**." : ""}`;
                         break;                       
@@ -71,8 +72,6 @@ ${enemyStats.block > playerStats.attack ? "The enemy has higher block than your 
             }
             function battle(itemIndex) {
                 const enemyName = script[itemIndex].content.name;
-
-                const playerStats = userInfo.combat;
 
                 if (!(enemyName in monsters)) {
                     throw new Error("Enemy not found!")
@@ -116,6 +115,7 @@ ${enemyStats.block > playerStats.attack ? "The enemy has higher block than your 
                         if (itemIndex == script.length) {
                             await buttons.update({ content: "Dungeon finished! Exiting dungeon...", components: [] });
                             await scriptingUtils.wait(2000);
+                            weAreFinished = true;
                             res({
                                 completed: true,
                                 userInfo: userInfo,
@@ -127,12 +127,12 @@ ${enemyStats.block > playerStats.attack ? "The enemy has higher block than your 
                                 if (!won) {
                                     await buttons.update({ content: "Lost battle. Exiting dungeon...", components: [] });
                                     await scriptingUtils.wait(2000);
+                                    weAreFinished = true;
                                     res({
                                         completed: false,
                                         userInfo: userInfo,
                                         response: response
                                     });
-                                    weAreFinished = true;
                                 } else {
                                     buttons.update({content: `Congratulations! You won!
 \`Health remaining: ${userInfo.combat.health}\``, components: [row]})
@@ -148,7 +148,6 @@ ${enemyStats.block > playerStats.attack ? "The enemy has higher block than your 
                         updateButtons();
                     }
                 } catch (e) {
-                    console.log(e);
                     if (!weAreFinished) {
                         await response.edit({ content: "Timed out. Please start again", components: [] });
                         rej({

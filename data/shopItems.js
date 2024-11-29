@@ -305,7 +305,7 @@ module.exports = {
             scripts: {
                 onUse: function(userInfo, metadata) {
                     userInfo.combat.health += 20;
-                    if (userInfo.combat.health > userInfo.combat.maxHealth) userInfo.combat.health = userInfo.combat.maxHealth;
+                    if (userInfo.combat.health > userInfo.combat.maxHealth + userInfo.level * 5) userInfo.combat.health = userInfo.combat.maxHealth + userInfo.level * 5;
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
