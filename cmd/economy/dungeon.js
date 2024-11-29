@@ -17,7 +17,6 @@ module.exports = {
         const availableDungeons = [];
 
         for (let i in dungeonList) {
-            
             let meetCriteria = true;
             //Have we completed the previous dungeon in the series?
             if (dungeonList[i].seriesNumber > 1) {
@@ -40,10 +39,17 @@ module.exports = {
                 availableDungeons.push(i);
             }
         }
+        function dungeonCompleted(dungeonInfo) { //dungeonInfo is object from dungeonlist.js
+            for (let i in userInfo.dungeonsCompleted) {
+                if (userInfo.dungeonsCompleted[i].seriesName == dungeonInfo.seriesName && userInfo.dungeonsCompleted[i].seriesNumber == dungeonInfo.seriesNumber) return true;
+            }
+            return false;
+        }
         if (targetDungeon == "list") {
             let list = [];
             for (let i of availableDungeons) {
-                list.push(`${i}: ${dungeonList[i].content}`);
+                let completed = dungeonCompleted(availableDungeons[i]);
+                list.push(`${i}: ${dungeonList[i].content} ${completed ? "(complete)" : ""}`);
             }
             economyUtils.displayList(interaction, list);
         } else {
