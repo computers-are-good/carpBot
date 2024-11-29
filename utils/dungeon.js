@@ -3,10 +3,12 @@ const path = require('node:path');
 const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
 const { createUserData } = require(path.join(__dirname, "/createUserData"));
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
+const { monsters } = require(path.join(__dirname, "../data/monsters"));
 
 module.exports = {
     dungeon: async function (interaction, script, userInfo) {
         return new Promise(async (res, rej) => {
+
             const previous = new ButtonBuilder()
                 .setCustomId('Previous')
                 .setLabel('Stop')
@@ -22,30 +24,80 @@ module.exports = {
             const pageSize = 5;
             let pageOffset = 0;
             let itemIndex = 0;
+            let battleWon = true;
             function processCurrentIndex(itemIndex) {
-                let stringToReply;
+                let stringToReply = "";
                 let currentStep = script[itemIndex];
                 switch (currentStep.type) {
                     case "text":
                         stringToReply = script[itemIndex].content;
                         break;
                     case "prebattle":
-                        stringToReply = `You are about to enter battle with a ${currentStep.content.name}`;
-                        break;
-                    case "battle":
-                        stringToReply = `You are battling a ${currentStep.content.name}. I have not implemented combat yet :(`;
-                        break;
+                        const enemyStats = generateEnemyStats(itemIndex);
+                        stringToReply = `You are about to enter battle with a ${currentStep.content.name}
+Health: ${enemyStats.health}
+Attack: ${enemyStats.attack},
+Block: ${enemyStats.block}`;
+                        break;                       
                 }
                 return stringToReply;
             }
+            function attack(dmg, target) {
+                target.shield -= dmg;
+                if (target.shield < 0) {
+                    target.health += target.shield;
+                    target.shield = 0;
+                }
+                return target;
+            }
+            function generateEnemyStats(itemIndex) {
+                const enemyName = script[itemIndex].content.name;
+                const enemyLevel = script[itemIndex].content.level ?? 1;
+                const enemyStats = monsters[enemyName];
+                for (let stat in enemyStats) {
+                    enemyStats[stat] += Math.floor(enemyStats[stat] * (enemyLevel / 3))
+                }
+                if ("enemyMultipliers" in script[itemIndex].content) {
+                    for (let stat in enemyStats) {
+                        enemyStats[stat] *= script[itemIndex].content.enemyMultipliers[stat] ?? 1;
+                    }
+                }
+                return enemyStats;
+            }
+            function battle(itemIndex) {
+                const enemyName = script[itemIndex].content.name;
+
+                const playerStats = userInfo.combat;
+
+                if (!(enemyName in monsters)) {
+                    throw new Error("Enemy not found!")
+                }
+
+                const enemyStats = generateEnemyStats(itemIndex);
+                while (true) {
+                    playerStats.shield = playerStats.block;
+                    enemyStats.shield = enemyStats.block;
+                    attack(playerStats.attack, enemyStats);
+                    attack(enemyStats.attack, playerStats);
+                    if (playerStats.health <= 0) {
+                        return false;
+                    } else if (enemyStats.health <= 0) {
+                        return true;
+                    }
+                }
+            }
+            let str = processCurrentIndex(itemIndex);
             let response = await interaction.reply({
-                content: processCurrentIndex(itemIndex),
+                content: str,
                 components: [row]
             });
+            if (!battleWon) {
+                return;
+            }
             const collectorFilter = i => i.user.id === interaction.user.id;
             async function updateButtons() {
                 try {
-                    buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+                    let buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
                     if (buttons.customId === 'Previous') {
                         buttons.update({ content: "Dungeon stopped", components: [] });
                         res({
@@ -53,7 +105,7 @@ module.exports = {
                             userInfo: userInfo,
                             response: response
                         });
-                        return
+                        return;
                     } else if (buttons.customId === 'Next') {
                         itemIndex++
                         if (itemIndex == script.length) {
@@ -63,14 +115,28 @@ module.exports = {
                                 userInfo: userInfo,
                                 response: response
                             });
-                            return
+                            return;
                         } else {
-                            let stringToReply = processCurrentIndex(itemIndex);
-                            buttons.update({ content: stringToReply, components: [row] });
+                            if (script[itemIndex].type == "battle") {
+                                let won = battle(itemIndex);
+                                if (!won) {
+                                    buttons.update({ content: "Lost battle. Exiting dungeon.", components: [] });
+                                    return;
+                                } else {
+                                    buttons.update({content: `Congratulations! You won!
+Health remaining: ${userInfo.combat.health}
+Attack: ${userInfo.combat.attack}
+Block: ${userInfo.combat.block}`, components: [row]})
+                                }
+                            } else {
+                                let stringToReply = processCurrentIndex(itemIndex);
+                                buttons.update({ content: stringToReply, components: [row] });
+                            }
                         }
                         updateButtons();
                     }
                 } catch (e) {
+                    console.log(e);
                     await response.edit({ content: "Timed out. Please start again", components: [] });
                     rej({
                         completed: false,
@@ -82,5 +148,5 @@ module.exports = {
             updateButtons();
         },
         );
-}
+    }
 }

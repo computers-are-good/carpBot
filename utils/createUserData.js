@@ -9,6 +9,11 @@ module.exports = {
             expRequired: 15,
             inventory: [],
             moneyOnHand: 0,
+            combat: {
+                health: 100,
+                block: 10,
+                attack: 10,
+            },
             moneyBankAccount: 0,
             megaGem: 0,
             passiveMode: false,
@@ -17,6 +22,7 @@ module.exports = {
             lastRobbedSomeone: 0,
             effects: [],
             friends: [],
+            dungeonsCompleted: [],
 
         }
         let usernames = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/usernames.json`)).toString("UTF-8"));
