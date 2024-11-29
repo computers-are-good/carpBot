@@ -18,7 +18,7 @@ module.exports = {
 				item.metadata.lastCollected = now;
 			}
 		}
-		let moneyGained = Math.ceil(totalTimeElapsed / 50);
+		let moneyGained = Math.ceil(totalTimeElapsed / 70);
 		if (typeof moneyGained == "number")
 			userInfo.moneyOnHand += moneyGained;
 

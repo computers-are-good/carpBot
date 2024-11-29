@@ -3,8 +3,8 @@ const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = re
 const path = require('node:path');
 const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
 const { createUserData } = require(path.join(__dirname, "/createUserData"));
-const scriptingUtils = require(path.join(__dirname, "/scripting"))
-
+const scriptingUtils = require(path.join(__dirname, "/scripting"));
+const dataLocks = require(path.join(__dirname, "/datalocks"))
 
 module.exports = {
     formatMoney: function (val) {
@@ -47,6 +47,10 @@ module.exports = {
                 let usernames = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/${usernames}`)).toString("UTF-8"));
                 usernames[userId] = interaction.user.username;
                 fs.writeFileSync(path.join(__dirname, `../userdata/${usernames}`), JSON.stringify(usernames));
+            }
+            if (dataLocks.dataIsLocked(interaction.user.id)) {
+                rej(0);
+                return;
             }
             acc(userInfo);
         });
@@ -138,16 +142,16 @@ module.exports = {
         }
         updateButtons();
     },
-    confirmation: async function (interaction, msg) {
+    confirmation: async function (interaction, msg, confirmmsg, cancelmsg) {
         return new Promise(async (res, rej) => {
             const confirm = new ButtonBuilder()
                 .setCustomId('Confirm')
-                .setLabel('Confirm')
+                .setLabel(confirmmsg ?? 'Confirm')
                 .setStyle(ButtonStyle.Primary);
 
             const cancel = new ButtonBuilder()
                 .setCustomId('Cancel')
-                .setLabel('Cancel')
+                .setLabel(cancelmsg ?? 'Cancel')
                 .setStyle(ButtonStyle.Secondary);
 
             const row = new ActionRowBuilder().addComponents(cancel, confirm);
@@ -160,13 +164,13 @@ module.exports = {
             try {
                 buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
                 if (buttons.customId === 'Confirm') {
-                    await response.edit({ content: "Action confirmed.", components: [] });
+                    await response.edit({ content: msg, components: [] });
                     res({
                         confirmed: true,
                         response: response
                     });
                 } else if (buttons.customId === 'Cancel') {
-                    await response.edit({ content: "Action cancelled.", components: [] });
+                    await response.edit({ content: msg, components: [] });
                     res({
                         confirmed: false,
                         response: response
@@ -224,5 +228,5 @@ module.exports = {
             for (let i = 0; i < quantity; i++)
                 itemData.scripts.onBuy(userInfo);
         return userInfo;
-    }
+    },
 }

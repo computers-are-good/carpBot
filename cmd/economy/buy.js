@@ -10,7 +10,7 @@ const { developerIds } = require(path.join(__dirname, "../../configs.json"))
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('buy')
-        .addStringOption(option => option.setName("item").setDescription("Item to buy"))
+        .addStringOption(option => option.setName("item").setDescription("Item to buy").setRequired(true))
         .addStringOption(option => option.setName("quantity").setDescription("How much you want to buy"))
         .setDescription('Buys something from the shop!'),
     async execute(interaction) {

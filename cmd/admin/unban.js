@@ -12,7 +12,7 @@ module.exports = {
         const adminsList = JSON.parse(fs.readFileSync(path.join(__dirname, "../../configs.json"))).developerIds;
         const playerToUnban = interaction.options.getUser("player");
         if (!adminsList.includes(interaction.user.id)) {
-            await interaction.reply("You are not an admin!");
+            await interaction.reply("Hey, you're not an admin! What are you doing?");
             return;
         }
         let bannedList = []
