@@ -25,11 +25,16 @@ module.exports = {
 			await command.execute(interaction);
 		} catch (error) {
 			console.error(error);
-			if (interaction.replied || interaction.deferred) {
-				await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-			} else {
-				await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+			try {
+				if (interaction.replied || interaction.deferred) {
+					await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+				} else {
+					await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+				}
+			} catch {
+				console.log("An error occurred but we couldn't tell the Discord servers this has happened...");
 			}
+
 		}
 	},
 };

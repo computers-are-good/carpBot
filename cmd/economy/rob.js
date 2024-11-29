@@ -32,7 +32,6 @@ module.exports = {
 			return;
 		}
 
-
 		const time = new Date().getTime();
 		let percentageToRob = 0.1;
 		let moneyRobbed = Math.floor(targetPlayerData.moneyOnHand * percentageToRob);
