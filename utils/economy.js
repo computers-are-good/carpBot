@@ -4,7 +4,7 @@ const path = require('node:path');
 const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
 const { createUserData } = require(path.join(__dirname, "/createUserData"));
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
-const dataLocks = require(path.join(__dirname, "/datalocks"))
+const dataLocks = require(path.join(__dirname, "/datalocks"));
 
 module.exports = {
     formatMoney: function (val) {

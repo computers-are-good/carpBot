@@ -46,36 +46,39 @@ module.exports = {
 
 		dataLocks.lockData(targetPlayerId);
 		dataLocks.lockData(interaction.user.id);
+		try {
+			economyUtils.confirmation(interaction, `Preparing to rob ${targetPlayer.username} for ${economyUtils.formatMoney(moneyRobbed)} with a ${successChance * 100}% chance of success. Are you sure?`).then(val => {
+				let { confirmed, response } = val;
+				if (confirmed) {
+					if (Math.random() < successChance) {
+						//success
+						targetPlayerData.moneyOnHand -= moneyRobbed;
+						userInfo.moneyOnHand += moneyRobbed;
+						response.edit("Successfully robbed the guy!");
+					} else {
+						targetPlayerData.moneyOnHand += moneyLostOnFail;
+						userInfo.moneyOnHand -= moneyLostOnFail;
+						response.edit(`You failed robbing the guy. You lost ${economyUtils.formatMoney(moneyLostOnFail)}`);
+					}
+					targetPlayerData.lastGotRobbed = time;
+					userInfo.lastRobbedSomeone = time;
 
-		economyUtils.confirmation(interaction, `Preparing to rob ${targetPlayer.username} for ${economyUtils.formatMoney(moneyRobbed)} with a ${successChance * 100}% chance of success. Are you sure?`).then(val => {
-			let { confirmed, response } = val;
-			if (confirmed) {
-				if (Math.random() < successChance) {
-					//success
-					targetPlayerData.moneyOnHand -= moneyRobbed;
-					userInfo.moneyOnHand += moneyRobbed;
-					response.edit("Successfully robbed the guy!");
+					fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+					fs.writeFileSync(path.join(__dirname, `../../userdata/${targetPlayerId}`), JSON.stringify(targetPlayerData));
 				} else {
-					targetPlayerData.moneyOnHand += moneyLostOnFail;
-					userInfo.moneyOnHand -= moneyLostOnFail;
-					response.edit(`You failed robbing the guy. You lost ${economyUtils.formatMoney(moneyLostOnFail)}`);
+					response.edit("Robbery cancelled.");
 				}
-				targetPlayerData.lastGotRobbed = time;
-				userInfo.lastRobbedSomeone = time;
-
-				fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
-				fs.writeFileSync(path.join(__dirname, `../../userdata/${targetPlayerId}`), JSON.stringify(targetPlayerData));
-			} else {
-				response.edit("Robbery cancelled.");
-			}
+				dataLocks.unlockData(targetPlayerId);
+				dataLocks.unlockData(interaction.user.id);
+			}, val => {
+				let { response } = val;
+				response.edit("The player was not robbed (you have timed out).");
+				dataLocks.unlockData(targetPlayerId);
+				dataLocks.unlockData(interaction.user.id);
+			});
+		} catch {
 			dataLocks.unlockData(targetPlayerId);
 			dataLocks.unlockData(interaction.user.id);
-		}, val => {
-			let { response } = val;
-			response.edit("The player was not robbed (you have timed out).");
-			dataLocks.unlockData(targetPlayerId);
-			dataLocks.unlockData(interaction.user.id);
-		});
-
+		}
 	},
 };

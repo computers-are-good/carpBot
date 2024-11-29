@@ -6,6 +6,9 @@ const { dungeon } = require(path.join(__dirname, "../../utils/dungeon"));
 const { dungeonText } = require(path.join(__dirname, "../../data/dungeontext"));
 const dataLocks = require(path.join(__dirname, "../../utils/datalocks"));
 const { dungeonList } = require(path.join(__dirname, "../../data/dungeonlist"));
+const { calculateLevelUp } = require(path.join(__dirname, "../../utils/calculateLevelUp"));
+const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('dungeon')
@@ -23,7 +26,6 @@ module.exports = {
                 meetCriteria = false;
                 for (let j in userInfo.dungeonsCompleted) {
                     const dungeon = userInfo.dungeonsCompleted[j];
-                    console.log(dungeon);
                     if (dungeon.seriesName == dungeonList[i].seriesName) {
                         meetCriteria = true;
                         break;
@@ -48,7 +50,7 @@ module.exports = {
         if (targetDungeon == "list") {
             let list = [];
             for (let i of availableDungeons) {
-                let completed = dungeonCompleted(availableDungeons[i]);
+                let completed = dungeonCompleted(dungeonList[i]);
                 list.push(`${i}: ${dungeonList[i].content} ${completed ? "(complete)" : ""}`);
             }
             economyUtils.displayList(interaction, list);
@@ -62,25 +64,82 @@ module.exports = {
             }
 
             if (canDoDungeon) {
+                const targetDungeonInfo = dungeonList[targetDungeon];
                 dataLocks.lockData(interaction.user.id);
-
-                dungeon(interaction, dungeonText.test, userInfo).then(success => {
-                    success.response.edit({ content: `Dungeon ${success.completed ? "completed" : "not completed"}.`, components: [] });
-                    if (!userInfo.dungeonsCompleted.includes(targetDungeon))
-                        userInfo.dungeonsCompleted.push({
-                            name: targetDungeon,
-                            seriesName: dungeonList[targetDungeon].seriesName,
-                            seriesNumber: dungeonList[targetDungeon].seriesNumber
-                        });
-                    dataLocks.unlockData(interaction.user.id);
-                    fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
-
-                },
-                    fail => {
-                        fail.response.edit({ content: "Dungeon not completed", components: [] });
+                try {
+                    dungeon(interaction, dungeonText.test, userInfo).then(success => {
+                        if (success.completed) {
+                            let stringToSend = `Dungeon completed!`
+                            let previouslyCompleted = dungeonCompleted(targetDungeonInfo);
+                            if (!previouslyCompleted)
+                                userInfo.dungeonsCompleted.push({
+                                    name: targetDungeon,
+                                    seriesName: dungeonList[targetDungeon].seriesName,
+                                    seriesNumber: dungeonList[targetDungeon].seriesNumber
+                                });
+                            let moneyGained = targetDungeonInfo.completeRewards.money;
+                            let expGained = targetDungeonInfo.completeRewards.exp;
+    
+                            stringToSend += `\nGained ${economyUtils.formatMoney(moneyGained)} and ${expGained} exp`;
+                            if ("item" in targetDungeonInfo.completeRewards) {
+                                stringToSend += `\nYou gained the following items:`
+                                for (let item in targetDungeonInfo.completeRewards.item) {
+                                    const itemObj = targetDungeonInfo.completeRewards.item[item];
+                                    userInfo = economyUtils.addToInventory(userInfo,
+                                        itemObj.id,
+                                        itemObj.quantity);
+                                    const shopItemObj = shopItems[itemObj.id]
+                                    stringToSend += ` ${shopItemObj.name} x${itemObj.quantity}`
+                                }
+                            }
+                            if (!previouslyCompleted) {
+                                stringToSend += `\nFirst time completion rewards:`
+                                moneyGained += targetDungeonInfo.firstCompleteRewards.exp;
+                                expGained += targetDungeonInfo.firstCompleteRewards.money;
+                                stringToSend += `\n${economyUtils.formatMoney(moneyGained)} and ${expGained} exp`;
+    
+                                if ("item" in targetDungeonInfo.firstCompleteRewards) {
+                                    stringToSend += `\nFirst time completion items:`
+                                    for (let item in targetDungeonInfo.firstCompleteRewards.item) {
+                                        const itemObj = targetDungeonInfo.firstCompleteRewards.item[item];
+                                        userInfo = economyUtils.addToInventory(userInfo, 
+                                            itemObj.id, 
+                                            itemObj.quantity);
+                                        const shopItemObj = shopItems[itemObj.id]
+                                        stringToSend += ` ${shopItemObj.name} x${itemObj.quantity}`
+                                    }
+                                }
+                            }
+                            const levelUpResults = calculateLevelUp(userInfo.level, userInfo.expRequired, expGained);
+                            if (levelUpResults.newLevel !== userInfo.level) {
+                                stringToSend += `\nCongratulations! You levelled up (${userInfo.level} -> ${levelUpResults.newLevel})`
+                            } else {
+    
+                            }
+                            userInfo.level = levelUpResults.newLevel;
+                            userInfo.moneyOnHand += moneyGained;
+                            userInfo.expRequired = levelUpResults.expRequired;
+    
+                            success.response.edit({ content: stringToSend, components: [] });
+    
+                        } else {
+                            success.response.edit({ content: "Dungeon failed", components: [] });
+                        }
                         dataLocks.unlockData(interaction.user.id);
                         fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
-                    });
+    
+                    },
+                        fail => {
+                            fail.response.edit({ content: "Dungeon not completed", components: [] });
+                            dataLocks.unlockData(interaction.user.id);
+                            fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+                        });
+                } catch (e){
+                    console.log(e);
+                    dataLocks.unlockData(interaction.user.id);
+                }
+
+                
             }
         }
     },

@@ -8,7 +8,6 @@ const { monsters } = require(path.join(__dirname, "../data/monsters"));
 module.exports = {
     dungeon: async function (interaction, script, userInfo) {
         return new Promise(async (res, rej) => {
-
             const previous = new ButtonBuilder()
                 .setCustomId('Previous')
                 .setLabel('Stop')
@@ -21,8 +20,6 @@ module.exports = {
 
             const row = new ActionRowBuilder().addComponents(previous, next);
 
-            const pageSize = 5;
-            let pageOffset = 0;
             let itemIndex = 0;
             let battleWon = true;
             function processCurrentIndex(itemIndex) {
@@ -62,6 +59,9 @@ Block: ${enemyStats.block}`;
                         enemyStats[stat] *= script[itemIndex].content.enemyMultipliers[stat] ?? 1;
                     }
                 }
+                for (let stat in enemyStats) 
+                    if (enemyStats[stat] <= 0) 
+                        enemyStats[stat] = 1;
                 return enemyStats;
             }
             function battle(itemIndex) {
