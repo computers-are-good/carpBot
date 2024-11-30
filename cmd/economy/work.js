@@ -5,7 +5,7 @@ const { createUserData } = require(path.join(__dirname, "../../utils/createUserD
 const { calculateLevelUp } = require(path.join(__dirname, "../../utils/calculateLevelUp"));
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
-const jobs = require(path.join(__dirname, "../../data/worktext"));
+const {jobs} = require(path.join(__dirname, "../../data/worktext"));
 
 module.exports = {
     data: new SlashCommandBuilder()
