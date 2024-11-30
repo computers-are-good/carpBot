@@ -18,7 +18,8 @@ module.exports = {
             "Usage: `/balance`. Checks your level, and much money you have in your wallet and bank account."
         ],
         ban: [
-            "Usage: `/ban [user]`. Admin only. Once a user is banned CrapBot will not respond to them, not even with a \"You are banned\" message."
+            "Usage: `/ban [user]`. Admin only. Once a user is banned CrapBot will not respond to them, not even with a \"You are banned\" message.",
+            "**Be careful! You can ban yourself!**"
         ],
         buy: [
             "Usage: `/buy [item] [quantity]`. Buys items from the shop. Use `/shop` to see which items are for sale. If not specified, quantity will default to 1."
@@ -67,6 +68,9 @@ module.exports = {
         ],
         shop: [
             "Usage: `/shop [category]`. Browses the shop. You can optionally enter a category and only items in that category will be shown to you."
+        ],
+        unban: [
+            "Usage: `/unban [user]`. Unbans a user."
         ],
         upgradehouse: [
             "Usage: `/upgradehouse [address|\"list\"]`. Spend money to upgrade a house. Upgraded houses generate more rent.",
