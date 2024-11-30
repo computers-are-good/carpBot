@@ -5,50 +5,8 @@ const { createUserData } = require(path.join(__dirname, "../../utils/createUserD
 const { calculateLevelUp } = require(path.join(__dirname, "../../utils/calculateLevelUp"));
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
+const jobs = require(path.join(__dirname, "../../data/worktext"));
 
-const jobs = [
-    "helped the NSA blow up the sun",
-    "fried some noodles",
-    "made some high-grade explosive pidgeons",
-    "exploited the weak and vulnerable for their own profit",
-    "danced a really funny dance",
-    "mucked around but still got paid",
-    "performed the greatest song you've heard in your lives",
-    "gave up all hope",
-    "yelled into a void",
-    "ran some DnD sessions",
-    "told Rupee he was the best DM",
-    'helped the neighbour commit arson',
-    'roasted people on StackOverflow',
-    'learned how to hack',
-    "studied chemistry and gave up",
-    "delivered newspapers warning us of the world's end",
-    "laid down in a corner and cried",
-    "did normal, totally legitimate work",
-    "yelled at his workers like a true capitalist boss",
-    "yearned for the mines and answered to his desires",
-    "found a really big diamond",
-    "washed some windows... in space",
-    "went to Mars and back in 3 minutes",
-    "had a big think about the meaning of life and all that is contained within",
-    "drank some water to test if there are poisons in it",
-    "overthrew the monarchy for the rebellion",
-    "starred in a teen dystopia where lettuce is banned",
-    "was cast to play a scarecrow and stood in the field for 18 hours",
-    "broke and fixed all of modern physics",
-    "found some money off the ground",
-    "guarded a rich couple's tomato sauce bottle for 30 minutes",
-    "helped with the regularly scheduled sun maintainance",
-    "made stupid motorbike sounds with their mouth while running down the street",
-    "stood at the border and said \"I love you\" to deter migrants",
-    "Spread misinformation regarding the upcoming election",
-    "dug a really big hole",
-    "spilled the government secrets",
-    "gave a public speech about hot dogs... made of real dog",
-    "did some wheelies in the McDonalds parking lot",
-    "drove on the highway at 300 kilometers an hour for \"science\"",
-    "invented some new words"
-]
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('work')
