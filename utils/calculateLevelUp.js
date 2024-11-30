@@ -8,7 +8,7 @@ function calculateLevelUp(currentLevel, expRequired, expToGain, levelUpFunction 
 
     if (expRequired <= expToGain) {
         newLevel++
-        return calculateLevelUp(newLevel, expRequiredToLevelUp(newLevel), expToGain - expRequired)
+        return calculateLevelUp(newLevel, levelUpFunction(newLevel), expToGain - expRequired, levelUpFunction);
     } else {
         newExpRequired = newExpRequired - expToGain
         return {

@@ -54,7 +54,15 @@ module.exports = {
             fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
         }
         function robberyFailed() {
-            userInfo = grantEffect(userInfo, "criminal",  14400);
+            let criminalDuration = 14400;
+            //Birds reduce duration of "criminal"
+            for (let pet of userInfo.pets) {
+                if (pet.id == 103) {
+                    criminalDuration -= Math.floor(criminalDuration * 0.02 * pet.bondLevel);
+                }
+                if (criminalDuration <= 10) criminalDuration = 10; 
+            }
+            userInfo = grantEffect(userInfo, "criminal",  criminalDuration);
             dataLocks.unlockData(interaction.user.id);
             fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
         }

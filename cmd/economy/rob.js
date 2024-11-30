@@ -63,6 +63,14 @@ module.exports = {
 						targetPlayerData.moneyOnHand += moneyLostOnFail;
 						userInfo.moneyOnHand -= moneyLostOnFail;
 						response.edit(`You failed robbing the guy. You lost ${economyUtils.formatMoney(moneyLostOnFail)}`);
+						let criminalDuration = 300;
+						//Birds reduce duration of "criminal"
+						for (let pet of userInfo.pets) {
+							if (pet.id == 103) {
+								criminalDuration -= Math.floor(criminalDuration * 0.02 * pet.bondLevel);
+							}
+							if (criminalDuration <= 10) criminalDuration = 10; 
+						}
 						userInfo = grantEffect(userInfo, "criminal", 300);
 					}
 					targetPlayerData.lastGotRobbed = time;
