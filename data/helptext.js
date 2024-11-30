@@ -6,7 +6,7 @@ module.exports = {
             "To start, `/work` to earn some money. Use `/shop` to see which items are for sale and `/buy` to purchase them. Use `/balance` to check your account balance.",
             "As you work, you will earn experience and level up. This will increase your stats in combat, as and increase the amount of money you get from working.",
             "Beware! Other players can steal your money with `/steal`. You can buy various items to defend yourself, or turn on passive mode with `/passivemode`.",
-            "Want to fight monsters? Go and enter a dungeon with `/dungeon`! Use `/dungeonlist` to see which dungeons are available.",
+            "Want to fight monsters? Level up, then go and enter a dungeon with `/dungeon`! Use `/dungeonlist` to see which dungeons are available.",
             "Some commands like `/rob` and `/dungeon` will lock you in. CrapBot will not respond to other commands until you finish what you're doing.",
             "That's all for now! We hope you have fun with CrapBot.",
         ],
@@ -49,7 +49,7 @@ module.exports = {
         ],
         dungeonlist: [
             "Usage: `/dungeonlist [incomplete]`, where completed is true or false. If incomplete is true, then only the dungeons you haven't done will be shown.",
-            "This command lists all the dungeons you can do and filters out the ones you can't."
+            "This command lists all the dungeons you can do and filters out the ones you can't. If a dungeon is not shown to you, try levelling up."
         ],
         inventory: [
             "Usage: `/inventory`. Displays what's in your inventory."
