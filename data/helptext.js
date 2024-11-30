@@ -5,6 +5,7 @@ module.exports = {
             "Earn money, role play, enter dungeons, and more!",
             "To start, `/work` to earn some money. Use `/shop` to see which items are for sale and `/buy` to purchase them. Use `/balance` to check your account balance.",
             "As you work, you will earn experience and level up. This will increase your stats in combat, as and increase the amount of money you get from working.",
+            "Want to level up fast? Buy EXP potions from the shop, or use `/learn`.",
             "Beware! Other players can steal your money with `/steal`. You can buy various items to defend yourself, or turn on passive mode with `/passivemode`.",
             "Want to fight monsters? Level up, then go and enter a dungeon with `/dungeon`! Use `/dungeonlist` to see which dungeons are available.",
             "Some commands like `/rob` and `/dungeon` will lock you in. CrapBot will not respond to other commands until you finish what you're doing.",
@@ -56,6 +57,9 @@ module.exports = {
         ],
         leaderboard: [
             "Usage: `/leaderboard`. Displays the top 5 users with the most money. This is updated periodically."
+        ],
+        learn: [
+            "Ūsage: `/learn [skill]`. Spend money to learn a skill and gain a large amount of experience."
         ],
         passivemode: [
             "Usage: `/passivemode`. Toggles passive mode on or off. While you are in passive mode, you cannot be grieved by commands like `/rob`, but you also can't grieve other players",

@@ -15,7 +15,7 @@ module.exports = {
         const dataPath = path.join(__dirname, `../../userdata/${interaction.user.id}`);
         userInfo = await economyUtils.prefix(interaction);
 
-        let expGained = Math.ceil((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 0.8) * 2 + 4);
+        let expGained = Math.ceil((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 0.6) * 2 + 4);
         let moneyGained = Math.ceil(((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.35) + 1) * 100);
         let effect = economyUtils.hasEffect(userInfo, ["coffee", "greenTea", "redTea", "criminal"]);
         userInfo = effect.userInfo;

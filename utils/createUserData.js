@@ -25,7 +25,7 @@ module.exports = {
             effects: [],
             friends: [],
             dungeonsCompleted: [],
-
+            learned: [],
         }
         let usernames = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/usernames.json`)).toString("UTF-8"));
         usernames[userId] = username;

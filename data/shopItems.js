@@ -231,7 +231,7 @@ module.exports = {
             displayInInventory: true,
             category: ["object", "consumable"],
             description: "Gain 250 exp.",
-            cost: 5000,
+            cost: 149900,
             emoji: "🧋",
             oneOff: false,
             addToInventory: true,
