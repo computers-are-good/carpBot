@@ -122,6 +122,7 @@ module.exports = {
         });
         const collectorFilter = i => i.user.id === interaction.user.id;
         async function updateButtons() {
+            let stringToReply;
             try {
                 buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
                 if (buttons.customId === 'Previous') {
@@ -138,7 +139,7 @@ module.exports = {
                     updateButtons();
                 }
             } catch (e) {
-                await response.edit({ content: "Finished displaying list.", components: [] })
+                await response.edit({ content: stringToReply, components: [] })
             }
         }
         updateButtons();
