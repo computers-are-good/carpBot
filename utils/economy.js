@@ -6,6 +6,7 @@ const { createUserData } = require(path.join(__dirname, "/createUserData"));
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const dataLocks = require(path.join(__dirname, "/datalocks"));
 const { dungeonList } = require(path.join(__dirname, "../data/dungeonlist"));
+const {defaultUserData} = require(path.join(__dirname, "../data/defaultuserdata"));
 
 module.exports = {
     formatMoney: function (val) {
@@ -52,6 +53,11 @@ module.exports = {
             if (dataLocks.dataIsLocked(interaction.user.id)) {
                 rej(0);
                 return;
+            }
+            for (let key in defaultUserData) {
+                if (!(key in userInfo)) {
+                    userInfo[key] = defaultUserData[key];
+                }
             }
             acc(userInfo);
         });
