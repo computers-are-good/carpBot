@@ -10,13 +10,13 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('upgradehouse')
 		.setDescription('Upgrade your houses to earn more money!')
-		.addStringOption(option => option.setName("house").setDescription("Name of house to upgrade (or list)").setRequired(true)),
+		.addStringOption(option => option.setName("house").setDescription("Name of house to upgrade (or list)")),
 	async execute(interaction) {
         userInfo = await economyUtils.prefix(interaction);
 		const house = interaction.options.getString("house");
 		let houses = userInfo.inventory.filter(e => e.Id == 1008);
 
-		if (house == "list") {
+		if (house == "list" || !house) {
 			let listToDisplay = [];
 			houses.forEach(e => {
 				listToDisplay.push(`${scriptingUtils.choice(["🏡","🏠","🏘️","🏚️"])} ${e.metadata.Address}: level ${e.metadata.level}`);

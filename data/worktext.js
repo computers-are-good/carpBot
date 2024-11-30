@@ -1,6 +1,6 @@
 module.exports = {
     jobs: [
-        "helped the NSA blow up the sun",
+    "helped the NSA blow up the sun",
     "fried some noodles",
     "made some high-grade explosive pidgeons",
     "exploited the weak and vulnerable for their own profit",
@@ -51,5 +51,6 @@ module.exports = {
     "extracted deadly venom from a spider",
     "deleted two lines of code and took down the internet",
     "did some lite trolling",
+    "pretended to be a raindrop and jumped out a plane"
     ]
 }
