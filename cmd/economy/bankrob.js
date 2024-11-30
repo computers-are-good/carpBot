@@ -5,7 +5,7 @@ const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
 const dataLocks = require(path.join(__dirname, "../../utils/datalocks"));
 const {grantEffect} = require(path.join(__dirname, "../../utils/grantEffect"));
-const {masterQuestionsList} = require(path.join(__dirname, "../../utils/grantEffect"));
+const {masterQuestionsList} = require(path.join(__dirname, "../../data/bankrobquestions"));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,6 +14,14 @@ module.exports = {
     async execute(interaction) {
         userInfo = await economyUtils.prefix(interaction);
         const collectorFilter = i => i.user.id === interaction.user.id;
+
+        //can't rob banks while you are criminal
+        let effectResults = economyUtils.hasEffect(userInfo, ["criminal"]);
+        userInfo = effectResults.userInfo;
+        if (effectResults.effects.criminal) {
+            await interaction.reply(`You're already a criminal! Don't want to turn yourself into the one place police love to guard. (Remaining: ${effectResults.effectDurations.criminal}s)`);
+            return;
+        }
 
         const trueResponse = new ButtonBuilder()
             .setCustomId('true')
@@ -73,7 +81,7 @@ module.exports = {
                     if (userResponse == questions[questionAsked].correct) {
                         questionAsked++
                         if (questionAsked >= 5) {
-                            response.edit({content: "Congratulations! You are successful", components: []});
+                            response.edit({content: `Congratulations! You are successful and have gained ${economyUtils.formatMoney(moneyToGain)}`, components: []});
                             robberySuccessful();
                             
                         } else {
