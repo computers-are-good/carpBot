@@ -45,8 +45,8 @@ module.exports = {
             }
             if (userInfo.username != interaction.user.username) {
                 userInfo.username = interaction.user.username;
-                let usernames = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/${usernames}`)).toString("UTF-8"));
-                usernames[userId] = interaction.user.username;
+                let usernames = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/usernames.json`)).toString("UTF-8"));
+                usernames[interaction.user.id] = interaction.user.username;
                 fs.writeFileSync(path.join(__dirname, `../userdata/${usernames}`), JSON.stringify(usernames));
             }
             if (dataLocks.dataIsLocked(interaction.user.id)) {

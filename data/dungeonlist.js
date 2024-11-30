@@ -5,7 +5,7 @@ module.exports = {
             seriesNumber: 1,
             seriesName: "test",
             requirements: {
-                level: 300
+                level: 3
             },
             completeRewards: {
                 exp: 50,

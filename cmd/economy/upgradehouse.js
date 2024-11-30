@@ -21,7 +21,7 @@ module.exports = {
 			houses.forEach(e => {
 				listToDisplay.push(`${scriptingUtils.choice(["🏡","🏠","🏘️","🏚️"])} ${e.metadata.Address}: level ${e.metadata.level}`);
 			});
-			economyUtils.displayList(interaction, listToDisplay);
+			await economyUtils.displayList(interaction, listToDisplay);
 			return;
 		}
 		let houseFound = false;

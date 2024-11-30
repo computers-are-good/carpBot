@@ -29,7 +29,7 @@ module.exports = {
             correct: true
         },
         {
-            question: "If `x = √2 x √2` then is a irrational number",
+            question: "If `x = √2 x √2` then x is a irrational number",
             correct: false
         },
         {

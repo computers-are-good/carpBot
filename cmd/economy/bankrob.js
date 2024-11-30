@@ -81,7 +81,7 @@ module.exports = {
                     if (userResponse == questions[questionAsked].correct) {
                         questionAsked++
                         if (questionAsked >= 5) {
-                            response.edit({content: `Congratulations! You are successful and have gained ${economyUtils.formatMoney(moneyToGain)}`, components: []});
+                            response.edit({content: `Congratulations! You are successful and have gained ${economyUtils.formatMoney(moneyToBeEarned)}`, components: []});
                             robberySuccessful();
                             
                         } else {

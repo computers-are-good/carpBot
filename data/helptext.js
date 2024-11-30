@@ -21,6 +21,12 @@ module.exports = {
             "Usage: `/ban [user]`. Admin only. Once a user is banned CrapBot will not respond to them, not even with a \"You are banned\" message.",
             "**Be careful! You can ban yourself!**"
         ],
+        bankrob: [
+            "Usage: `/bankrob`. Go and rob a bank! In order to be successful, you must answer 5 true or false questions correctly.",
+            "If you are successful, you will get a large amount of money!",
+            "If you fail, either by answering incorrectly or by timing out, you will become a criminal and must lie low for 4 hours.",
+            "This means you cannot work or rob another bank until the effect expires."
+        ],
         buy: [
             "Usage: `/buy [item] [quantity]`. Buys items from the shop. Use `/shop` to see which items are for sale. If not specified, quantity will default to 1."
         ],
