@@ -16,6 +16,7 @@ module.exports = {
                 maxHealth: 100,
                 attack: 10,
             },
+            pets:[],
             moneyBankAccount: 0,
             megaGem: 0,
             passiveMode: false,

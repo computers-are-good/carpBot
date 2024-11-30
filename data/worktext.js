@@ -51,6 +51,8 @@ module.exports = {
     "extracted deadly venom from a spider",
     "deleted two lines of code and took down the internet",
     "did some lite trolling",
-    "pretended to be a raindrop and jumped out a plane"
+    "pretended to be a raindrop and jumped out a plane",
+    "undefined",
+    "[object Object]"
     ]
 }
