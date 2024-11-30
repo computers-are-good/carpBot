@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
-const { createUserData } = require(path.join(__dirname, "../../utils/createUserData"));
 const { calculateLevelUp } = require(path.join(__dirname, "../../utils/calculateLevelUp"));
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
@@ -34,6 +33,21 @@ module.exports = {
         if (effect.effects.redTea) {
             expGained = Math.ceil(expGained * 3);
         }
+
+        //Effects of pets
+        for (let pet of userInfo.pets) {
+            if (pet.id == 100) { //dog
+                moneyGained *= pet.bondLevel * 1.2
+                moneyGained = Math.floor(moneyGained);
+            }
+            if (pet.id == 101) { //cat
+                expGained *= pet.bondLevel * 1.1
+                expGained = Math.floor(expGained);
+            }
+        }
+
+        if (typeof moneyGained !== "number" || typeof expGained !== "number") throw new Error("Money Gained or Exp Gained is not a number. Please check your code!");
+        
         userInfo.moneyOnHand += moneyGained;
         let { newLevel, newExpRequired } = calculateLevelUp(userInfo.level, userInfo.expRequired, expGained);
 

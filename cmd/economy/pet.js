@@ -2,38 +2,49 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { petsList } = require(path.join(__dirname, "../../data/petslist"));
+const { calculateLevelUp } = require(path.join(__dirname, "../../utils/calculateLevelUp"));
 
+const petMessages = [
+    "You took {PETNAME} on a walk.",
+    "You patted {PETNAME}'s head"
+]
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('petbuy')
-        .setDescription('Buy or look at a list of pets.')
-        .addStringOption(option => option.setName("pet").setDescription("Which pet do you want to buy?")),
-    async execute(interaction) {
+	data: new SlashCommandBuilder()
+		.setName('pet')
+		.setDescription('Pet a pet!')
+        .addStringOption(option => option.setName("pet").setDescription("Which pet do you want to pet?")),
+	async execute(interaction) {
         userInfo = await economyUtils.prefix(interaction);
-        const petToBuy = interaction.options.getString("pet");
-        function userHasPet(petId) {
-            for (let i in userInfo.pets) {
-                if (i == petId) {
-                    return true;
-                }
-            }
-            return false;
+        const selectedPet = interaction.options.getString("pet");
+        let toPet;
+        if (userInfo.pets.length == 0) {
+            await interaction.reply(`Welcome to the CrapBot pets system! To get started, buy a pet with \`/petbuy\`.`);
         }
-        const petsToBuy = [];
-        for (let pet in petsList) {
-            if (!userHasPet(petsList[pet].id)) {
-                petsToBuy.push(petsList[pet]);
+        for (let pet of userInfo.pets) {
+            if (pet.name.toLowerCase() == selectedPet.toLowerCase() || petsList[pet.id].name.toLowerCase() == selectedPet.toLowerCase()) {
+                toPet = pet;
             }
         }
-        if (!petToBuy) {
-            const listToDisplay = [];
-            for (let i of petsToBuy) {
-                listToDisplay.push(`${i.name}: ${i.description}\n`);
-            }
-            economyUtils.displayList(interaction, listToDisplay);
+        if (!toPet) {
+            await interaction.reply(`You don't have that pet! Reply with the name of the pet, or the type of pet.`);
+            return;
         }
+        let pointsGained = scriptingUtils.randIntBetween(1, 5);
+        const levelUpResults = calculateLevelUp(toPet.bondLevel, toPet.pointsUntilIncrease, pointsGained, level => 100 + level * 50);
+        let stringToReply = scriptingUtils.choice(petMessages).replace("{PETNAME}", toPet.name);
+        stringToReply += `\nGained ${pointsGained} bond points.`;
 
+        if (levelUpResults.newLevel !== toPet.bondLevel) {
+            stringToReply += `\nYour bond with ${toPet.name} has deepened! (${toPet.bondLevel} -> ${levelUpResults.newLevel})`;
+        } else {
+            stringToReply += `\nYou need ${levelUpResults.newExpRequired} more points to increase your bond with ${toPet.name}`;
+        }
+        toPet.bondLevel = levelUpResults.newLevel;
+        toPet.pointsUntilIncrease = levelUpResults.newExpRequired;
 
-    },
+        await interaction.reply(stringToReply);
+        fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+	},
 };
