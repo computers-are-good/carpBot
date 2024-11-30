@@ -182,7 +182,6 @@ module.exports = {
                 rej({ confirmed: false, response: response });
             }
         });
-
     },
     addToInventory: function (userInfo, itemId, quantity, metadataParameters) {
         const itemData = shopItems[itemId];

@@ -4,7 +4,6 @@ const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 
-
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('daily')

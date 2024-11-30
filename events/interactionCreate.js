@@ -27,9 +27,9 @@ module.exports = {
 			console.error(error);
 			try {
 				if (interaction.replied || interaction.deferred) {
-					await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+					await interaction.followUp({ content: `F U C K! ${error.message}`, ephemeral: true });
 				} else {
-					await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+					await interaction.reply({ content: `F U C K! ${error.message}`, ephemeral: true });
 				}
 			} catch {
 				console.log("An error occurred but we couldn't tell the Discord servers this has happened...");
