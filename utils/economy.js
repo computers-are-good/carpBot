@@ -284,10 +284,10 @@ module.exports = {
         let priceMultiplier = 1;
         for (let pet of userInfo.pets) {
             if (pet.id == 104) { //rabbits reduce the price of items
-                priceMultiplier -= 0.005 * pet.bondLevel;
+                priceMultiplier -= 0.0025 * pet.bondLevel;
             }
         }
-        if (priceMultiplier <= 0.1) priceMultiplier = 0.1;
+        if (priceMultiplier <= 0.5) priceMultiplier = 0.5;
         return Math.floor(shopItem.cost * priceMultiplier);
     }
 }
