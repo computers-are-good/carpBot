@@ -269,5 +269,15 @@ module.exports = {
         playerStats.attack = userInfo.combat.attack + Math.floor(userInfo.combat.attack * userInfo.level / 3);
         playerStats.block = userInfo.combat.block + Math.floor(userInfo.combat.block * userInfo.level / 3);
         return playerStats
+    },
+    determinePrice: function(userInfo, shopItem) {
+        let priceMultiplier = 1;
+        for (let pet of userInfo.pets) {
+            if (pet.id == 104) { //rabbits reduce the price of items
+                priceMultiplier -= 0.005 * pet.bondLevel;
+            }
+        }
+        if (priceMultiplier <= 0.1) priceMultiplier = 0.1;
+        return Math.floor(shopItem.cost * priceMultiplier);
     }
 }

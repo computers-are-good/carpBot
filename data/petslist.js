@@ -4,7 +4,7 @@ module.exports = {
             name: "Dog",
             cost: 50000,
             description: "A man's best friend! Raise your bond level with your dog to earn more money while working!",
-            names: ["Felix", "Aurelia", "Finn", "Theodore", "Violet", "Arlo", "Luna", "Charlotte", "Milo", "Hazel", "Kai", "Henry", "Mae", "Freya"]
+            names: ["Felix", "Aurelia", "Finn", "Theodore", "Violet", "Arlo", "Luna", "Charlotte", "Milo", "Hazel", "Kai", "Henry", "Mae", "Freya", "Nero"]
         },
         101: {
             name: "Cat",
@@ -23,6 +23,12 @@ module.exports = {
             cost: 500000,
             description: "A pet birb will help you escape from your morally questionable actions! Raise your bond level with your bird to reduce the duration of the \"criminal\" effect.",
             names: ["Barry", "Duke", "Fred", "Jasper", "Ala", "Angelica", "Bella", "Chloe", "Isabella", "Kira", "April"]
+        },
+        104: {
+            name: "Rabbit",
+            cost: 25000,
+            description: "A pet rabbit will reduce the cost of items at the shop!",
+            names: ["Nibles", "Flower", "Thumper", "Blueberry", "Lily", "Peter", "Scruffy"]
         }
     }
 }

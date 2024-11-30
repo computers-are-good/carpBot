@@ -39,10 +39,10 @@ module.exports = {
             return;
         }
         const itemData = shopItems[itemId];
+        const cost = economyUtils.determinePrice(userInfo, itemData);
 
-
-        if (itemData.cost * quantity > userInfo.moneyOnHand) {
-            await interaction.reply(`This item costs ${economyUtils.formatMoney(shopItems[itemId].cost * quantity)} but user only has ${economyUtils.formatMoney(userInfo.moneyOnHand)} on hand. Try working or withdrawing money from your bank account.`);
+        if (cost * quantity > userInfo.moneyOnHand) {
+            await interaction.reply(`This item costs ${economyUtils.formatMoney(cost * quantity)} but user only has ${economyUtils.formatMoney(userInfo.moneyOnHand)} on hand. Try working or withdrawing money from your bank account.`);
             return;
         }
 
@@ -83,7 +83,7 @@ module.exports = {
         }
 
 
-        userInfo.moneyOnHand -= itemData.cost * quantity;
+        userInfo.moneyOnHand -= cost * quantity;
         userInfo = economyUtils.addToInventory(userInfo, itemId, quantity);
 
         fs.writeFileSync(dataPath, JSON.stringify(userInfo));

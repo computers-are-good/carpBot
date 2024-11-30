@@ -25,7 +25,7 @@ module.exports = {
         }
         for (let i = 0; i < objectsFittingCriteria.length; i++) {
             let object = objectsFittingCriteria[i];
-            stringsToDisplay.push(`${object.emoji ? object.emoji : ""} **${object.name}** (${economyUtils.formatMoney(object.cost)}):\nCategories: ${object.category.join(", ")}\n${object.description}\n`);
+            stringsToDisplay.push(`${object.emoji ? object.emoji : ""} **${object.name}** (${economyUtils.formatMoney(economyUtils.determinePrice(userInfo, object))}):\nCategories: ${object.category.join(", ")}\n${object.description}\n`);
         }
 
         economyUtils.displayList(interaction, stringsToDisplay)
