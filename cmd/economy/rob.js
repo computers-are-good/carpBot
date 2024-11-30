@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const dataLocks = require(path.join(__dirname, "../../utils/datalocks"));
+const {grantEffect} = require(path.join(__dirname, "../../utils/grantEffect.js"));
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -62,6 +63,7 @@ module.exports = {
 						targetPlayerData.moneyOnHand += moneyLostOnFail;
 						userInfo.moneyOnHand -= moneyLostOnFail;
 						response.edit(`You failed robbing the guy. You lost ${economyUtils.formatMoney(moneyLostOnFail)}`);
+						userInfo = grantEffect(userInfo, "criminal", 300);
 					}
 					targetPlayerData.lastGotRobbed = time;
 					userInfo.lastRobbedSomeone = time;

@@ -35,8 +35,13 @@ module.exports = {
 
         let expGained = Math.ceil((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 0.5) * 2 + 4);
         let moneyGained = Math.ceil(((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 0.5) + 1) * 100);
-        let effect = economyUtils.hasEffect(userInfo, ["coffee", "greenTea", "redTea"]);
+        let effect = economyUtils.hasEffect(userInfo, ["coffee", "greenTea", "redTea", "criminal"]);
         userInfo = effect.userInfo;
+
+        if (effect.effects.criminal) {
+            await interaction.reply(`You are a criminal! Better lay low for a while (remaining: ${effect.effectDurations.criminal}s)`);
+            return;
+        }
         if (effect.effects.coffee) {
             moneyGained += 150;
             expGained += userInfo.level;
