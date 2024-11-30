@@ -54,11 +54,15 @@ module.exports = {
                 rej(0);
                 return;
             }
+
+            let infoModified = false;
             for (let key in defaultUserData) {
                 if (!(key in userInfo)) {
                     userInfo[key] = defaultUserData[key];
+                    infoModified = true;
                 }
             }
+            if (infoModified) fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
             acc(userInfo);
         });
     },
