@@ -278,7 +278,7 @@ module.exports = {
         playerStats.maxHealth = userInfo.combat.maxHealth + 5 * userInfo.level;
         playerStats.attack = userInfo.combat.attack + Math.floor(userInfo.combat.attack * userInfo.level / 3);
         playerStats.block = userInfo.combat.block + Math.floor(userInfo.combat.block * userInfo.level / 3);
-        return playerStats
+        return playerStats;
     },
     determinePrice: function(userInfo, shopItem) {
         let priceMultiplier = 1;
@@ -287,7 +287,7 @@ module.exports = {
                 priceMultiplier -= 0.0025 * pet.bondLevel;
             }
         }
-        if (priceMultiplier <= 0.5) priceMultiplier = 0.5;
+        if (priceMultiplier <= 0.42) priceMultiplier = 0.42;
         return Math.floor(shopItem.cost * priceMultiplier);
     }
 }
