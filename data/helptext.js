@@ -1,5 +1,8 @@
 module.exports = {
     helpText: {
+        apple: [
+            "Usage: `/apple`. 🍎 Plays bad apple."
+        ],
         basicHelp: [
             "Welcome to crapbot!",
             "Earn money, role play, enter dungeons, and more!",
@@ -68,6 +71,16 @@ module.exports = {
         pay: [
             "Usage: `/pay [player] [amount]`. Pays another player with the specified amount of money."
         ],
+        pet: [
+            "Usage: `/pet [pet]`. Do something together with your pet to raise your bond level with them."
+        ],
+        petbuy: [
+            "Usage: `/petbuy [type]`. Buys a pet (e.g. dog or cat). If type is not specified, then CrapBot will list all types of pet available."
+        ],
+        petrename: [
+            "Usage: `/petrename [oldname] [newname]`. Renames a pet. For oldname, you can either put the type of pet (e.g. dog) or the name of your pet.",
+            "Please note that a profanity filter is in use."
+        ],
         ping: [
             "Usage: `/ping`. CrapBot will reply with \"Pong!\""
         ],
@@ -96,6 +109,5 @@ module.exports = {
             "Usage: `/work`. Work to earn some money and experience. The amount earned is based on your level.",
             "Various items like Green Tea and Coffee can increase the amount of experience or money you earn."
         ]
-
     }
 }
