@@ -7,29 +7,30 @@ const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const dataLocks = require(path.join(__dirname, "/datalocks"));
 const { dungeonList } = require(path.join(__dirname, "../data/dungeonlist"));
 const {defaultUserData} = require(path.join(__dirname, "../data/defaultuserdata"));
+const {profanities} = require(path.join(__dirname, "../data/profanities"));
 
 module.exports = {
     formatMoney: function (val) {
         a = val / 100;
-        a = a.toString().split('')
-        let output = []
-        let tempSliced = []
+        a = a.toString().split('');
+        let output = [];
+        let tempSliced = [];
         if (a.includes('.')) {
-            let index = a.indexOf('.')
-            let spliceCount = a.length - index
-            tempSliced = a.splice(index, spliceCount)
-            a.splice(index, spliceCount)
+            let index = a.indexOf('.');
+            let spliceCount = a.length - index;
+            tempSliced = a.splice(index, spliceCount);
+            a.splice(index, spliceCount);
         }
         for (let i = a.length - 1; i >= 0; i--) {
             if (Math.abs(a.length - 1 - i) % 3 == 0) {
-                output.unshift(`,`)
-                output.unshift(a[i])
+                output.unshift(`,`);
+                output.unshift(a[i]);
             } else {
-                output.unshift(a[i])
+                output.unshift(a[i]);
             }
         }
-        output.pop()
-        return `$${output.join('').concat(tempSliced.join(''))}`
+        output.pop();
+        return `$${output.join('').concat(tempSliced.join(''))}`;
     },
     prefix: function (interaction) {
         return new Promise((acc, rej) => {
@@ -289,5 +290,12 @@ module.exports = {
         }
         if (priceMultiplier <= 0.42) priceMultiplier = 0.42;
         return Math.floor(shopItem.cost * priceMultiplier);
+    },
+    profanityCheck: function(phrase) { //returning false means you have failed the profanity check (i.e. the phrase contains bad words)
+        phrase = phrase.toLowerCase();
+        for (let profanity in profanities) {
+            if (phrase.includes(profanity)) return false;
+        }
+        return true;
     }
 }
