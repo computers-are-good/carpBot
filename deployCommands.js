@@ -19,7 +19,7 @@ for (const folder of commandFolders) {
 			let category;
 			switch (folder) {
 				case "admin":
-					category = "🚫 Admin only:";
+					category = "🚫 Admin only";
 					break;
 				case "economy":
 					category = "💵 Economy";
@@ -28,7 +28,9 @@ for (const folder of commandFolders) {
 					category = "🥳 Fun";
 					break;
 				default:
-					category = folder;
+					const folderArr = folder.split('');
+					folderArr[0] = folderArr[0].toUpperCase()
+					category = folderArr.join("");
 			}			
 			command.data.description = `${category}: ${command.data.description}`;
 			commands.push(command.data.toJSON());
