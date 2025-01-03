@@ -1,3 +1,4 @@
+//https://discordjs.guide/creating-your-bot/
 const { Events } = require('discord.js');
 
 module.exports = {

@@ -1,3 +1,4 @@
+//based off https://discordjs.guide/creating-your-bot/
 const { Events } = require('discord.js');
 const path = require('node:path');
 const fs = require("fs");

@@ -1,3 +1,4 @@
+//based off https://discordjs.guide/creating-your-bot/
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
