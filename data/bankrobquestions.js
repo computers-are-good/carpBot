@@ -80,5 +80,9 @@ module.exports = {
             question: "Hydrogen has 1 proton, 1 neutron, and 1 electron.",
             correct: false
         },
+        {
+            question: "'True' starts with a t",
+            correct: true
+        }
     ]
 }

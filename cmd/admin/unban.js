@@ -5,7 +5,7 @@ const path = require('node:path');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('unban')
-		.setDescription('Admin only.')
+		.setDescription('Get off Santa\'s naughty list.')
         .addUserOption(option => option.setName("player").setDescription("Player to unban")),
 	async execute(interaction) {
         //are we an admin?
