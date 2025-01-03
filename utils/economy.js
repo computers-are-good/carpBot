@@ -34,7 +34,7 @@ module.exports = {
     },
     prefix: function (interaction) {
         return new Promise((acc, rej) => {
-            const dataPath = path.join(__dirname, `../userdata/${interaction.user.id}`);
+            const dataPath = path.join(__dirname, `../userdata/economy/${interaction.user.id}`);
 
             if (!fs.existsSync(dataPath)) {
                 createUserData(interaction.user.id, interaction.user.username);
@@ -49,7 +49,7 @@ module.exports = {
                 userInfo.username = interaction.user.username;
                 let usernames = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/usernames.json`)).toString("UTF-8"));
                 usernames[interaction.user.id] = interaction.user.username;
-                fs.writeFileSync(path.join(__dirname, `../userdata/${usernames}`), JSON.stringify(usernames));
+                fs.writeFileSync(path.join(__dirname, `../userdata/economy/${usernames}`), JSON.stringify(usernames));
             }
             if (dataLocks.dataIsLocked(interaction.user.id)) {
                 rej(0);
@@ -63,7 +63,7 @@ module.exports = {
                     infoModified = true;
                 }
             }
-            if (infoModified) fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+            if (infoModified) fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
             acc(userInfo);
         });
     },
@@ -95,7 +95,7 @@ module.exports = {
         return toReturn;
     },
     saveData: function (userId, userInfo) {
-        fs.writeFileSync(path.join(__dirname, `../userdata/${userId}`), JSON.stringify(userInfo));
+        fs.writeFileSync(path.join(__dirname, `../userdata/economy/${userId}`), JSON.stringify(userInfo));
 
     },
     displayList: async function (interaction, items, itemsPerPage) {

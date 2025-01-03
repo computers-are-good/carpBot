@@ -51,7 +51,7 @@ module.exports = {
         function robberySuccessful() {
             userInfo.moneyOnHand += moneyToBeEarned;
             dataLocks.unlockData(interaction.user.id);
-            fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+            fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
         }
         function robberyFailed() {
             let criminalDuration = 14400;
@@ -64,7 +64,7 @@ module.exports = {
             }
             userInfo = grantEffect(userInfo, "criminal",  criminalDuration);
             dataLocks.unlockData(interaction.user.id);
-            fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+            fs.writeFileSync(path.join(__dirname, `../../userdata//economy/${interaction.user.id}`), JSON.stringify(userInfo));
         }
 
         let response = await interaction.reply({

@@ -34,6 +34,6 @@ module.exports = {
 
         await interaction.reply(`Withdrew ${economyUtils.formatMoney(amountOfMoney)}`)
 
-        fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+        fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
     },
 };

@@ -9,6 +9,6 @@ module.exports = {
         const data = defaultUserData;
         data.username = username;
         fs.writeFileSync(path.join(__dirname, `../userdata/usernames.json`), JSON.stringify(usernames));
-        fs.writeFileSync(path.join(__dirname, `../userdata/${userId}`), JSON.stringify(data));
+        fs.writeFileSync(path.join(__dirname, `../userdata/economy/${userId}`), JSON.stringify(data));
     }
 };

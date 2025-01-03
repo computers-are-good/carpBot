@@ -17,7 +17,7 @@ module.exports = {
 				if (now - userInfo.lastTogglePassiveMode > 86400000) {
 					userInfo.passiveMode = !userInfo.passiveMode;
 					userInfo.lastTogglePassiveMode = now;
-					fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+					fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
 					await response.edit(`Passive mode is now ${userInfo.passiveMode ? "enabled" : "disabled"}.`);
 				} else {
 					await response.edit("Please wait at least a day before toggling passive mode.");

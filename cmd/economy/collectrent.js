@@ -22,7 +22,7 @@ module.exports = {
 		if (typeof moneyGained == "number")
 			userInfo.moneyOnHand += moneyGained;
 
-		const dataPath = path.join(__dirname, `../../userdata/${interaction.user.id}`)
+		const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`)
 		fs.writeFileSync(dataPath, JSON.stringify(userInfo));
 		await interaction.reply(`Gained ${economyUtils.formatMoney(moneyGained)}.`);
 

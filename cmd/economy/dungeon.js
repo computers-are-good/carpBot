@@ -123,13 +123,13 @@ module.exports = {
                         await success.response.edit({ content: "Dungeon not completed.", components: [] });
                     }
                     dataLocks.unlockData(interaction.user.id);
-                    fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+                    fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
     
                 },
                     fail => {
                         fail.response.edit({ content: "Dungeon not completed", components: [] });
                         dataLocks.unlockData(interaction.user.id);
-                        fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+                        fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
                     });
             } catch (e) {
                 console.log(e);

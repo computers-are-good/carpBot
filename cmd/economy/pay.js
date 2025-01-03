@@ -21,11 +21,11 @@ module.exports = {
         const targetPlayer = interaction.options.getUser("player")
         const targetPlayerId = targetPlayer.id;
 
-        if (!fs.existsSync(path.join(__dirname, `../../userdata/${targetPlayerId}`))) {
+        if (!fs.existsSync(path.join(__dirname, `../../userdata/economy/${targetPlayerId}`))) {
             await interaction.reply("This user has not used CrapBot.");
             return;
         }
-        let targetPlayerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../../userdata/${targetPlayerId}`)).toString("UTF-8"));
+        let targetPlayerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../../userdata/economy/${targetPlayerId}`)).toString("UTF-8"));
 
         amountOfMoney *= 100;
         amountOfMoney = Math.floor(amountOfMoney);
@@ -39,7 +39,7 @@ module.exports = {
 
         await interaction.reply(`Paid ${targetPlayer.username} ${economyUtils.formatMoney(amountOfMoney)}`)
 
-        fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
-        fs.writeFileSync(path.join(__dirname, `../../userdata/${targetPlayerId}`), JSON.stringify(targetPlayerData));
+        fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+        fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${targetPlayerId}`), JSON.stringify(targetPlayerData));
     },
 };

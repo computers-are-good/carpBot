@@ -45,6 +45,6 @@ module.exports = {
         toPet.pointsUntilIncrease = levelUpResults.newExpRequired;
 
         await interaction.reply(stringToReply);
-        fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+        fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
 	},
 };

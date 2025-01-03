@@ -45,7 +45,7 @@ module.exports = {
 			userInfo.abilitiesImproved[category]++;
 			userInfo.combat[category] += valueToIncrease;
 			response.edit(`Increased ${statToImproveReadable} (${userInfo.combat[category] - valueToIncrease} -> ${userInfo.combat[category]}).`)
-			fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+			fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
 		} else {
 			response.edit("Training cancelled.");
 		}

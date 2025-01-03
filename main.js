@@ -13,7 +13,7 @@ const commandFolders = fs.readdirSync(foldersPath);
 //delete all .lock files
 const lockFiles = fs.readdirSync(path.join(__dirname, "/userdata")).filter(file => file.startsWith('.lock'));
 lockFiles.forEach(e => {
-	fs.rmSync(path.join(__dirname, `/userdata/${e}`))
+	fs.rmSync(path.join(__dirname, `/userdata/economy/${e}`));
 });
 
 for (const folder of commandFolders) {

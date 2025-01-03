@@ -17,7 +17,7 @@ module.exports = {
 		let targetPlayer = interaction.options.getUser("player");
 		let targetPlayerId = targetPlayer.id;
 
-		if (!fs.existsSync(path.join(__dirname, `../../userdata/${targetPlayerId}`))) {
+		if (!fs.existsSync(path.join(__dirname, `../../userdata/economy/${targetPlayerId}`))) {
 			await interaction.reply("This user has not used CrapBot.");
 			return;
 		}
@@ -26,7 +26,7 @@ module.exports = {
 			await interaction.reply("You are in passive mode.");
 			return;
 		}
-		let targetPlayerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../../userdata/${targetPlayerId}`)).toString("UTF-8"));
+		let targetPlayerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../../userdata/economy/${targetPlayerId}`)).toString("UTF-8"));
 
 		if (targetPlayerData.passiveMode) {
 			await interaction.reply("That user is in passive mode. Please leave them alone.");
@@ -76,8 +76,8 @@ module.exports = {
 					targetPlayerData.lastGotRobbed = time;
 					userInfo.lastRobbedSomeone = time;
 
-					fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
-					fs.writeFileSync(path.join(__dirname, `../../userdata/${targetPlayerId}`), JSON.stringify(targetPlayerData));
+					fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+					fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${targetPlayerId}`), JSON.stringify(targetPlayerData));
 				} else {
 					response.edit("Robbery cancelled.");
 				}

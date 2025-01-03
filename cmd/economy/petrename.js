@@ -36,7 +36,7 @@ module.exports = {
             petObject.name = newName;
 
             await interaction.reply(`Pet ${oldNameToUseInMsg} renamed to ${petObject.name}.`);
-            fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+            fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
         }
         //Has the user entered a type of pet e.g. "Dog"?
         for (let pet in petsList) {

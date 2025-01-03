@@ -14,7 +14,7 @@ module.exports = {
         .addStringOption(option => option.setName("quantity").setDescription("How much you want to buy"))
         .setDescription('Buys something from the shop!'),
     async execute(interaction) {
-        const dataPath = path.join(__dirname, `../../userdata/${interaction.user.id}`)
+        const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`)
         userInfo = await economyUtils.prefix(interaction);
 
         let itemToBuy = interaction.options.getString("item");

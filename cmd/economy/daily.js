@@ -19,6 +19,6 @@ module.exports = {
         userInfo.moneyOnHand += moneyGained;
         userInfo.lastDaily = today;
         interaction.reply(`Thanks for logging in on ${today}. You have gained ${economyUtils.formatMoney(moneyGained)} dollars.`);
-        fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+        fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
 	},
 };

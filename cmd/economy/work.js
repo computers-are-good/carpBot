@@ -11,7 +11,7 @@ module.exports = {
         .setName('work')
         .setDescription('Work to make some money!'),
     async execute(interaction) {
-        const dataPath = path.join(__dirname, `../../userdata/${interaction.user.id}`);
+        const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`);
         userInfo = await economyUtils.prefix(interaction);
 
         let expGained = Math.ceil((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 0.6) * 2 + 4);

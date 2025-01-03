@@ -72,7 +72,7 @@ module.exports = {
                 }
             );
             await interaction.reply(`You have brought a ${selectedPet.name} named ${petName}.`);
-            fs.writeFileSync(path.join(__dirname, `../../userdata/${interaction.user.id}`), JSON.stringify(userInfo));
+            fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
         }
     },
 };
