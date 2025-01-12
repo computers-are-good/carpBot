@@ -10,7 +10,7 @@ module.exports = {
         .setDescription('🍎'),
     async execute(interaction) {
         const frames = JSON.parse(fs.readFileSync(path.join(__dirname, "../../data/apple.json"), "utf-8"))
-        let response = await interaction.reply('🍎');
+        let response = await interaction.reply('🍎 Not working on mobile? Go on a computer.');
         framesPlayer(response, frames, 33.3333333333333333);
     },
 };
