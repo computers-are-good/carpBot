@@ -10,5 +10,6 @@ module.exports = {
     },
     settings: {
         costOfNuke: 160,
+        costOfPlutonium: 1000,
     }
 }

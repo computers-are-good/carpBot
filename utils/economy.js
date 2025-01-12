@@ -63,7 +63,7 @@ module.exports = {
                     infoModified = true;
                 }
             }
-            if (infoModified) fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+            if (infoModified) fs.writeFileSync(dataPath, JSON.stringify(userInfo));
             acc(userInfo);
         });
     },

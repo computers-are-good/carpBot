@@ -19,7 +19,7 @@ module.exports = {
 			try {
 				amountOfNukes = parseFloat(stringOption);
 			} catch {
-				await interaction.reply("Failed to parse that amount of nukes! Did you enter a number? Do not include dollar signs in your amount");
+				await interaction.reply("Failed to parse that amount of nukes! Did you enter a number?");
 				return;
 			}
 		}

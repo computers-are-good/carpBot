@@ -2,7 +2,7 @@
 const { Events } = require('discord.js');
 const path = require('node:path');
 const fs = require("fs");
-const gachaCommands = ["buynukes"];
+const gachaCommands = ["buynukes", "buyplutonium"];
 const { createGachaData } = require(path.join(__dirname, "../utils/createUserData"));
 
 module.exports = {
