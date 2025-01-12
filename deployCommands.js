@@ -2,7 +2,7 @@
 const { REST, Routes } = require('discord.js');
 const { clientId, guildId } = require('./configs.json');
 const fs = require('node:fs');
-const token = fs.readFileSync("./secret.txt").toString("UTF-8")
+const token = JSON.parse(fs.readFileSync("configs.json", "utf-8")).token;
 const path = require('node:path');
 
 const commands = [];
