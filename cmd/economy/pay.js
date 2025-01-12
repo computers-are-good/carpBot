@@ -16,7 +16,8 @@ module.exports = {
         try {
             amountOfMoney = parseFloat(interaction.options.getString("amount"));
         } catch {
-            interaction.reply("Failed to parse that amount of money! Did you enter a number? Do not include dollar signs in your amount");
+            await interaction.reply("Failed to parse that amount of money! Did you enter a number? Do not include dollar signs in your amount");
+            return;
         }
         const targetPlayer = interaction.options.getUser("player")
         const targetPlayerId = targetPlayer.id;

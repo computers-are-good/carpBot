@@ -27,6 +27,8 @@ for (const folder of commandFolders) {
 				case "fun":
 					category = "🥳 Fun";
 					break;
+				case "gacha":
+					category = "⭐ Gacha"
 				default:
 					const folderArr = folder.split('');
 					folderArr[0] = folderArr[0].toUpperCase()
