@@ -23,6 +23,11 @@ module.exports = {
 				return;
 			}
 		}
+		if (Number.isNaN(amountOfNukes)) {
+			await interaction.reply("Failed to parse that amount of nukes! Did you enter a number?");
+			return;
+		}
+		
 		const cost = amountOfNukes * settings.costOfNuke;
 		if (userInfo.plutonium < cost) {
 			await interaction.reply("You don't have that much plutonium!");

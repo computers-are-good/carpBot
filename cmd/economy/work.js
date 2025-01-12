@@ -16,6 +16,8 @@ module.exports = {
 
         let expGained = Math.ceil((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 0.6) * 2 + 4);
         let moneyGained = Math.ceil(((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.35) + 1) * 100);
+        if (economyUtils.inventoryHasItem(userInfo.inventory, 1009)) moneyGained += 5000;
+        
         let effect = economyUtils.hasEffect(userInfo, ["coffee", "greenTea", "redTea", "criminal"]);
         userInfo = effect.userInfo;
 
@@ -49,6 +51,7 @@ module.exports = {
         if (typeof moneyGained !== "number" || typeof expGained !== "number") throw new Error("Money Gained or Exp Gained is not a number. Please check your code!");
         
         userInfo.moneyOnHand += moneyGained;
+        userInfo.lifetimeMoneyFromWorking += moneyGained;
         let { newLevel, newExpRequired } = calculateLevelUp(userInfo.level, userInfo.expRequired, expGained);
 
         let stringToWrite =

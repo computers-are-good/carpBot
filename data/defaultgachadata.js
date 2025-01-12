@@ -11,5 +11,7 @@ module.exports = {
     settings: {
         costOfNuke: 160,
         costOfPlutonium: 1000,
+        twoStarRate: 0.05,
+        eightStarRate: 0.001,
     }
 }

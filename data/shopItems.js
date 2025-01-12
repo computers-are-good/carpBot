@@ -1,9 +1,29 @@
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../utils/economy"));
-const {grantEffect} = require(path.join(__dirname, "../utils/grantEffect.js"))
+const { grantEffect } = require(path.join(__dirname, "../utils/grantEffect.js"))
 const scriptingUtils = require(path.join(__dirname, "../utils/scripting"));
-const {calculateLevelUp} = require(path.join(__dirname, "../utils/calculateLevelUp"));
-
+const { calculateLevelUp } = require(path.join(__dirname, "../utils/calculateLevelUp"));
+/* 
+{
+    name: Name of the item that will be displayed in /shop and /inventory,
+    category: List the categories the item belongs to:
+        - All items should have the "object" category
+        - If an item has a "consumable" category, the quantity will decrease by 1 when it is used.
+        - If an item has a "testing" category, it can only be brought by admins.
+        - Other categories, like "income" can be listed to better help users find the items.
+    displayInInventory: if set to false, the item will not be displayed when /inventory is used.
+    cost: the cost of the item in cents,
+    metadataToDisplay: The metadata tags in this array will be displayed when /inventory is used.
+    emoji: the emoji representing the data which will be added before the item name in /shop and /inventory
+    oneOff: if set to true, crapbot will only allow the item to be brought once
+    addToInventory: if set to false, the item will not be added to the user's inventory
+    scripts:
+        - generateMetadata: generates the metadata of an item to be stored in the inventory.
+        - onUse: is ran when the item is used.
+        - onBuy: is ran when the item is brought.
+        - canBuy: Can the user buy this item?
+}
+*/
 module.exports = {
     shopItems: {
         1001: {
@@ -17,10 +37,10 @@ module.exports = {
             oneOff: true,
             addToInventory: true,
             scripts: {
-                generateMetadata: function() {
-                    return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
+                generateMetadata: function () {
+                    return { Colour: Math.random() < 0.5 ? "White" : "Black" }
                 },
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
@@ -40,10 +60,10 @@ module.exports = {
             oneOff: true,
             addToInventory: true,
             scripts: {
-                generateMetadata: function() {
-                    return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
+                generateMetadata: function () {
+                    return { Colour: Math.random() < 0.5 ? "White" : "Black" }
                 },
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
@@ -63,10 +83,10 @@ module.exports = {
             emoji: "🎲",
             addToInventory: true,
             scripts: {
-                generateMetadata: function() {
-                    return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
+                generateMetadata: function () {
+                    return { Colour: Math.random() < 0.5 ? "White" : "Black" }
                 },
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
@@ -86,10 +106,10 @@ module.exports = {
             oneOff: true,
             addToInventory: true,
             scripts: {
-                generateMetadata: function() {
-                    return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
+                generateMetadata: function () {
+                    return { Colour: Math.random() < 0.5 ? "White" : "Black" }
                 },
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
@@ -109,10 +129,10 @@ module.exports = {
             oneOff: true,
             addToInventory: true,
             scripts: {
-                generateMetadata: function() {
-                    return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
+                generateMetadata: function () {
+                    return { Colour: Math.random() < 0.5 ? "White" : "Black" }
                 },
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
@@ -132,10 +152,10 @@ module.exports = {
             emoji: "🎲",
             addToInventory: true,
             scripts: {
-                generateMetadata: function() {
-                    return {Colour:  Math.random() < 0.5 ? "White" : "Black"}
+                generateMetadata: function () {
+                    return { Colour: Math.random() < 0.5 ? "White" : "Black" }
                 },
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
@@ -154,7 +174,7 @@ module.exports = {
             oneOff: true,
             addToInventory: true,
             scripts: {
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
@@ -174,11 +194,72 @@ module.exports = {
             oneOff: false,
             addToInventory: true,
             scripts: {
-                generateMetadata: function() {
+                generateMetadata: function () {
                     return {
                         lastCollected: new Date().getTime(),
                         level: 1,
                         Address: `${Math.ceil(Math.random() * 5000)} ${scriptingUtils.choice(["Clozer Drive", "Moon Street", "Heaven Road"])}`
+                    }
+                }
+            }
+        },
+        1009: {
+            name: "Degree",
+            category: ["object", "income"],
+            displayInInventory: false,
+            description: "If only getting a degree was this simple in real life! Buy this to earn an extra $50 when working.",
+            cost: 888800,
+            metadataToDisplay: ["subject"],
+            emoji: "📄",
+            oneOff: true,
+            addToInventory: true,
+            scripts: {
+                generateMetadata: function () {
+                    return {
+                        subject: "Psychology"
+                    }
+                },
+                canBuy: function (userInfo) {
+                    let messagesToUser;
+                    if (userInfo.level < 10 || userInfo.lifetimeMoneyFromWorking < 500000) {
+                        if (userInfo.level < 10) {
+                            messagesToUser += "You must be level 10 or above to buy this item. "
+                        }
+                        if (userInfo.lifetimeMoneyFromWorking < 500000) {
+                            messagesToUser += `You must have earned at least $5,000 from working before buying this (you have earned ${economyUtils.formatMoney(userInfo.lifetimeMoneyFromWorking)})`
+                        }
+                        return {
+                            canBuy: false,
+                            messageToUser: messagesToUser
+                        }
+                    }
+
+                    return {
+                        canBuy: true
+                    }
+                }
+            }
+        },
+        1010: {
+            name: "Adventurer's boots",
+            category: ["object", "income"],
+            displayInInventory: false,
+            description: "Buy these boots to go on epic adventures in dungeons!",
+            cost: 50000,
+            metadataToDisplay: [""],
+            emoji: "🥾",
+            oneOff: true,
+            addToInventory: true,
+            scripts: {
+                canBuy: function (userInfo) {
+                    if (userInfo.level < 2) {
+                        return {
+                            canBuy: false,
+                            messageToUser: "You must be level 3 or above to buy this item."
+                        }
+                    }
+                    return {
+                        canBuy: true
                     }
                 }
             }
@@ -193,7 +274,7 @@ module.exports = {
             oneOff: false,
             addToInventory: true,
             scripts: {
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     let won = Math.random() < 0.1;
                     if (won) {
                         userInfo.moneyOnHand += 2000;
@@ -216,7 +297,7 @@ module.exports = {
             oneOff: false,
             addToInventory: true,
             scripts: {
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     userInfo = grantEffect(userInfo, "coffee", 60);
                     return {
                         userInfo: userInfo,
@@ -236,8 +317,62 @@ module.exports = {
             oneOff: false,
             addToInventory: true,
             scripts: {
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     let results = calculateLevelUp(userInfo.level, userInfo.expRequired, 250);
+                    let outputString = ""
+                    if (userInfo.level != results.newLevel) {
+                        outputString = `Congratulations! Levelled up (${userInfo.level} -> ${results.newLevel})`;
+                    }
+                    userInfo.level = results.newLevel;
+                    userInfo.expRequired = results.newExpRequired;
+
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: outputString
+                    }
+                }
+            }
+        },
+        2006: {
+            name: "Medium EXP Potion",
+            displayInInventory: true,
+            category: ["object", "consumable"],
+            description: "Gain 2500 exp.",
+            cost: 999900,
+            emoji: "🧋",
+            oneOff: false,
+            addToInventory: true,
+            scripts: {
+                onUse: function (userInfo, metadata) {
+                    let results = calculateLevelUp(userInfo.level, userInfo.expRequired, 2500);
+                    let outputString = ""
+                    if (userInfo.level != results.newLevel) {
+                        outputString = `Congratulations! Levelled up (${userInfo.level} -> ${results.newLevel})`;
+                    }
+                    userInfo.level = results.newLevel;
+                    userInfo.expRequired = results.newExpRequired;
+
+                    return {
+                        userInfo: userInfo,
+                        metadata: metadata,
+                        messageToUser: outputString
+                    }
+                }
+            }
+        },
+        2007: {
+            name: "Large EXP Potion",
+            displayInInventory: true,
+            category: ["object", "consumable"],
+            description: "Gain 10000 exp.",
+            cost: 1999900,
+            emoji: "🧋",
+            oneOff: false,
+            addToInventory: true,
+            scripts: {
+                onUse: function (userInfo, metadata) {
+                    let results = calculateLevelUp(userInfo.level, userInfo.expRequired, 1000);
                     let outputString = ""
                     if (userInfo.level != results.newLevel) {
                         outputString = `Congratulations! Levelled up (${userInfo.level} -> ${results.newLevel})`;
@@ -263,7 +398,7 @@ module.exports = {
             oneOff: false,
             addToInventory: true,
             scripts: {
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     userInfo = grantEffect(userInfo, "greenTea", 60);
                     return {
                         userInfo: userInfo,
@@ -283,7 +418,7 @@ module.exports = {
             oneOff: false,
             addToInventory: true,
             scripts: {
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     userInfo = grantEffect(userInfo, "redTea", 60);
                     return {
                         userInfo: userInfo,
@@ -293,7 +428,7 @@ module.exports = {
                 }
             }
         },
-        2010: {
+        2011: {
             name: "Apple",
             displayInInventory: true,
             category: ["object", "consumable", "healing"],
@@ -303,7 +438,7 @@ module.exports = {
             oneOff: false,
             addToInventory: true,
             scripts: {
-                onUse: function(userInfo, metadata) {
+                onUse: function (userInfo, metadata) {
                     userInfo.combat.health += 20;
                     if (userInfo.combat.health > userInfo.combat.maxHealth + userInfo.level * 5) userInfo.combat.health = userInfo.combat.maxHealth + userInfo.level * 5;
                     return {
@@ -333,7 +468,7 @@ module.exports = {
             emoji: "💀",
             addToInventory: false,
             scripts: {
-                onBuy: function(userData) {
+                onBuy: function (userData) {
                     userData.moneyOnHand += 2000
                 }
             }
@@ -347,7 +482,7 @@ module.exports = {
             emoji: "💀",
             addToInventory: false,
             scripts: {
-                onBuy: function(userData) {
+                onBuy: function (userData) {
                     userData.moneyOnHand += 9999999
                 }
             }

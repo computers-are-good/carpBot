@@ -82,9 +82,20 @@ module.exports = {
             }
         }
 
+        //check for the canBuy script
+        if (itemData.scripts && itemData.scripts.canBuy) {
+            let testResults = itemData.scripts.canBuy(userInfo);
+            if (!testResults.canBuy) {
+                await interaction.reply(`You do not meed the requirements to buy the item. Reason: ${testResults.messageToUser}`);
+                return;
+            }
+        }
+
 
         userInfo.moneyOnHand -= cost * quantity;
         userInfo = economyUtils.addToInventory(userInfo, itemId, quantity);
+
+        userInfo.inventory = userInfo.inventory.sort((a, b) => parseInt(a.Id) - parseInt(b.Id));
 
         fs.writeFileSync(dataPath, JSON.stringify(userInfo));
 

@@ -6,8 +6,8 @@ const { createUserData } = require(path.join(__dirname, "/createUserData"));
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const dataLocks = require(path.join(__dirname, "/datalocks"));
 const { dungeonList } = require(path.join(__dirname, "../data/dungeonlist"));
-const {defaultUserData} = require(path.join(__dirname, "../data/defaultuserdata"));
-const {profanities} = require(path.join(__dirname, "../data/profanities"));
+const { defaultUserData } = require(path.join(__dirname, "../data/defaultuserdata"));
+const { profanities } = require(path.join(__dirname, "../data/profanities"));
 
 module.exports = {
     formatMoney: function (val) {
@@ -85,7 +85,7 @@ module.exports = {
                     toReturn.effects[effect] = true;
                     toReturn.effectDurations[effect] = Math.floor((userInfo.effects[userEffect].validUntil - now) / 1000);
                     break;
-                } 
+                }
             }
             if (!effectFound) {
                 toReturn.effects[effect] = false;
@@ -198,34 +198,36 @@ module.exports = {
     addToInventory: function (userInfo, itemId, quantity, metadataParameters) {
         const itemData = shopItems[itemId];
         async function addItem(Id, quantity, metadata) {
-            let metaDataNeedsToBeGenerated = false;
-            if (metadata) metaDataNeedsToBeGenerated = true;
-            let addedToInventory = false;
+            if (itemData.addToInventory) {
+                let metaDataNeedsToBeGenerated = false;
+                if (metadata) metaDataNeedsToBeGenerated = true;
+                let addedToInventory = false;
 
-            for (let item in userInfo.inventory) {
-                if (userInfo.inventory[item].Id == Id) {
-                    if (!metaDataNeedsToBeGenerated) {
-                        userInfo.inventory[item].quantity += quantity;
-                        addedToInventory = true;
-                    } else if (scriptingUtils.deepEqual(userInfo.inventory[item].metadata, metadata)) {
-                        userInfo.inventory[item].quantity += quantity;
-                        addedToInventory = true;
+                for (let item in userInfo.inventory) {
+                    if (userInfo.inventory[item].Id == Id) {
+                        if (!metaDataNeedsToBeGenerated) {
+                            userInfo.inventory[item].quantity += quantity;
+                            addedToInventory = true;
+                        } else if (scriptingUtils.deepEqual(userInfo.inventory[item].metadata, metadata)) {
+                            userInfo.inventory[item].quantity += quantity;
+                            addedToInventory = true;
+                        }
                     }
                 }
-            }
 
-            if (!addedToInventory) {
-                let objToPush = {
-                    Id: itemId,
-                    quantity: quantity
+                if (!addedToInventory) {
+                    let objToPush = {
+                        Id: itemId,
+                        quantity: quantity
+                    }
+                    if (metaDataNeedsToBeGenerated) {
+                        objToPush.metadata = metadata;
+                    }
+                    userInfo.inventory.push(objToPush);
                 }
-                if (metaDataNeedsToBeGenerated) {
-                    objToPush.metadata = metadata;
-                }
-                userInfo.inventory.push(objToPush);
             }
         }
-        if (itemData.addToInventory) {
+        if (shopItems[itemId].scripts) {
             let metaDataNeedsToBeGenerated = (shopItems[itemId].scripts.generateMetadata != undefined);
             if (metaDataNeedsToBeGenerated) {
                 for (let i = 0; i < quantity; i++) { //each item may need to have metadata generated separately
@@ -235,13 +237,16 @@ module.exports = {
             } else {
                 addItem(itemId, quantity);
             }
+
+            if (itemData.scripts.onBuy)
+                for (let i = 0; i < quantity; i++)
+                    itemData.scripts.onBuy(userInfo);
+        } else {
+            addItem(itemId, quantity);
         }
-        if (itemData.scripts.onBuy)
-            for (let i = 0; i < quantity; i++)
-                itemData.scripts.onBuy(userInfo);
         return userInfo;
     },
-    listAvailableDungeons: function(userInfo) {
+    listAvailableDungeons: function (userInfo) {
         let availableDungeons = [];
         for (let i in dungeonList) {
             let meetCriteria = true;
@@ -267,13 +272,13 @@ module.exports = {
         }
         return availableDungeons;
     },
-    dungeonCompleted: function(userInfo, dungeonInfo) { //dungeonInfo is object from dungeonlist.js
+    dungeonCompleted: function (userInfo, dungeonInfo) { //dungeonInfo is object from dungeonlist.js
         for (let i in userInfo.dungeonsCompleted) {
             if (userInfo.dungeonsCompleted[i].seriesName == dungeonInfo.seriesName && userInfo.dungeonsCompleted[i].seriesNumber == dungeonInfo.seriesNumber) return true;
         }
         return false;
     },
-    generateUserStats: function(userInfo) {
+    generateUserStats: function (userInfo) {
         const playerStats = {};
         playerStats.health = userInfo.combat.health;
         playerStats.maxHealth = userInfo.combat.maxHealth + 5 * userInfo.level;
@@ -281,7 +286,7 @@ module.exports = {
         playerStats.block = userInfo.combat.block + Math.floor(userInfo.combat.block * userInfo.level / 3);
         return playerStats;
     },
-    determinePrice: function(userInfo, shopItem) {
+    determinePrice: function (userInfo, shopItem) {
         let priceMultiplier = 1;
         for (let pet of userInfo.pets) {
             if (pet.id == 104) { //rabbits reduce the price of items
@@ -291,11 +296,26 @@ module.exports = {
         if (priceMultiplier <= 0.42) priceMultiplier = 0.42;
         return Math.floor(shopItem.cost * priceMultiplier);
     },
-    profanityCheck: function(phrase) { //returning false means you have failed the profanity check (i.e. the phrase contains bad words)
+    profanityCheck: function (phrase) { //returning false means you have failed the profanity check (i.e. the phrase contains bad words)
         phrase = phrase.toLowerCase();
         for (let profanity in profanities) {
             if (phrase.includes(profanity)) return false;
         }
         return true;
+    },
+    inventoryHasItem: function (inventory, itemId, metadata) {
+        for (let item in inventory) {
+            if (inventory[item].Id == itemId) {
+                if (metadata) {
+                    if (scriptingUtils.deepEqual(metadata, userInfo.inventory[item].metadata)) {
+                        return true;
+                    }
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

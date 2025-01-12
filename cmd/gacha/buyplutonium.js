@@ -26,21 +26,26 @@ module.exports = {
 				return;
 			}
 		}
+		if (Number.isNaN(amountOfPlutonium)) {
+			await interaction.reply("Failed to parse that amount of plutonium! Did you enter a number?");
+			return;
+		}
+		
 		if (economyInfo.moneyOnHand == 0) {
 			await interaction.reply("You don't have any money so you can't buy any nukes. Go out there and make some money with `/work`.");
 			return;
 		}
+
 		const moneyRequired = settings.costOfPlutonium * amountOfPlutonium;
 		if (moneyRequired > economyInfo.moneyOnHand) {
 			await interaction.reply(`You don't have the needed money! The cost is ${economyUtils.formatMoney(moneyRequired)} but you only have ${economyUtils.formatMoney(userInfo.moneyOnHand)}. Keep \`/work\`ing!`);
 			return;
 		}
+
 		economyInfo.moneyOnHand -= moneyRequired;
 		await interaction.reply(`You have brought ${amountOfPlutonium} plutonium for ${economyUtils.formatMoney(moneyRequired)}.`);
 
-
 		fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(economyInfo));
 		fs.writeFileSync(path.join(__dirname, `../../userdata/gacha/${interaction.user.id}`), JSON.stringify(userInfo));
-
 	},
 };

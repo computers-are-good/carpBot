@@ -29,6 +29,12 @@ module.exports = {
             }
             economyUtils.displayList(interaction, list);
         } else {
+
+            if (!economyUtils.inventoryHasItem(userInfo.inventory, 1010)){
+                await interaction.reply("Please buy a pair of Adventurer's boots with `/buy Adventurer's boots` before starting a dungeon. It costs $500.");
+                return;
+            }
+
             let dungeonFound = false;
             for (let i of availableDungeons) {
                 if (i.toLowerCase() == dungeonInput.toLowerCase()) {
@@ -38,7 +44,7 @@ module.exports = {
                 }
             }
             if (!dungeonFound) {
-                await interaction.reply("That dungeon is not found. See the available dungeons with `/dungeon` or `/dungeonlist`.");
+                await interaction.reply("That dungeon is not found or you do not have it unlocked. See the available dungeons with `/dungeon` or `/dungeonlist`.");
                 return;
             }
             const targetDungeonInfo = dungeonList[targetDungeon];
