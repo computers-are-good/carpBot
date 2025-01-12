@@ -50,11 +50,13 @@ module.exports = {
         "Green Plains": [
             {
                 type: "text",
-                content: "The sun shines down radiantly on your skin as you enter the plains. It is a beautiful, cloudy day, perfect for a beginner's adventure. You continue walking forward."
+                content: "The sun shines down radiantly on your skin as you enter the plains. It is a beautiful, cloudy day, perfect for a beginner's adventure. You continue walking forward.",
+                img: "stream.jpg"
             },
             {
                 type: "text",
-                content: "You come across a tree standing solitarily on the horizon. You approach it, and see a small rat under the tree."
+                content: "You come across a tree standing solitarily on the horizon. You approach it, and see a small rat under the tree.",
+                img: "plains.jpg"
             },
             {
                 type: "prebattle",
@@ -72,7 +74,8 @@ module.exports = {
             },
             {
                 type: "text",
-                content: "After you defeat the rat, you wander on further into the plains. The scenery changed colour. The vast green grass become yellowed. In the distance, you see two more rats."
+                content: "After you defeat the rat, you wander on further into the plains. The scenery changed colour. The vast green grass become yellowed. In the distance, you see two more rats.",
+                img: "plainsyellowgrass.jpg"
             },
             {
                 type: "prebattle",

@@ -27,10 +27,12 @@ module.exports = {
 
             function processCurrentIndex(itemIndex) {
                 let stringToReply = "";
+                let imageToReplyWith = "";
                 let currentStep = script[itemIndex];
                 switch (currentStep.type) {
                     case "text":
                         stringToReply = script[itemIndex].content;
+                        if (script[itemIndex].img) imageToReplyWith = path.join(__dirname, `../data/dungeonimg/${script[itemIndex].img}`);
                         break;
                     case "prebattle":
                         const enemyStats = generateEnemyStats(itemIndex);
@@ -41,14 +43,22 @@ Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(25 - playerStats.at
 Block: ${playerStats.block}${scriptingUtils.generateSpaces(25 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}${scriptingUtils.generateSpaces(20 - enemyStats.block.toString().length - 7)}
 \`
 ${enemyStats.block > playerStats.attack ? "The enemy has higher block than your attack. **You will not win the fight**." : ""}`;
-                        break;                       
+                        if (enemyStats.img) {
+                            imageToReplyWith = path.join(__dirname, `../data/dungeonimg/${enemyStats.img}`);
+                        }
+                        break;
                 }
-                return stringToReply;
+
+                return {
+                    string: stringToReply,
+                    image: imageToReplyWith
+                };
             }
             function generateEnemyStats(itemIndex) {
                 const enemyName = script[itemIndex].content.name;
                 const enemyLevel = script[itemIndex].content.level ?? 1;
                 const enemyStats = scriptingUtils.deepClone(monsters[enemyName]);
+                if (enemyStats.img) delete enemyStats.img
                 for (let stat in enemyStats) {
                     enemyStats[stat] += Math.floor(enemyStats[stat] * (enemyLevel / 3))
                 }
@@ -57,9 +67,10 @@ ${enemyStats.block > playerStats.attack ? "The enemy has higher block than your 
                         enemyStats[stat] = Math.floor(enemyStats[stat] * (script[itemIndex].content.enemyMultipliers[stat] ?? 1));
                     }
                 }
-                for (let stat in enemyStats) 
-                    if (enemyStats[stat] <= 0) 
+                for (let stat in enemyStats)
+                    if (enemyStats[stat] <= 0)
                         enemyStats[stat] = 1;
+                enemyStats.img = monsters[enemyName].img;
                 return enemyStats;
             }
             function attack(dmg, target) {
@@ -92,11 +103,22 @@ ${enemyStats.block > playerStats.attack ? "The enemy has higher block than your 
                     }
                 }
             }
-            let str = processCurrentIndex(itemIndex);
-            let response = await interaction.reply({
-                content: str,
-                components: [row]
-            });
+            let response;
+            let results = processCurrentIndex(itemIndex);
+            let stringToReply = results.string;
+            if (results.image) {
+                response = await interaction.reply({
+                    content: stringToReply,
+                    components: [row],
+                    files: [{ attachment: results.image }]
+                })
+            } else {
+                response = await interaction.reply({
+                    content: stringToReply,
+                    components: [row],
+                    files: [],
+                });
+            }
             const collectorFilter = i => i.user.id === interaction.user.id;
             async function updateButtons() {
                 try {
@@ -134,20 +156,36 @@ ${enemyStats.block > playerStats.attack ? "The enemy has higher block than your 
                                         response: response
                                     });
                                 } else {
-                                    buttons.update({content: `Congratulations! You won!
-\`Health remaining: ${userInfo.combat.health}\``, components: [row]})
+                                    buttons.update({
+                                        content: `Congratulations! You won!
+\`Health remaining: ${userInfo.combat.health}\``, components: [row]
+                                    })
                                 }
                             } else {
-                                let stringToReply = processCurrentIndex(itemIndex);
+                                let results = processCurrentIndex(itemIndex);
+                                let stringToReply = results.string;
                                 if (userInfo.health <= 20) {
                                     stringToReply += "**You are low on health. Buy and use a healing item. To see healing items, go /shop healing**"
                                 }
-                                buttons.update({ content: stringToReply, components: [row] });
+                                if (results.image) {
+                                    buttons.update({
+                                        content: stringToReply,
+                                        components: [row],
+                                        files: [{ attachment: results.image }]
+                                    })
+                                } else {
+                                    buttons.update({
+                                        content: stringToReply,
+                                        components: [row],
+                                        files: [],
+                                    });
+                                }
                             }
                         }
                         updateButtons();
                     }
                 } catch (e) {
+                    console.log(e);
                     if (!weAreFinished) {
                         await response.edit({ content: "Timed out. Please start again", components: [] });
                         rej({

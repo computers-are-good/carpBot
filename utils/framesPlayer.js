@@ -14,7 +14,9 @@ module.exports = {
 					line = captions[captionsKeys[captionsKeys.length - 1]]
 				} else if (f > captionsKeys[i] && f < captionsKeys[i + 1]) {
 					line = captions[captionsKeys[i]];
-				}
+				} else if (captionsKeys.includes(f)) {
+                    line = captions[f];
+                }
 			}
             let t1 = performance.now();
             await response.edit(`\`${line}\n${frames[f]}\``)

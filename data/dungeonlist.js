@@ -45,7 +45,7 @@ module.exports = {
             seriesName: "plains",
             seriesNumber: 1,
             requirements: {
-                level: 5
+                level: 3
             },
             completeRewards: {
                 exp: 50,
