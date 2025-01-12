@@ -6,12 +6,14 @@ module.exports = {
         twoStarPity: 0,
         eightStarPity: 0,
         characters: [],
-        fallenAshes: []
+        fallenAshes: 0
     },
     settings: {
         costOfNuke: 160,
         costOfPlutonium: 1000,
         twoStarRate: 0.05,
         eightStarRate: 0.001,
+        twoStarPityLimit: 10,
+        eightStarPityLimit: 69,
     }
 }
