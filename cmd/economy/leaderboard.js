@@ -4,7 +4,7 @@ const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 
 function createLeaderboard() {
-    const dirpath = path.join(__dirname, "../../userdata");
+    const dirpath = path.join(__dirname, "../../userdata/economy");
     const dir = fs.readdirSync(dirpath);
     let leaderboard = {
         lastUpdated: new Date().getTime(),
