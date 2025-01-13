@@ -10,9 +10,9 @@ module.exports = {
 			for (let i = 0; i < captionsKeys.length; i++) {
 				if (f < captions[1]) {
 					line = captions[captionsKeys[0]]
-				} else if (f > captionsKeys[captionsKeys.length - 1]) {
+				} else if (f > captionsKeys[captionsKeys.length - 1] * 0.95) {
 					line = captions[captionsKeys[captionsKeys.length - 1]]
-				} else if (f > captionsKeys[i] && f < captionsKeys[i + 1]) {
+				} else if (f > captionsKeys[i] * 0.95 && f < captionsKeys[i + 1] * 0.95) {
 					line = captions[captionsKeys[i]];
 				} else if (captionsKeys.includes(f)) {
                     line = captions[f];

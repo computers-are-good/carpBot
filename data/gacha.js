@@ -32,6 +32,12 @@ module.exports = {
             rarity: 2,
             img: "anisa.png"
         },
+        2004: {
+            name: "Cia",
+            description: "An ordinary girl that dreams about being the protagonist of a young adult dystopian novel.",
+            rarity: 2,
+            img: "cia.png"
+        },
         8001: {
             name: "[object Object]",
             description: "[object Object]",
@@ -88,7 +94,7 @@ module.exports = {
             name: "The sun",
             description: "The closest star is always available for nuking! Although the items dropped by the sun are relatively common, they are nevertheless still highly valued.",
             oneStarPool: [1001, 1002],
-            twoStarPool: [2001, 2002, 2003],
+            twoStarPool: [2001, 2002, 2003, 2004],
             eightStarPool: [8005, 8006, 8007, 8008, 8009, 8010]
         }
     }
