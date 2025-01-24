@@ -317,5 +317,31 @@ module.exports = {
             }
         }
         return false;
+    },
+    canGriefPlayer: async function(targetPlayerId, userInfo, interaction) {
+        let canGrief = true;
+		if (!fs.existsSync(path.join(__dirname, `../userdata/economy/${targetPlayerId}`))) {
+			await interaction.reply("This user has not used CrapBot.");
+			canGrief = false;
+		}
+
+		if (userInfo.passiveMode) {
+			await interaction.reply("You are in passive mode.");
+			canGrief = false;
+		}
+		let targetPlayerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/economy/${targetPlayerId}`)).toString("UTF-8"));
+
+		if (targetPlayerData.passiveMode) {
+			await interaction.reply("That user is in passive mode. Please leave them alone.");
+			canGrief = false;
+		}
+		if (targetPlayerId == interaction.user.id) {
+			await interaction.reply("You can't grief yourself!");
+			canGrief = false;
+		}
+        return {
+            canGrief: canGrief,
+            targetUserData: targetPlayerData
+        }
     }
 }

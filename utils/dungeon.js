@@ -11,25 +11,35 @@ function battle(player, enemy) {
         if (target.shield < 0) {
             target.health += target.shield;
             target.shield = 0;
+        } else {
+            target.health--; //Minimum damage of one.
         }
         return target;
     }
-
+    let roundCounter = 0;
     while (true) {
+        //Can't defeat the enemy in 200 rounds? You probably can't defeat the enemy. You lose.
+        if (roundCounter >= 200) return false;
+
         player.shield = player.block;
         enemy.shield = enemy.block;
         attack(player.attack, enemy);
+        if (enemy.health <= 0) {
+            enemy.health = 0;
+            return true;
+        }
+
         attack(enemy.attack, player);
         if (player.health <= 0) {
             player.health = 0;
             return false;
-        } else if (enemy.health <= 0) {
-            return true;
-        }
+        } 
+        roundCounter++;
+
     }
 }
 module.exports = {
-    battle,
+    battle: battle,
     dungeon: async function (interaction, script, userInfo) {
         return new Promise(async (res, rej) => {
             let weAreFinished = false;
@@ -65,7 +75,7 @@ Health: ${playerStats.health} (max: ${playerStats.maxHealth})${scriptingUtils.ge
 Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(25 - playerStats.attack.toString().length - 8)}| Attack: ${enemyStats.attack}${scriptingUtils.generateSpaces(20 - enemyStats.attack.toString().length - 8)}
 Block: ${playerStats.block}${scriptingUtils.generateSpaces(25 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}${scriptingUtils.generateSpaces(20 - enemyStats.block.toString().length - 7)}
 \`
-${enemyStats.block > playerStats.attack ? "The enemy has higher block than your attack. **You will not win the fight**." : ""}`;
+${enemyStats.block >= playerStats.attack ? "The enemy has block higher or equal to your attack. **You will only deal damage of one per turn**" : ""}`;
                         if (enemyStats.img) {
                             imageToReplyWith = path.join(__dirname, `../data/dungeonimg/${enemyStats.img}`);
                         }

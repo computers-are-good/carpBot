@@ -15,27 +15,11 @@ module.exports = {
 
 		//search for the player
 		let targetPlayer = interaction.options.getUser("player");
-		let targetPlayerId = targetPlayer.id;
+		const targetPlayerId = targetPlayer.id
 
-		if (!fs.existsSync(path.join(__dirname, `../../userdata/economy/${targetPlayerId}`))) {
-			await interaction.reply("This user has not used CrapBot.");
-			return;
-		}
-
-		if (userInfo.passiveMode) {
-			await interaction.reply("You are in passive mode.");
-			return;
-		}
-		let targetPlayerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../../userdata/economy/${targetPlayerId}`)).toString("UTF-8"));
-
-		if (targetPlayerData.passiveMode) {
-			await interaction.reply("That user is in passive mode. Please leave them alone.");
-			return;
-		}
-		if (targetPlayerId == interaction.user.id) {
-			await interaction.reply("You can't rob yourself!");
-			return;
-		}
+		let griefTestResults = await economyUtils.canGriefPlayer(targetPlayerId, userInfo, interaction);
+		if (!griefTestResults.canGrief) return;
+		let targetPlayerData = griefTestResults.targetUserData;
 
 		const time = new Date().getTime();
 		let percentageToRob = 0.1;
