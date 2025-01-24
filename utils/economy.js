@@ -92,6 +92,7 @@ module.exports = {
                 toReturn.effectDurations[effect] = 0
             }
         }
+        userInfo.effects.yes = "yes";
         return toReturn;
     },
     saveData: function (userId, userInfo) {

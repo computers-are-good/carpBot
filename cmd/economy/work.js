@@ -17,9 +17,8 @@ module.exports = {
         let expGained = Math.ceil((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 0.6) * 2 + 4);
         let moneyGained = Math.ceil(((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.35) + 1) * 100);
         if (economyUtils.inventoryHasItem(userInfo.inventory, 1009)) moneyGained += 5000;
-        
         let effect = economyUtils.hasEffect(userInfo, ["coffee", "greenTea", "redTea", "criminal"]);
-        userInfo = effect.userInfo;
+        console.log(userInfo.effects)
 
         if (effect.effects.criminal) {
             await interaction.reply(`You are a criminal! Better lay low for a while (remaining: ${effect.effectDurations.criminal}s)`);
@@ -68,7 +67,7 @@ Wallet: **${economyUtils.formatMoney(userInfo.moneyOnHand)}**`
             stringToWrite += `\nGained ${expGained} exp. (To next level: ${newExpRequired}${effect.effects.greenTea ? `, Green tea duration remaining: ${effect.effectDurations.greenTea}s` : ""}${effect.effects.redTea ? `, Red tea duration remaining: ${effect.effectDurations.redTea}s` : ""})`;
         }
 
-        fs.writeFileSync(dataPath, JSON.stringify(userInfo));
+       // fs.writeFileSync(dataPath, JSON.stringify(userInfo));
 
         await interaction.reply(stringToWrite);
     },

@@ -43,7 +43,7 @@ ${enemyStats.block >= playerStats.attack ? "The enemy has block higher or equal 
             }
            fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
         } else {
-            response.edit(`PvP cancelled.`)
+            response.edit(`PvP cancelled.`);
         }
         
     },
