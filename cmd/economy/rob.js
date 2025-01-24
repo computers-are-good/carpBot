@@ -21,6 +21,12 @@ module.exports = {
 		if (!griefTestResults.canGrief) return;
 		let targetPlayerData = griefTestResults.targetUserData;
 
+		let effectResults = economyUtils.hasEffect(userInfo, ["criminal"]);
+        if (effectResults.criminal > 0) {
+            await interaction.reply(`You're already a criminal! You shouldn't do more crimes. (Remaining: ${effectResults.criminal}s)`);
+            return;
+        }
+
 		const time = new Date().getTime();
 		let percentageToRob = 0.1;
 		let moneyRobbed = Math.floor(targetPlayerData.moneyOnHand * percentageToRob);
@@ -55,7 +61,7 @@ module.exports = {
 							}
 							if (criminalDuration <= 10) criminalDuration = 10; 
 						}
-						userInfo = grantEffect(userInfo, "criminal", 300);
+						grantEffect(userInfo, "criminal", 300);
 					}
 					targetPlayerData.lastGotRobbed = time;
 					userInfo.lastRobbedSomeone = time;

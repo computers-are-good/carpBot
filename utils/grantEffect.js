@@ -15,6 +15,5 @@ module.exports = {
             name: effect,
             validUntil: new Date().getTime() + duration * 1000
         });
-        return userInfo;
     },
 }

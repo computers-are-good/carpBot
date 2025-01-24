@@ -17,9 +17,8 @@ module.exports = {
 
         //can't rob banks while you are criminal
         let effectResults = economyUtils.hasEffect(userInfo, ["criminal"]);
-        userInfo = effectResults.userInfo;
-        if (effectResults.effects.criminal) {
-            await interaction.reply(`You're already a criminal! Don't want to turn yourself into the one place police love to guard. (Remaining: ${effectResults.effectDurations.criminal}s)`);
+        if (effectResults.criminal > 0) {
+            await interaction.reply(`You're already a criminal! Don't want to turn yourself into the one place police love to guard. (Remaining: ${effectResults.criminal}s)`);
             return;
         }
 
@@ -62,7 +61,7 @@ module.exports = {
                 }
                 if (criminalDuration <= 10) criminalDuration = 10; 
             }
-            userInfo = grantEffect(userInfo, "criminal",  criminalDuration);
+            grantEffect(userInfo, "criminal",  criminalDuration);
             dataLocks.unlockData(interaction.user.id);
             fs.writeFileSync(path.join(__dirname, `../../userdata//economy/${interaction.user.id}`), JSON.stringify(userInfo));
         }

@@ -18,20 +18,19 @@ module.exports = {
         let moneyGained = Math.ceil(((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.35) + 1) * 100);
         if (economyUtils.inventoryHasItem(userInfo.inventory, 1009)) moneyGained += 5000;
         let effect = economyUtils.hasEffect(userInfo, ["coffee", "greenTea", "redTea", "criminal"]);
-        console.log(userInfo.effects)
 
-        if (effect.effects.criminal) {
+        if (effect.criminal > 0) {
             await interaction.reply(`You are a criminal! Better lay low for a while (remaining: ${effect.effectDurations.criminal}s)`);
             return;
         }
-        if (effect.effects.coffee) {
+        if (effect.coffee > 0) {
             moneyGained += 150;
             expGained += userInfo.level;
         }
-        if (effect.effects.greenTea) {
+        if (effect.greenTea > 0) {
             expGained = Math.ceil(expGained * 1.2);
         }
-        if (effect.effects.redTea) {
+        if (effect.redTea > 0) {
             expGained = Math.ceil(expGained * 3);
         }
 
@@ -56,7 +55,7 @@ module.exports = {
         let stringToWrite =
             `
 User ${userInfo.username} ${scriptingUtils.choice(jobs)}. 
-Gained **${economyUtils.formatMoney(moneyGained)}**. ${effect.effects.coffee ? `Coffee duration remaining: ${effect.effectDurations.coffee}s` : ""}
+Gained **${economyUtils.formatMoney(moneyGained)}**. ${effect.coffee ? `Coffee duration remaining: ${effect.coffee}s` : ""}
 Wallet: **${economyUtils.formatMoney(userInfo.moneyOnHand)}**`
 
         userInfo.expRequired = newExpRequired;
@@ -64,10 +63,10 @@ Wallet: **${economyUtils.formatMoney(userInfo.moneyOnHand)}**`
             stringToWrite += `\nLevel up! (${userInfo.level} -> ${newLevel})`;
             userInfo.level = newLevel
         } else {
-            stringToWrite += `\nGained ${expGained} exp. (To next level: ${newExpRequired}${effect.effects.greenTea ? `, Green tea duration remaining: ${effect.effectDurations.greenTea}s` : ""}${effect.effects.redTea ? `, Red tea duration remaining: ${effect.effectDurations.redTea}s` : ""})`;
+            stringToWrite += `\nGained ${expGained} exp. (To next level: ${newExpRequired}${effect.greenTea > 0 ? `, Green tea duration remaining: ${effect.greenTea}s` : ""}${effect.redTea > 0 ? `, Red tea duration remaining: ${effect.redTea}s` : ""})`;
         }
 
-       // fs.writeFileSync(dataPath, JSON.stringify(userInfo));
+       fs.writeFileSync(dataPath, JSON.stringify(userInfo));
 
         await interaction.reply(stringToWrite);
     },

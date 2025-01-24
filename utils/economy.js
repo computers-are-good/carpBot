@@ -71,9 +71,7 @@ module.exports = {
     hasEffect: function (userInfo, effects) {
         //delete expired effects
         let toReturn = {
-            userInfo: userInfo,
-            effects: {},
-            effectDurations: {}
+
         }
         let now = new Date().getTime();
         userInfo.effects = userInfo.effects.filter(a => a.validUntil > now);
@@ -82,17 +80,14 @@ module.exports = {
             for (let userEffect in userInfo.effects) {
                 if (userInfo.effects[userEffect].name == effect) {
                     effectFound = true;
-                    toReturn.effects[effect] = true;
-                    toReturn.effectDurations[effect] = Math.floor((userInfo.effects[userEffect].validUntil - now) / 1000);
+                    toReturn[effect] = Math.floor((userInfo.effects[userEffect].validUntil - now) / 1000);
                     break;
                 }
             }
             if (!effectFound) {
-                toReturn.effects[effect] = false;
-                toReturn.effectDurations[effect] = 0
+                toReturn[effect] = 0;
             }
         }
-        userInfo.effects.yes = "yes";
         return toReturn;
     },
     saveData: function (userId, userInfo) {

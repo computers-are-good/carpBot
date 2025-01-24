@@ -298,7 +298,7 @@ module.exports = {
             addToInventory: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
-                    userInfo = grantEffect(userInfo, "coffee", 60);
+                    grantEffect(userInfo, "coffee", 60);
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
@@ -399,7 +399,7 @@ module.exports = {
             addToInventory: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
-                    userInfo = grantEffect(userInfo, "greenTea", 60);
+                    grantEffect(userInfo, "greenTea", 60);
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
@@ -419,7 +419,7 @@ module.exports = {
             addToInventory: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
-                    userInfo = grantEffect(userInfo, "redTea", 60);
+                    grantEffect(userInfo, "redTea", 60);
                     return {
                         userInfo: userInfo,
                         metadata: metadata,
