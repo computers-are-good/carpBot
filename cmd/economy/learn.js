@@ -35,7 +35,10 @@ module.exports = {
 			for (let i in availableSkills){
 				const skill = availableSkills[i];
 				let string = "";
-				string += `You can learn **${skill.name}** for **${economyUtils.formatMoney(skill.cost)}** to gain **${skill.exp}** exp.`;
+				string += 
+`**${skill.name}** (**${skill.exp}** exp): 
+${skill.description}
+**${economyUtils.formatMoney(skill.cost)}**.`;
 				listToDisplay.push(string);
 			}
 			economyUtils.displayList(interaction, listToDisplay);

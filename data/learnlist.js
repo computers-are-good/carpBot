@@ -3,16 +3,19 @@ module.exports = {
         //Generally, the EXP gained should be around half of (cost / 100)
         {
             name: "Calculus",
+            description: "Hard maths.",
             cost: 1500000,
             exp: 6000
         },
         {
             name: "Calculus II",
+            description: "Even harder maths.",
             cost: 3000000,
             exp: 12000
         },
         {
             name: "Calculus III",
+            description: "Harder than even harder maths.",
             cost: 6000000,
             exp: 24000
         },
