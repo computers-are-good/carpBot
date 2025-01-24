@@ -5,6 +5,7 @@ module.exports = {
         expRequired: 15,
         inventory: [],
         moneyOnHand: 0,
+        permanentWorkMultiplier: 1,
         lastDaily: "",
         combat: {
             health: 100,
