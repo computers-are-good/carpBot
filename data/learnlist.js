@@ -59,13 +59,13 @@ module.exports = {
             name: "Cooking",
             cost: 59900,
             exp: 512,
-            description: "Learning to cook allows you to use /cook to make an item. What you make will be based on your level." //TO IMPLEMENT
+            description: "Learning to cook allows you to use /cook to make an item. What you make will be based on your level."
         },
         {
             name: "Flying",
             cost: 60000000,
             exp: 250000,
-            description: "Learning to fly decreases the chance you will be caught when you try to rob another player" //TO IMPLEMENT
+            description: "Learning to fly increases your chance of success when you try to rob another player"
         },
         {
             name: "Swimming",
@@ -91,7 +91,6 @@ module.exports = {
                 userInfo.permanentWorkMultiplier += 0.5;
             }
         },
-
         {
             name: "Violin",
             cost: 99999999,

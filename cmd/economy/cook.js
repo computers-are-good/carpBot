@@ -15,10 +15,7 @@ module.exports = {
         const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`)
         userInfo = await economyUtils.prefix(interaction);
 
-        let hasSkill = false;
-        for (let skill of userInfo.learned) {
-            if (skill == "Cooking") hasSkill = true;
-        }
+        let hasSkill = userInfo.learned.includes("Cooking");
 
         if (!hasSkill) {
             await interaction.reply("You haven't learnt the Cooking skill yet! Try `/learn cooking`.");

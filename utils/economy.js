@@ -131,7 +131,7 @@ module.exports = {
         async function updateButtons() {
             let stringToReply;
             try {
-                buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 5_000 });
+                buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
                 if (buttons.customId === 'Previous') {
                     pageOffset = Math.max(0, pageOffset - pageSize);
                     stringToReply = outputString(pageSize, pageOffset);

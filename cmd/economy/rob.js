@@ -27,11 +27,13 @@ module.exports = {
             return;
         }
 
+
 		const time = new Date().getTime();
 		let percentageToRob = 0.1;
 		let moneyRobbed = Math.floor(targetPlayerData.moneyOnHand * percentageToRob);
 		let moneyLostOnFail = Math.ceil(userInfo.moneyOnHand * 0.02);
 		let successChance = 0.8;
+		if (userInfo.learned.includes("Flying")) successChance += 0.15;
 		if (time - targetPlayerData.lastGotRobbed < 60000) {
 			successChance = 0
 		} else {

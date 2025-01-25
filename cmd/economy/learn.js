@@ -36,8 +36,7 @@ module.exports = {
 				const skill = availableSkills[i];
 				let string = "";
 				string += 
-`**${skill.name}** (**${skill.exp}** exp): ${skill.description ? `${skill.description}\n` : ""}
-**${economyUtils.formatMoney(skill.cost)}**.
+`**${skill.name}** (**${skill.exp}** exp): ${skill.description ? `${skill.description}\n` : ""}**${economyUtils.formatMoney(skill.cost)}**.
 `;
 				listToDisplay.push(string);
 			}

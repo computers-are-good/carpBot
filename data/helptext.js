@@ -38,6 +38,11 @@ module.exports = {
             "Usage: `/collectrent`. Collects rent from your houses. The higher level the house, the more rent you will be able to collect from it. You must have at least 1 house to be able to collect rent.",
             "You get around $15,000 per day from each house."
         ],
+        cook: [
+            "Usage: `/cook`. Cooks food in your kitchen. What you make is dependent on your level. Reaching level 10 gives you a roughly 50% chance to make coffee.",
+            "As you level up, you will be able to make more complex items with more powerful effects, but there's always a chance you'll blow up the kitchen...",
+            "To unlock this command, you must learn the cooking skill first with `/learn cooking`"
+        ],
         daily: [
             "Usage: `/daily`. Claim a daily reward bonus. This will give you some money in accordance with your level."
         ],
