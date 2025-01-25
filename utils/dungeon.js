@@ -17,6 +17,7 @@ function battle(player, enemy, maxRounds) {
         return target;
     }
     let roundCounter = 0;
+    if (player.health <= 0) return false;
     while (true) {
         //Can't defeat the enemy in the specified rounds? You probably can't defeat the enemy. You lose.
         if (roundCounter >= maxRounds) return false;
