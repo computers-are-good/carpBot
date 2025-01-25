@@ -15,7 +15,7 @@ module.exports = {
         const {userInfo, notifications} = await economyUtils.prefix(interaction);
 
 
-        let expGained = Math.ceil((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 0.6) * 2 + 4);
+        let expGained = Math.ceil((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.4) * 2 + 4);
         let moneyGained = Math.ceil(((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.35) + 1) * 100 * userInfo.permanentWorkMultiplier);
         if (economyUtils.inventoryHasItem(userInfo.inventory, 1009)) moneyGained += 5000;
         let effect = economyUtils.hasEffect(userInfo, ["coffee", "greenTea", "redTea", "criminal"]);
