@@ -32,13 +32,13 @@ module.exports = {
 			availableSkills = availableSkills.sort((a, b) => a.cost - b.cost);
 
 			let listToDisplay = [];
-			for (let i in availableSkills){
+			for (let i in availableSkills) {
 				const skill = availableSkills[i];
 				let string = "";
 				string += 
-`**${skill.name}** (**${skill.exp}** exp): 
-${skill.description}
-**${economyUtils.formatMoney(skill.cost)}**.`;
+`**${skill.name}** (**${skill.exp}** exp): ${skill.description ? `${skill.description}\n` : ""}
+**${economyUtils.formatMoney(skill.cost)}**.
+`;
 				listToDisplay.push(string);
 			}
 			economyUtils.displayList(interaction, listToDisplay);
@@ -61,7 +61,7 @@ ${skill.description}
 			//Have we learnt the skill before?
 			for (let i in userInfo.learned) {
 				if (userInfo.learned[i].toLowerCase() == skill.name.toLowerCase()) {
-					await interaction.reply(`You have learnt this skill.`);
+					await interaction.reply(`You have learnt this skill before.`);
 					return;
 				}
 			}
@@ -69,6 +69,9 @@ ${skill.description}
 
 			userInfo.moneyOnHand -= skill.cost;
 			userInfo.learned.push(skill.name);
+			if (skill.onLearn) {
+				skill.onLearn(userInfo);
+			}
 			const levelUpResults = calculateLevelUp(userInfo.level, userInfo.expRequired, skill.exp);
 			if (levelUpResults.newLevel !== userInfo.level) {
 				string += `\nYou levelled up! (${userInfo.level} -> ${levelUpResults.newLevel})`;

@@ -131,7 +131,7 @@ module.exports = {
         async function updateButtons() {
             let stringToReply;
             try {
-                buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
+                buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 5_000 });
                 if (buttons.customId === 'Previous') {
                     pageOffset = Math.max(0, pageOffset - pageSize);
                     stringToReply = outputString(pageSize, pageOffset);
@@ -146,7 +146,11 @@ module.exports = {
                     updateButtons();
                 }
             } catch (e) {
-                await response.edit({ content: stringToReply, components: [] })
+                try {
+                    await response.edit({ content: stringToReply, components: [] });
+                } catch (e) {
+                    console.log("Could not edit a message after the response timed out! Has that message been deleted by an admin?");
+                }
             }
         }
         updateButtons();
