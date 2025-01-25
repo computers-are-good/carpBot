@@ -5,7 +5,7 @@ const { createUserData } = require(path.join(__dirname, "/createUserData"));
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const { monsters } = require(path.join(__dirname, "../data/monsters"));
 const economyUtils = require(path.join(__dirname, "/economy"));
-function battle(player, enemy) {
+function battle(player, enemy, maxRounds) {
     function attack(dmg, target) {
         target.shield -= dmg;
         if (target.shield < 0) {
@@ -18,8 +18,8 @@ function battle(player, enemy) {
     }
     let roundCounter = 0;
     while (true) {
-        //Can't defeat the enemy in 200 rounds? You probably can't defeat the enemy. You lose.
-        if (roundCounter >= 200) return false;
+        //Can't defeat the enemy in the specified rounds? You probably can't defeat the enemy. You lose.
+        if (roundCounter >= maxRounds) return false;
 
         player.shield = player.block;
         enemy.shield = enemy.block;

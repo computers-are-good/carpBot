@@ -57,7 +57,7 @@ client.on(Events.ClientReady, _ => { //modified from https://www.youtube.com/wat
 			name: scriptingUtils.choice(motd),
 			type: ActivityType.Playing
 		});
-	}, 60000)
+	}, 60000);
 
 })
 client.login(token);
