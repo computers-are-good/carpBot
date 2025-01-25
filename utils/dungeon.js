@@ -40,7 +40,7 @@ function battle(player, enemy, maxRounds) {
     }
 }
 function compareStatsString(playerStats, enemyStats) {
-    return ` \`Your stats:              | Enemy stats:
+    return `\`Your stats:              | Enemy stats:
 Health: ${playerStats.health} (max: ${playerStats.maxHealth})${scriptingUtils.generateSpaces(25 - playerStats.health.toString().length - playerStats.maxHealth.toString().length - 16)}| Health: ${enemyStats.health}${scriptingUtils.generateSpaces(20 - enemyStats.health.toString().length - 8)}
 Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(25 - playerStats.attack.toString().length - 8)}| Attack: ${enemyStats.attack}${scriptingUtils.generateSpaces(20 - enemyStats.attack.toString().length - 8)}
 Block: ${playerStats.block}${scriptingUtils.generateSpaces(25 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}${scriptingUtils.generateSpaces(20 - enemyStats.block.toString().length - 7)}\`
