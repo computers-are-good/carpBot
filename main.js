@@ -1,14 +1,24 @@
 //based off https://discordjs.guide/creating-your-bot/
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, GatewayIntentBits, Events, ActivityType} = require('discord.js');
 const { token } = require('./configs.json');
+const scriptingUtils = require(path.join(__dirname, "/utils/scripting"));
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.commands = new Collection();
 const foldersPath = path.join(__dirname, 'cmd');
 const commandFolders = fs.readdirSync(foldersPath);
+
+const motd = [
+	"Eating bricks",
+	"Grinding /work",
+	"/apple",
+	"Gonna give you up",
+	"🐟",
+	"Javascriptin'"
+]
 
 //delete all .lock files
 const lockFiles = fs.readdirSync(path.join(__dirname, "/userdata/economy")).filter(file => file.startsWith('.lock'));
@@ -41,5 +51,13 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
+client.on(Events.ClientReady, _ => { //modified from https://www.youtube.com/watch?v=QGJkr-zNlT0
+	setInterval(_ => {
+		client.user.setActivity({
+			name: scriptingUtils.choice(motd),
+			type: ActivityType.Playing
+		});
+	}, 60000)
 
+})
 client.login(token);
