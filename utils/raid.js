@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require('node:path');
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
+const economyUtils = require(path.join(__dirname, "/economy"));
 const { calculateLevelUp } = require(path.join(__dirname, "/calculateLevelUp"));
 const { monsters } = require(path.join(__dirname, "../data/monsters"));
 const raidBossList = ["Monella, Ultimate Master", "Sytlar, Demon of the Underworld"];
@@ -8,12 +9,17 @@ const raidBossList = ["Monella, Ultimate Master", "Sytlar, Demon of the Underwor
 
 module.exports = {
     distributeRewards(currentRaidData) {
-        for (let player of currentRaidData.playersDamage) {
-            const playerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/economy/${playerData.id}`), "UTF-8"));
-            playerData.moneyOnHand += player.totalDamage * 100;
-            let levelUpResults = calculateLevelUp(playerData.level, playerData.expRequired, player.totalDamage);
+        for (let id of Object.keys(currentRaidData.playersDamage)) {
+            const dmg = currentRaidData.playersDamage[id];
+            const playerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/economy/${id}`), "UTF-8"));
+            const moneyGained = dmg * 100;
+            playerData.moneyOnHand += moneyGained;
+            const expGained = dmg;
+            let levelUpResults = calculateLevelUp(playerData.level, playerData.expRequired, expGained);
             playerData.level = levelUpResults.newLevel;
             playerData.expRequired = levelUpResults.newExpRequired;
+            economyUtils.notifyPlayer(playerData, `You have gained ${expGained} exp and ${economyUtils.formatMoney(moneyGained)} from ${currentRaidData.currentMonster}`)
+            fs.writeFileSync(path.join(__dirname, `../userdata/economy/${id}`), JSON.stringify(playerData))
         }
     },
     getCurrentMonster: function () {
@@ -21,7 +27,7 @@ module.exports = {
             let selectedMonster;
             if (typeof currentRaidData !== "undefined") {
                 let i = raidBossList.indexOf(currentRaidData.currentMonster) + 1;
-                if (i > raidBossList) i = 0;
+                if (i > raidBossList.length - 1) i = 0;
                 selectedMonster = raidBossList[i];
             } else {
                 selectedMonster = raidBossList[0];
@@ -45,9 +51,11 @@ module.exports = {
             if (raidData.date !== scriptingUtils.getCurrentDay()) {
                 this.distributeRewards(raidData);
                 raidData = generateNewRaidData(raidData);
+                this.saveData(raidData);
             }
         } else {
-            raidData = generateNewRaidData()
+            raidData = generateNewRaidData();
+            this.saveData(raidData);
         }
 
         return raidData;

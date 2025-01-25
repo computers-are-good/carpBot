@@ -4,6 +4,7 @@ const path = require('node:path');
 const { Client, Collection, GatewayIntentBits, Events, ActivityType} = require('discord.js');
 const { token } = require('./configs.json');
 const scriptingUtils = require(path.join(__dirname, "/utils/scripting"));
+const raidUtils = require(path.join(__dirname, "/utils/raid"));
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -17,7 +18,8 @@ const motd = [
 	"/apple",
 	"Gonna give you up",
 	"🐟",
-	"Javascriptin'"
+	"Javascriptin'",
+	"pain"
 ]
 
 //delete all .lock files
@@ -51,12 +53,17 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
-client.on(Events.ClientReady, _ => { //modified from https://www.youtube.com/watch?v=QGJkr-zNlT0
+let curDate = scriptingUtils.getCurrentDay();
+client.on(Events.ClientReady, _ => {
 	setInterval(_ => {
-		client.user.setActivity({
+		client.user.setActivity({ //modified from https://www.youtube.com/watch?v=QGJkr-zNlT0
 			name: scriptingUtils.choice(motd),
 			type: ActivityType.Playing
 		});
+		if (curDate !== scriptingUtils.getCurrentDay()) {
+			curDate = scriptingUtils.getCurrentDay();
+			raidUtils.getCurrentMonster();
+		}
 	}, 60000);
 
 })
