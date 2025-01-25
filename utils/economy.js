@@ -191,7 +191,7 @@ module.exports = {
                 }
             } catch (e) {
                 await response.edit({ content: "Timed out.", components: [] });
-                rej({ confirmed: false, response: response });
+                res({ confirmed: false, response: response });
             }
         });
     },
