@@ -13,12 +13,12 @@ module.exports = {
         .setDescription('Cooks food in your kitchen!'),
     async execute(interaction) {
         const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`)
-        userInfo = await economyUtils.prefix(interaction);
+        const {userInfo, notifications} = await economyUtils.prefix(interaction);
 
         let hasSkill = userInfo.learned.includes("Cooking");
 
         if (!hasSkill) {
-            await interaction.reply("You haven't learnt the Cooking skill yet! Try `/learn cooking`.");
+            await interaction.reply(`${notifications}You haven't learnt the Cooking skill yet! Try \`/learn cooking\`.`);
             return;
         }
 
@@ -37,12 +37,12 @@ module.exports = {
         if (itemsCanBeMade.length > 0) {
             const itemMade = scriptingUtils.choice(itemsCanBeMade);
             economyUtils.addToInventory(userInfo, itemMade, 1);
-            await interaction.reply(`Congratulations! You made some ${scriptingUtils.fancyText(`Homemade ${shopItems[itemMade].name}`)}.`);
+            await interaction.reply(`${notifications}Congratulations! You made some ${scriptingUtils.fancyText(`Homemade ${shopItems[itemMade].name}`)}.`);
 
             fs.writeFileSync(dataPath, JSON.stringify(userInfo));
         } else {
             await interaction.reply(`
-You blew up the kitchen and failed to make anything. Try levelling up or /cook again.
+${notifications}You blew up the kitchen and failed to make anything. Try levelling up or /cook again.
 Reaching level 10 gives you a roughly 50% chance to make coffee.`);
         }
     },

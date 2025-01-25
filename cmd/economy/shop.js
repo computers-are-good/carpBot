@@ -10,11 +10,12 @@ module.exports = {
         .setDescription('Browse items for sale!')
         .addStringOption(option => option.setName("category").setDescription("Category")),
     async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+		const {userInfo, notifications} = await economyUtils.prefix(interaction);
         const category = interaction.options.getString("category");
 
         let objectsFittingCriteria = [];
         let stringsToDisplay = [];
+        if (notifications) stringsToDisplay.push(notifications)
         for (let item in shopItems) {
             if (shopItems[item].category.includes("testing")) continue;
             if (!category) {

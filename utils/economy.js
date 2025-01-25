@@ -63,8 +63,39 @@ module.exports = {
                     infoModified = true;
                 }
             }
+            let notifs = ""
+            if (userInfo.notifications.length > 0) {
+                userInfo.notifications.filter(e => {
+                    if (e.hideable) {
+                        if (new Date().getTime() - e.timeMachineReadable < 60000) {
+                            return false;
+                        }
+                    }
+                    return true;
+                })
+                notifs += "Kia ora. You have notifications:\n";
+                if (userInfo.notifications.length > 5) {
+                    for (let i = 0; i < 5; i++) {
+                        const notification = userInfo.notifications[i];
+                        notifs += `${notification.timeDisplay} ${notification.msg}\n`;
+                    }
+                    notifs += `(and ${userInfo.notifications.length - 5} more)`
+                    userInfo.notifications.splice(0, 5);
+                } else {
+                    for (let i = 0; i < userInfo.notifications.length; i++) {
+                        const notification = userInfo.notifications[i];
+                        notifs += `${notification.timeDisplay} ${notification.msg}\n`;
+                    }
+                    userInfo.notifications = [];
+                }
+                notifs += "\n"
+                infoModified = true;
+            }
             if (infoModified) fs.writeFileSync(dataPath, JSON.stringify(userInfo));
-            acc(userInfo);
+            
+            acc({
+                userInfo: userInfo,
+                notifications: notifs});
         });
     },
 
@@ -318,30 +349,38 @@ module.exports = {
         }
         return false;
     },
-    canGriefPlayer: async function(targetPlayerId, userInfo, interaction) {
+    canGriefPlayer: async function(targetPlayerId, userInfo, interaction, notifications) {
         let canGrief = true;
 		if (!fs.existsSync(path.join(__dirname, `../userdata/economy/${targetPlayerId}`))) {
-			await interaction.reply("This user has not used CrapBot.");
+			await interaction.reply(`${notifications}This user has not used CrapBot.`);
 			canGrief = false;
 		}
 
 		if (userInfo.passiveMode) {
-			await interaction.reply("You are in passive mode.");
+			await interaction.reply(`${notifications}You are in passive mode.`);
 			canGrief = false;
 		}
 		let targetPlayerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/economy/${targetPlayerId}`)).toString("UTF-8"));
 
 		if (targetPlayerData.passiveMode) {
-			await interaction.reply("That user is in passive mode. Please leave them alone.");
+			await interaction.reply(`${notifications}That user is in passive mode. Please leave them alone.`);
 			canGrief = false;
 		}
 		if (targetPlayerId == interaction.user.id) {
-			await interaction.reply("You can't grief yourself!");
+			await interaction.reply(`${notifications}You can't grief yourself!`);
 			canGrief = false;
 		}
         return {
             canGrief: canGrief,
             targetUserData: targetPlayerData
         }
+    },
+    notifyPlayer(userInfo, msg, hideable = false) { //hideable messages won't be displayed if the player logs on within a minute of the message being generated.
+        userInfo.notifications.push({
+            msg: msg,
+            timeDisplay: scriptingUtils.getTimestamp(),
+            timeMachineReadable: new Date().getTime(),
+            hideable: hideable
+        })
     }
 }

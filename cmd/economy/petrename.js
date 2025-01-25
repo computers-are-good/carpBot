@@ -12,7 +12,7 @@ module.exports = {
         .addStringOption(option => option.setName("oldname").setDescription("The old name of your pet").setRequired(true))
         .addStringOption(option => option.setName("newname").setDescription("The new name of your pet").setRequired(true)),
     async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+        const {userInfo, notifications} = await economyUtils.prefix(interaction);
         const oldName = interaction.options.getString("oldname");
         const newName = interaction.options.getString("newname");
 
@@ -21,13 +21,13 @@ module.exports = {
             //Check the old name: can't be the name of an existing pet
             for (let pet in petsList) {
                 if (petsList[pet].name.toLowerCase() == newName.toLowerCase()) {
-                    await interaction.reply(`${newName} is a type of pet. This name cannot be used`);
+                    await interaction.reply(`${notifications}${newName} is a type of pet. This name cannot be used`);
                     return;
                 }
             }
             //Can it pass the profanity check?
             if (!economyUtils.profanityCheck(oldName)) {
-                await interaction.reply("This name has failed the profanity check");
+                await interaction.reply(`${notifications}This name has failed the profanity check`);
                 return;
             }
 
@@ -35,7 +35,7 @@ module.exports = {
             let oldNameToUseInMsg = petObject.name;
             petObject.name = newName;
 
-            await interaction.reply(`Pet ${oldNameToUseInMsg} renamed to ${petObject.name}.`);
+            await interaction.reply(`${notifications}Pet ${oldNameToUseInMsg} renamed to ${petObject.name}.`);
             fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
         }
         //Has the user entered a type of pet e.g. "Dog"?
@@ -63,7 +63,7 @@ module.exports = {
         }
 
         if (!executedRename) {
-            await interaction.reply(`Pet ${oldName} not found!`);
+            await interaction.reply(`${notifications}Pet ${oldName} not found!`);
         }
     },
 };

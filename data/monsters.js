@@ -22,5 +22,15 @@ module.exports = {
             block: 10,
             attack: 40
         }
+    },
+    raidBossLoot: {
+        "Monella, Ultimate Master": {
+            50: 2005,
+            100: 2009
+        },
+        "Sytlar, Demon of the Underworld": {
+            50: 2005,
+            100: 2009
+        }
     }
 }

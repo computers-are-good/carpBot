@@ -14,7 +14,7 @@ module.exports = {
         .addStringOption(option => option.setName("quantity").setDescription("How many you want to use")),
     async execute(interaction) {
         const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`)
-        userInfo = await economyUtils.prefix(interaction);
+		const {userInfo, notifications} = await economyUtils.prefix(interaction);
 
         let itemToUse = interaction.options.getString("item");
         let quantity = 1;
@@ -29,21 +29,21 @@ module.exports = {
             }
         }
         if (!itemId) {
-            await interaction.reply("This is not an item in the shop.");
+            await interaction.reply(`${notifications}This is not an item in the shop.`);
             return;
         }
         if (quantity > 50) {
-            await interaction.reply("Can only use maximum of 50 items at a time");
+            await interaction.reply(`${notifications}Can only use maximum of 50 items at a time`);
             return;
         }
 
         for (let item in userInfo.inventory) {
             if (userInfo.inventory[item].Id == itemId) {
                 if (userInfo.inventory[item].quantity < quantity) {
-                    await interaction.reply(`Not enough items: you only have ${userInfo.inventory[item].quantity}`);
+                    await interaction.reply(`${notifications}Not enough items: you only have ${userInfo.inventory[item].quantity}`);
                     return;
                 }
-                let stringToReply = `User has used x${quantity} ${shopItems[itemId].name}`;
+                let stringToReply = `${notifications}You have used x${quantity} ${shopItems[itemId].name}`;
 
                 let returnObj
                 for (let i = 0; i < quantity; i++) {

@@ -11,19 +11,19 @@ module.exports = {
         .addUserOption(option => option.setName("player").setDescription("Whom to pay?").setRequired(true))
         .addStringOption(option => option.setName("amount").setDescription("The amount to pay").setRequired(true)),
     async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+		const {userInfo, notifications} = await economyUtils.prefix(interaction);
         let amountOfMoney = 0;
         try {
             amountOfMoney = parseFloat(interaction.options.getString("amount"));
         } catch {
-            await interaction.reply("Failed to parse that amount of money! Did you enter a number? Do not include dollar signs in your amount");
+            await interaction.reply(`${notifications}Failed to parse that amount of money! Did you enter a number? Do not include dollar signs in your amount`);
             return;
         }
         const targetPlayer = interaction.options.getUser("player")
         const targetPlayerId = targetPlayer.id;
 
         if (!fs.existsSync(path.join(__dirname, `../../userdata/economy/${targetPlayerId}`))) {
-            await interaction.reply("This user has not used CrapBot.");
+            await interaction.reply(`${notifications}That user has not used CrapBot.`);
             return;
         }
         let targetPlayerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../../userdata/economy/${targetPlayerId}`)).toString("UTF-8"));
@@ -31,14 +31,14 @@ module.exports = {
         amountOfMoney *= 100;
         amountOfMoney = Math.floor(amountOfMoney);
         if (amountOfMoney > userInfo.moneyOnHand) {
-            await interaction.reply(`You only have ${economyUtils.formatMoney(userInfo.moneyOnHand)} in your wallet but you tried to pay ${targetPlayer.username} ${economyUtils.formatMoney(amountOfMoney)}`);
+            await interaction.reply(`${notifications}You only have ${economyUtils.formatMoney(userInfo.moneyOnHand)} in your wallet but you tried to pay ${targetPlayer.username} ${economyUtils.formatMoney(amountOfMoney)}`);
             return;
         }
 
         targetPlayerData.moneyOnHand += amountOfMoney;
         userInfo.moneyOnHand -= amountOfMoney;
 
-        await interaction.reply(`Paid ${targetPlayer.username} ${economyUtils.formatMoney(amountOfMoney)}`)
+        await interaction.reply(`${notifications}Paid ${targetPlayer.username} ${economyUtils.formatMoney(amountOfMoney)}`)
 
         fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
         fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${targetPlayerId}`), JSON.stringify(targetPlayerData));

@@ -11,7 +11,7 @@ module.exports = {
         .setDescription('Buy or look at a list of pets.')
         .addStringOption(option => option.setName("pet").setDescription("Which pet do you want to buy?")),
     async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+        const {userInfo, notifications} = await economyUtils.prefix(interaction);
         const petToBuy = interaction.options.getString("pet");
         function userHasPet(petId) {
             for (let i of userInfo.pets) {
@@ -44,19 +44,19 @@ module.exports = {
                 }
             }
             if (!selectedPet) {
-                await interaction.reply("That pet is not in the database!");
+                await interaction.reply(`${notifications}That pet is not in the database!`);
                 return;
             }
 
             //Do we have the pet?
             if (userHasPet(selectedPetId)){
-                await interaction.reply(`You already have a ${selectedPet.name}!`);
+                await interaction.reply(`${notifications}You already have a ${selectedPet.name}!`);
                 return;
             }
             
             //Do we have the money?
             if (userInfo.moneyOnHand < selectedPet.cost) {
-                await interaction.reply(`The pet costs ${economyUtils.formatMoney(selectedPet.cost)} but you only have ${userInfo.moneyOnHand}`);
+                await interaction.reply(`${notifications}The pet costs ${economyUtils.formatMoney(selectedPet.cost)} but you only have ${userInfo.moneyOnHand}`);
                 return;
             }
 
@@ -71,7 +71,7 @@ module.exports = {
                     pointsUntilIncrease: 100
                 }
             );
-            await interaction.reply(`You have brought a ${selectedPet.name} named ${petName}.`);
+            await interaction.reply(`${notifications}You have brought a ${selectedPet.name} named ${petName}.`);
             fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
         }
     },

@@ -9,10 +9,11 @@ module.exports = {
         .setName('inventory')
         .setDescription('See the items in your inventory'),
     async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+        const {userInfo, notifications} = await economyUtils.prefix(interaction);
 
         let inventory = userInfo.inventory;
         let listOfItems = [];
+        if (notifications) listOfItems.push(notifications);
         for (let i = 0; i < inventory.length; i++) {
             let inventoryObject = userInfo.inventory[i];
             let shopObject = shopItems[inventoryObject.Id];

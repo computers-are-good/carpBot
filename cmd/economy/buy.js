@@ -15,7 +15,7 @@ module.exports = {
         .setDescription('Buys something from the shop!'),
     async execute(interaction) {
         const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`)
-        userInfo = await economyUtils.prefix(interaction);
+        const {userInfo, notifications} = await economyUtils.prefix(interaction);
 
         let itemToBuy = interaction.options.getString("item");
         let quantity = 1;
@@ -23,7 +23,7 @@ module.exports = {
         if (parsedQuantity && parsedQuantity !== NaN) quantity = parsedQuantity;
 
         if (!itemToBuy) {
-            await interaction.reply("Please specify something to buy! Use /shop to see what is available");
+            await interaction.reply(`${notifications}Please specify something to buy! Use /shop to see what is available`);
             return;
         }
 
@@ -35,26 +35,26 @@ module.exports = {
             }
         }
         if (!itemId) {
-            await interaction.reply("This is not an item in the shop.");
+            await interaction.reply(`${notifications}This is not an item in the shop.`);
             return;
         }
         const itemData = shopItems[itemId];
         const cost = economyUtils.determinePrice(userInfo, itemData);
 
         if (cost * quantity > userInfo.moneyOnHand) {
-            await interaction.reply(`This item costs ${economyUtils.formatMoney(cost * quantity)} but user only has ${economyUtils.formatMoney(userInfo.moneyOnHand)} on hand. Try working or withdrawing money from your bank account.`);
+            await interaction.reply(`${notifications}This item costs ${economyUtils.formatMoney(cost * quantity)} but user only has ${economyUtils.formatMoney(userInfo.moneyOnHand)} on hand. Try working or withdrawing money from your bank account.`);
             return;
         }
 
         if (itemData.category.includes("testing")) {
             if (!developerIds.includes(interaction.user.id)) {
-                await interaction.reply("This item can only be purchased by developers.");
+                await interaction.reply(`${notifications}This item can only be purchased by developers.`);
                 return;
             }
         }
 
         if (itemData.oneOff == true && quantity > 1) {
-            await interaction.reply(`This item can only be brought once, but you have tried to buy ${quantity} of it.`);
+            await interaction.reply(`${notifications}This item can only be brought once, but you have tried to buy ${quantity} of it.`);
             return;
         }
 
@@ -62,7 +62,7 @@ module.exports = {
         for (let i in userInfo.inventory) {
             if (userInfo.inventory[i].Id == itemId) {
                 if (itemData.oneOff) {
-                    await interaction.reply("This item can only be brought once");
+                    await interaction.reply(`${notifications}This item can only be brought once`);
                     return;
                 }
             }
@@ -77,7 +77,7 @@ module.exports = {
                 }
             }
             if (houseCount + quantity > 20) {
-                await interaction.reply("You can only have a maximum of 20 houses.");
+                await interaction.reply(`${notifications}You can only have a maximum of 20 houses.`);
                 return;
             }
         }
@@ -86,7 +86,7 @@ module.exports = {
         if (itemData.scripts && itemData.scripts.canBuy) {
             let testResults = itemData.scripts.canBuy(userInfo);
             if (!testResults.canBuy) {
-                await interaction.reply(`You do not meed the requirements to buy the item. Reason: ${testResults.messageToUser}`);
+                await interaction.reply(`${notifications}You do not meet the requirements to buy the item. Reason: ${testResults.messageToUser}`);
                 return;
             }
         }
@@ -99,7 +99,7 @@ module.exports = {
 
         fs.writeFileSync(dataPath, JSON.stringify(userInfo));
 
-        await interaction.reply(`You have brought ${quantity}x ${itemData.name} (ID ${itemId})`);
+        await interaction.reply(`${notifications}You have brought ${quantity}x ${itemData.name} (ID ${itemId})`);
     },
 };
 

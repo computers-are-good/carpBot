@@ -12,13 +12,13 @@ module.exports = {
         .setName('bankrob')
         .setDescription('Rob a bank by answering a series of true or false questions!'),
     async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+        const {userInfo, notifications} = await economyUtils.prefix(interaction);
         const collectorFilter = i => i.user.id === interaction.user.id;
 
         //can't rob banks while you are criminal
         let effectResults = economyUtils.hasEffect(userInfo, ["criminal"]);
         if (effectResults.criminal > 0) {
-            await interaction.reply(`You're already a criminal! Don't want to turn yourself into the one place police love to guard. (Remaining: ${effectResults.criminal}s)`);
+            await interaction.reply(`${notifications}You're already a criminal! Don't want to turn yourself into the one place police love to guard. (Remaining: ${effectResults.criminal}s)`);
             return;
         }
 
@@ -67,7 +67,7 @@ module.exports = {
         }
 
         let response = await interaction.reply({
-            content: `You are about to rob a bank for ${economyUtils.formatMoney(moneyToBeEarned)}. Press confirm to start`,
+            content: `${notifications}You are about to rob a bank for ${economyUtils.formatMoney(moneyToBeEarned)}. Press confirm to start`,
             components: [initialRow]
         });
         let buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });

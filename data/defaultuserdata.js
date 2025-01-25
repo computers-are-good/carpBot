@@ -29,6 +29,7 @@ module.exports = {
         friends: [],
         dungeonsCompleted: [],
         learned: [],
-        lifetimeMoneyFromWorking: 0
+        lifetimeMoneyFromWorking: 0,
+        notifications: [],
     }
 }

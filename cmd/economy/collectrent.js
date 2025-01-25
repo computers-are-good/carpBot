@@ -9,7 +9,8 @@ module.exports = {
 		.setName('collectrent')
 		.setDescription('If you have a house, collect rent from them'),
 	async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+		const {userInfo, notifications} = await economyUtils.prefix(interaction);
+
 		let totalTimeElapsed = 0;
 		let now = new Date().getTime();
 		for (let item of userInfo.inventory) {
@@ -24,7 +25,7 @@ module.exports = {
 
 		const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`)
 		fs.writeFileSync(dataPath, JSON.stringify(userInfo));
-		await interaction.reply(`Gained ${economyUtils.formatMoney(moneyGained)}.`);
+		await interaction.reply(`${notifications}Gained ${economyUtils.formatMoney(moneyGained)}.`);
 
 	},
 };

@@ -9,8 +9,8 @@ module.exports = {
 		.setName('balance')
 		.setDescription('Checks your account balance!'),
 	async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+        const {userInfo, notifications} = await economyUtils.prefix(interaction);
 
-		await interaction.reply(`User ${interaction.user.username} (LV: ${userInfo.level}, to next ${userInfo.expRequired}) has ${economyUtils.formatMoney(userInfo.moneyOnHand)} dollars in their wallet and ${economyUtils.formatMoney(userInfo.moneyBankAccount)} in their bank account`);
+		await interaction.reply(`${notifications}User ${interaction.user.username} (LV: ${userInfo.level}, to next ${userInfo.expRequired}) has ${economyUtils.formatMoney(userInfo.moneyOnHand)} dollars in their wallet and ${economyUtils.formatMoney(userInfo.moneyBankAccount)} in their bank account`);
 	},
 };

@@ -16,11 +16,11 @@ module.exports = {
 		.setDescription('Pet a pet!')
         .addStringOption(option => option.setName("pet").setDescription("Which pet do you want to pet?")),
 	async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+        const {userInfo, notifications} = await economyUtils.prefix(interaction);
         const selectedPet = interaction.options.getString("pet");
         let toPet;
         if (userInfo.pets.length == 0) {
-            await interaction.reply(`Welcome to the CrapBot pets system! To get started, buy a pet with \`/petbuy\`.`);
+            await interaction.reply(`${notifications}Welcome to the CrapBot pets system! To get started, buy a pet with \`/petbuy\`.`);
         }
         for (let pet of userInfo.pets) {
             if (pet.name.toLowerCase() == selectedPet.toLowerCase() || petsList[pet.id].name.toLowerCase() == selectedPet.toLowerCase()) {
@@ -28,12 +28,12 @@ module.exports = {
             }
         }
         if (!toPet) {
-            await interaction.reply(`You don't have that pet! Reply with the name of the pet, or the type of pet.`);
+            await interaction.reply(`${notifications}You don't have that pet! Reply with the name of the pet, or the type of pet.`);
             return;
         }
         let pointsGained = scriptingUtils.randIntBetween(1, 50000);
         const levelUpResults = calculateLevelUp(toPet.bondLevel, toPet.pointsUntilIncrease, pointsGained, level => 100 + level * 50);
-        let stringToReply = scriptingUtils.choice(petMessages).replace("{PETNAME}", toPet.name);
+        let stringToReply = notifications + scriptingUtils.choice(petMessages).replace("{PETNAME}", toPet.name);
         stringToReply += `\nGained ${pointsGained} bond points.`;
 
         if (levelUpResults.newLevel !== toPet.bondLevel) {

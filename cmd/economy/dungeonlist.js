@@ -11,7 +11,7 @@ module.exports = {
         .setDescription('Lists the dungeons you can do!')
         .addStringOption(option => option.setName("incomplete").setDescription("Display only incomplete dungeons (true | false)")),
     async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+        const {userInfo, notifications} = await economyUtils.prefix(interaction);
         const incomplete = interaction.options.getString("incomplete");
 
         const availableDungeons = economyUtils.listAvailableDungeons(userInfo);
@@ -19,7 +19,7 @@ module.exports = {
         for (let i of availableDungeons) {
             let completed = economyUtils.dungeonCompleted(userInfo, dungeonList[i]);
             if (incomplete == "true" && completed == true) continue;
-            list.push(`${i}: ${dungeonList[i].content} ${completed ? "(complete)" : ""}`);
+            list.push(`${notifications}${i}: ${dungeonList[i].content} ${completed ? "(complete)" : ""}`);
         }
         economyUtils.displayList(interaction, list);
     },

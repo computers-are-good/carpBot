@@ -17,7 +17,7 @@ module.exports = {
 		.setDescription('Spends money to learn a skill to gain experience!')
 		.addStringOption(option => option.setName("skill").setDescription("What you want to learn")),
 	async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+		const {userInfo, notifications} = await economyUtils.prefix(interaction);
 		//if nothing specified for "skill", then display everything that can be learnt
 		let availableSkills = [];
 		for (let i in learnList) {
@@ -32,6 +32,7 @@ module.exports = {
 			availableSkills = availableSkills.sort((a, b) => a.cost - b.cost);
 
 			let listToDisplay = [];
+			if (notifications) listToDisplay.push(notifications);
 			for (let i in availableSkills) {
 				const skill = availableSkills[i];
 				let string = "";
@@ -49,22 +50,22 @@ module.exports = {
 				}
 			}
 			if (!skill) {
-				await interaction.reply(`This skill does not exist.`);
+				await interaction.reply(`${notifications}This skill does not exist.`);
 				return;
 			}
 			//Do we have the money on hand?
 			if (userInfo.moneyOnHand < skill.cost) {
-				await interaction.reply(`You do not have enough money in your wallet. Try withdrawing some from your bank account.`);
+				await interaction.reply(`${notifications}You do not have enough money in your wallet. Try withdrawing some from your bank account.`);
 				return;
 			}
 			//Have we learnt the skill before?
 			for (let i in userInfo.learned) {
 				if (userInfo.learned[i].toLowerCase() == skill.name.toLowerCase()) {
-					await interaction.reply(`You have learnt this skill before.`);
+					await interaction.reply(`${notifications}You have learnt this skill before.`);
 					return;
 				}
 			}
-			let string = `You learnt ${skill.name} for ${economyUtils.formatMoney(skill.cost)}.`;
+			let string = `${notifications}You learnt ${skill.name} for ${economyUtils.formatMoney(skill.cost)}.`;
 
 			userInfo.moneyOnHand -= skill.cost;
 			userInfo.learned.push(skill.name);

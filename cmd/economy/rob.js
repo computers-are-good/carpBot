@@ -11,19 +11,19 @@ module.exports = {
 		.setDescription('Robs another player (cannot be used on players in passive mode)')
 		.addUserOption(option => option.setName("player").setDescription("Username of player to rob")),
 	async execute(interaction) {
-		userInfo = await economyUtils.prefix(interaction);
+		const {userInfo, notifications} = await economyUtils.prefix(interaction);
 
 		//search for the player
 		let targetPlayer = interaction.options.getUser("player");
 		const targetPlayerId = targetPlayer.id
 
-		let griefTestResults = await economyUtils.canGriefPlayer(targetPlayerId, userInfo, interaction);
+		let griefTestResults = await economyUtils.canGriefPlayer(targetPlayerId, userInfo, interaction, notifications);
 		if (!griefTestResults.canGrief) return;
 		let targetPlayerData = griefTestResults.targetUserData;
 
 		let effectResults = economyUtils.hasEffect(userInfo, ["criminal"]);
         if (effectResults.criminal > 0) {
-            await interaction.reply(`You're already a criminal! You shouldn't do more crimes. (Remaining: ${effectResults.criminal}s)`);
+            await interaction.reply(`${notifications}You're already a criminal! You shouldn't do more crimes. (Remaining: ${effectResults.criminal}s)`);
             return;
         }
 
@@ -43,13 +43,14 @@ module.exports = {
 		dataLocks.lockData(targetPlayerId);
 		dataLocks.lockData(interaction.user.id);
 		try {
-			economyUtils.confirmation(interaction, `Preparing to rob ${targetPlayer.username} for ${economyUtils.formatMoney(moneyRobbed)} with a ${successChance * 100}% chance of success. Are you sure?`).then(val => {
+			economyUtils.confirmation(interaction, `${notifications}Preparing to rob ${targetPlayer.username} for ${economyUtils.formatMoney(moneyRobbed)} with a ${successChance * 100}% chance of success. Are you sure?`).then(val => {
 				let { confirmed, response } = val;
 				if (confirmed) {
 					if (Math.random() < successChance) {
 						//success
 						targetPlayerData.moneyOnHand -= moneyRobbed;
 						userInfo.moneyOnHand += moneyRobbed;
+						economyUtils.notifyPlayer(targetPlayerData, `${interaction.user.username} robbed you for ${economyUtils.formatMoney(moneyRobbed)}`, true);
 						response.edit("Successfully robbed the guy!");
 					} else {
 						targetPlayerData.moneyOnHand += moneyLostOnFail;

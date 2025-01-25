@@ -8,9 +8,9 @@ module.exports = {
 		.setName('passivemode')
 		.setDescription('Toggles passive mode.'),
 	async execute(interaction) {
-		userInfo = await economyUtils.prefix(interaction);
+		const {userInfo, notifications} = await economyUtils.prefix(interaction);
 
-		economyUtils.confirmation(interaction, `Passive mode is currently ${userInfo.passiveMode ? "enabled" : "disabled"}.\nDo you want to ${userInfo.passiveMode ? "disable" : "enable"} passive mode?`).then(async val => {
+		economyUtils.confirmation(interaction, `${notifications}Passive mode is currently ${userInfo.passiveMode ? "enabled" : "disabled"}.\nDo you want to ${userInfo.passiveMode ? "disable" : "enable"} passive mode?`).then(async val => {
 			let { confirmed, response } = val;
 			const now = new Date().getTime();
 			if (confirmed) {

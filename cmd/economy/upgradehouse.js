@@ -12,7 +12,7 @@ module.exports = {
 		.setDescription('Upgrade your houses to earn more money!')
 		.addStringOption(option => option.setName("house").setDescription("Name of house to upgrade (or list)")),
 	async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+		const {userInfo, notifications} = await economyUtils.prefix(interaction);
 		const house = interaction.options.getString("house");
 		let houses = userInfo.inventory.filter(e => e.Id == 1008);
 
@@ -29,7 +29,7 @@ module.exports = {
 			if (houseToSearch.metadata.Address.toLowerCase() == house.toLowerCase()) {
 				houseFound = true;
 				const upgradeCost = moneyRequiredLevelUp(houseToSearch.metadata.level)
-				economyUtils.confirmation(interaction, `Upgrade this house? This costs ${economyUtils.formatMoney(upgradeCost)}`).then(async val => {
+				economyUtils.confirmation(interaction, `${notifications}Upgrade this house? This costs ${economyUtils.formatMoney(upgradeCost)}`).then(async val => {
 					let {confirmed, response} = val;
 					if  (confirmed) {
 						//enough money?
@@ -52,6 +52,6 @@ module.exports = {
 				});
 			}
 		}
-		if (!houseFound) await interaction.reply("House not found!");
+		if (!houseFound) await interaction.reply(`${notifications}House not found!`);
 	},
 };

@@ -17,7 +17,7 @@ module.exports = {
 					{ name: 'Block', value: 'block' },
 			)),
 	async execute(interaction) {
-		userInfo = await economyUtils.prefix(interaction);
+		const {userInfo, notifications} = await economyUtils.prefix(interaction);
 		const category = interaction.options.getString('stat');
 		const cost = Math.max(userInfo.abilitiesImproved[category] * 500, 100) * 100;
 		let statToImproveReadable = category;
@@ -34,7 +34,7 @@ module.exports = {
 				valueToIncrease = 1;
 				break;
 		}
-		const val = await economyUtils.confirmation(interaction, `You will increase ${statToImproveReadable} (${userInfo.combat[category]} -> ${userInfo.combat[category] + valueToIncrease}). This will cost ${economyUtils.formatMoney(cost)}. Are you sure?`);
+		const val = await economyUtils.confirmation(interaction, `${notifications}You will increase ${statToImproveReadable} (${userInfo.combat[category]} -> ${userInfo.combat[category] + valueToIncrease}). This will cost ${economyUtils.formatMoney(cost)}. Are you sure?`);
 		const { confirmed, response } = val;
 		if (confirmed) {
 			if (userInfo.moneyOnHand < cost) {

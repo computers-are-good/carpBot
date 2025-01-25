@@ -12,7 +12,8 @@ module.exports = {
         .setDescription('Work to make some money!'),
     async execute(interaction) {
         const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`);
-        userInfo = await economyUtils.prefix(interaction);
+        const {userInfo, notifications} = await economyUtils.prefix(interaction);
+
 
         let expGained = Math.ceil((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 0.6) * 2 + 4);
         let moneyGained = Math.ceil(((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.35) + 1) * 100 * userInfo.permanentWorkMultiplier);
@@ -20,7 +21,7 @@ module.exports = {
         let effect = economyUtils.hasEffect(userInfo, ["coffee", "greenTea", "redTea", "criminal"]);
 
         if (effect.criminal > 0) {
-            await interaction.reply(`You are a criminal! Better lay low for a while (remaining: ${effect.effectDurations.criminal}s)`);
+            await interaction.reply(`${notifications}You are a criminal! Better lay low for a while (remaining: ${effect.effectDurations.criminal}s)`);
             return;
         }
         if (effect.coffee > 0) {
@@ -53,7 +54,7 @@ module.exports = {
         let { newLevel, newExpRequired } = calculateLevelUp(userInfo.level, userInfo.expRequired, expGained);
 
         let stringToWrite =
-            `
+            `${notifications}
 User ${userInfo.username} ${scriptingUtils.choice(jobs)}. 
 Gained **${economyUtils.formatMoney(moneyGained)}**. ${effect.coffee ? `Coffee duration remaining: ${effect.coffee}s` : ""}
 Wallet: **${economyUtils.formatMoney(userInfo.moneyOnHand)}**`

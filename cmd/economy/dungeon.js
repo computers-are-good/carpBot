@@ -17,7 +17,7 @@ module.exports = {
         .setDescription('Visits a dungeon!')
         .addStringOption(option => option.setName("dungeon").setDescription("Which dungeon to enter?")),
     async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
+        const {userInfo, notifications} = await economyUtils.prefix(interaction);
         const dungeonInput = interaction.options.getString("dungeon");
         let targetDungeon;
         const availableDungeons = listAvailableDungeons(userInfo);
@@ -31,7 +31,7 @@ module.exports = {
         } else {
 
             if (!economyUtils.inventoryHasItem(userInfo.inventory, 1010)){
-                await interaction.reply("Please buy a pair of Adventurer's boots with `/buy Adventurer's boots` before starting a dungeon. It costs $500.");
+                await interaction.reply(`${notifications}Please buy a pair of Adventurer's boots with \`/buy Adventurer's boots\` before starting a dungeon. It costs $500.`);
                 return;
             }
 
@@ -44,14 +44,14 @@ module.exports = {
                 }
             }
             if (!dungeonFound) {
-                await interaction.reply("That dungeon is not found or you do not have it unlocked. See the available dungeons with `/dungeon` or `/dungeonlist`.");
+                await interaction.reply(`${notifications}That dungeon is not found or you do not have it unlocked. See the available dungeons with \`/dungeon\` or \`/dungeonlist\`.`);
                 return;
             }
             const targetDungeonInfo = dungeonList[targetDungeon];
     
             if ("requirements" in targetDungeonInfo) {
                 if ("level" in targetDungeonInfo.requirements && userInfo.level < targetDungeonInfo.requirements.level) {
-                    await interaction.reply(`You do not meet the level requirements to do this dungeon. Required: ${targetDungeonInfo.requirements.level}. You: ${userInfo.level}`);
+                    await interaction.reply(`${notifications}You do not meet the level requirements to do this dungeon. Required: ${targetDungeonInfo.requirements.level}. You: ${userInfo.level}`);
                     return;
                 }
             }
@@ -59,7 +59,7 @@ module.exports = {
             try {
                 dungeon(interaction, dungeonText[targetDungeon], userInfo).then(async success => {
                     if (success.completed) {
-                        let stringToSend = `Dungeon completed!`
+                        let stringToSend = `${notifications}Dungeon completed!`
                         let previouslyCompleted = economyUtils.dungeonCompleted(userInfo, targetDungeonInfo);
                         if (!previouslyCompleted)
                             userInfo.dungeonsCompleted.push({
@@ -126,7 +126,7 @@ module.exports = {
     
                         await success.response.edit({ content: stringToSend, components: [] });
                     } else {
-                        await success.response.edit({ content: "Dungeon not completed.", components: [] });
+                        await success.response.edit({ content: `${notifications}Dungeon not completed.`, components: [] });
                     }
                     dataLocks.unlockData(interaction.user.id);
                     fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
