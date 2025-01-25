@@ -8,7 +8,7 @@ const raidBossList = ["Monella, Ultimate Master", "Sytlar, Demon of the Underwor
 
 module.exports = {
     distributeRewards(currentRaidData) {
-        for (let player of raidData.playersDamage) {
+        for (let player of currentRaidData.playersDamage) {
             const playerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/economy/${playerData.id}`), "UTF-8"));
             playerData.moneyOnHand += player.totalDamage * 100;
             let levelUpResults = calculateLevelUp(playerData.level, playerData.expRequired, player.totalDamage);
@@ -36,6 +36,7 @@ module.exports = {
             for (let stat in raidData.combat) {
                 if (stat in ["health", "block", "attack"]) raidData.combat[stat] *= raidData.level;
             }
+            raidData.maxHealth = raidData.combat.health;
             return raidData;
         }
         let raidData;

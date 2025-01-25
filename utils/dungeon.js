@@ -33,13 +33,22 @@ function battle(player, enemy, maxRounds) {
         if (player.health <= 0) {
             player.health = 0;
             return false;
-        } 
+        }
         roundCounter++;
 
     }
 }
+function compareStatsString(playerStats, enemyStats) {
+    return ` \`Your stats:              | Enemy stats:
+Health: ${playerStats.health} (max: ${playerStats.maxHealth})${scriptingUtils.generateSpaces(25 - playerStats.health.toString().length - playerStats.maxHealth.toString().length - 16)}| Health: ${enemyStats.health}${scriptingUtils.generateSpaces(20 - enemyStats.health.toString().length - 8)}
+Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(25 - playerStats.attack.toString().length - 8)}| Attack: ${enemyStats.attack}${scriptingUtils.generateSpaces(20 - enemyStats.attack.toString().length - 8)}
+Block: ${playerStats.block}${scriptingUtils.generateSpaces(25 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}${scriptingUtils.generateSpaces(20 - enemyStats.block.toString().length - 7)}
+\`
+${enemyStats.block >= playerStats.attack ? "The enemy has block higher or equal to your attack. **You will only deal damage of one per turn**" : ""}`;
+};
 module.exports = {
     battle: battle,
+    compareStatsString,
     dungeon: async function (interaction, script, userInfo) {
         return new Promise(async (res, rej) => {
             let weAreFinished = false;
@@ -65,17 +74,12 @@ module.exports = {
                 switch (currentStep.type) {
                     case "text":
                         stringToReply = script[itemIndex].content;
-                        if (script[itemIndex].img) imageToReplyWith = path.join(__dirname, `../data/dungeonimg/${script[itemIndex].img}`);
+                        if (script[itemIndex].img) imageToReplyWith = path.join(__dirname, `../ data / dungeonimg / ${script[itemIndex].img} `);
                         break;
                     case "prebattle":
                         const enemyStats = generateEnemyStats(itemIndex);
-                        stringToReply = `You are about to enter battle with a ${currentStep.content.name}\`
-Your stats:              | Enemy stats:        
-Health: ${playerStats.health} (max: ${playerStats.maxHealth})${scriptingUtils.generateSpaces(25 - playerStats.health.toString().length - playerStats.maxHealth.toString().length - 16)}| Health: ${enemyStats.health}${scriptingUtils.generateSpaces(20 - enemyStats.health.toString().length - 8)}
-Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(25 - playerStats.attack.toString().length - 8)}| Attack: ${enemyStats.attack}${scriptingUtils.generateSpaces(20 - enemyStats.attack.toString().length - 8)}
-Block: ${playerStats.block}${scriptingUtils.generateSpaces(25 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}${scriptingUtils.generateSpaces(20 - enemyStats.block.toString().length - 7)}
-\`
-${enemyStats.block >= playerStats.attack ? "The enemy has block higher or equal to your attack. **You will only deal damage of one per turn**" : ""}`;
+                        stringToReply = `You are about to enter battle with a ${currentStep.content.name}
+${compareStatsString(playerStats, enemyStats)}`;
                         if (enemyStats.img) {
                             imageToReplyWith = path.join(__dirname, `../data/dungeonimg/${enemyStats.img}`);
                         }
