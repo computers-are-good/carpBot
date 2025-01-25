@@ -17,7 +17,7 @@ module.exports = {
         let stringsToDisplay = [];
         if (notifications) stringsToDisplay.push(notifications)
         for (let item in shopItems) {
-            if (shopItems[item].category.includes("testing")) continue;
+            if (shopItems[item].category.includes("testing") || shopItems[item].displayInShop == false) continue;
             if (!category) {
                 objectsFittingCriteria.push(shopItems[item]);
             } else if (category && shopItems[item].category.includes(category)) {
@@ -29,6 +29,6 @@ module.exports = {
             stringsToDisplay.push(`${object.emoji ? object.emoji : ""} **${object.name}** (${economyUtils.formatMoney(economyUtils.determinePrice(userInfo, object))}):\nCategories: ${object.category.join(", ")}\n${object.description}\n`);
         }
 
-        economyUtils.displayList(interaction, stringsToDisplay)
+        economyUtils.displayList(interaction, stringsToDisplay);
     }
 }

@@ -1,13 +1,12 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const path = require('node:path');
-const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
-const { createUserData } = require(path.join(__dirname, "/createUserData"));
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const { monsters } = require(path.join(__dirname, "../data/monsters"));
 const economyUtils = require(path.join(__dirname, "/economy"));
 function battle(player, enemy, maxRounds) {
-    function attack(dmg, target) {
-        target.shield -= dmg;
+    function attack(attacker, target) {
+        if (getCombatProbability(attacker, "doublestrike")) attack(attacker, enemy);
+        if (!getCombatProbability(attacker, "totalblock")) target.shield -= attacker.attack;
         if (target.shield < 0) {
             target.health += target.shield;
             target.shield = 0;
@@ -24,21 +23,48 @@ function battle(player, enemy, maxRounds) {
 
         player.shield = player.block;
         enemy.shield = enemy.block;
-        attack(player.attack, enemy);
+        attack(player, enemy);
+
+        //efffect for doublestrike
         if (enemy.health <= 0) {
             enemy.health = 0;
+            delete player.shield;
+            delete enemy.shield;
             return true;
         }
 
-        attack(enemy.attack, player);
+        attack(enemy, player);
         if (player.health <= 0) {
             player.health = 0;
+            delete player.shield;
+            delete enemy.shield;
             return false;
         }
         roundCounter++;
 
     }
 }
+const probabilityCaps = {
+    doublestrike: 0.7,
+    totalblock: 0.5
+}
+function addCombatProbability(userData, name, probability) {
+    const combat = userData.combat.probabilities;
+    if (name in combat) {
+        combat[name] += probability;
+    } else {
+        combat[name] = probability;
+    }
+    if (combat[name] > probabilityCaps[name]) combat[name] = probabilityCaps[name];
+}
+function getCombatProbability(combatObj, probability) { //returns true if the effect should trigger. Returns false if otherwise
+    const prob = combatObj.probabilities;
+    if (!prob) return false;
+    if (!(probability in prob)) return false;
+    if (prob[probability] < Math.random()) return true;
+    return false;
+}
+
 function compareStatsString(playerStats, enemyStats) {
     return `\`Your stats:              | Enemy stats:
 Health: ${playerStats.health} (max: ${playerStats.maxHealth})${scriptingUtils.generateSpaces(25 - playerStats.health.toString().length - playerStats.maxHealth.toString().length - 16)}| Health: ${enemyStats.health}${scriptingUtils.generateSpaces(20 - enemyStats.health.toString().length - 8)}
@@ -47,8 +73,10 @@ Block: ${playerStats.block}${scriptingUtils.generateSpaces(25 - playerStats.bloc
 ${enemyStats.block >= playerStats.attack ? "The enemy has block higher or equal to your attack. **You will only deal damage of one per turn**" : ""}`;
 };
 module.exports = {
-    battle: battle,
+    battle,
     compareStatsString,
+    addCombatProbability,
+    getCombatProbability,
     dungeon: async function (interaction, script, userInfo) {
         return new Promise(async (res, rej) => {
             let weAreFinished = false;

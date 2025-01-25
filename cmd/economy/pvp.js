@@ -21,7 +21,7 @@ module.exports = {
         //You can earn a maximum of one million dollars from a PvP match
         const moneyEarned = Math.min(Math.floor((targetPlayerData.moneyOnHand + targetPlayerData.moneyBankAccount) * 0.1 + targetPlayerData.level * 500 + 1000), 100000000);
 
-        const results = await economyUtils.confirmation(interaction, notifications + compareStatsString(playerStats, enemyStats), "Attack", "Wait, no...");
+        const results = await economyUtils.confirmation(interaction, `${notifications} ${compareStatsString(playerStats, enemyStats)}\nThe player you attack will not lose money. Expect ${economyUtils.formatMoney(moneyEarned)}.`, "Attack", "Wait, no...");
         const {confirmed, response} = results;
 
         if (confirmed) {

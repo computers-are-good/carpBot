@@ -3,23 +3,41 @@ const path = require('node:path');
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const economyUtils = require(path.join(__dirname, "/economy"));
 const { calculateLevelUp } = require(path.join(__dirname, "/calculateLevelUp"));
-const { monsters } = require(path.join(__dirname, "../data/monsters"));
+const { monsters, raidBossLoot } = require(path.join(__dirname, "../data/monsters"));
 const raidBossList = ["Monella, Ultimate Master", "Sytlar, Demon of the Underworld"];
-
+const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
 
 module.exports = {
     distributeRewards(currentRaidData) {
         for (let id of Object.keys(currentRaidData.playersDamage)) {
-            const dmg = currentRaidData.playersDamage[id];
+            const dmgFromPlayer = currentRaidData.playersDamage[id];
+            let playerNotification = `You dealt ${dmgFromPlayer} damage to ${currentRaidData.currentMonster}. `;
+            const dmgFromEveryone = currentRaidData.maxHealth - currentRaidData.combat.health;
             const playerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/economy/${id}`), "UTF-8"));
-            const moneyGained = dmg * 100;
+            let moneyGained = dmgFromPlayer * 100;
+            moneyGained += Math.floor(dmgFromEveryone / 10);
             playerData.moneyOnHand += moneyGained;
-            const expGained = dmg;
+            let expGained = dmgFromPlayer;
+            expGained += Math.floor(dmgFromEveryone / 1000);
             let levelUpResults = calculateLevelUp(playerData.level, playerData.expRequired, expGained);
             playerData.level = levelUpResults.newLevel;
             playerData.expRequired = levelUpResults.newExpRequired;
-            economyUtils.notifyPlayer(playerData, `You have gained ${expGained} exp and ${economyUtils.formatMoney(moneyGained)} from ${currentRaidData.currentMonster}`)
-            fs.writeFileSync(path.join(__dirname, `../userdata/economy/${id}`), JSON.stringify(playerData))
+            playerNotification += `Gained ${expGained} EXP and ${economyUtils.formatMoney(moneyGained)}\n`;
+
+            playerNotification += `You gained the following items: `;
+            const bossLoot = raidBossLoot[currentRaidData.currentMonster];
+            for (const item of Object.keys(bossLoot)) {
+                const dmgReq = bossLoot[item];
+                const itemData = shopItems[item];
+                let quantityObtained = 0;
+                quantityObtained += Math.floor(dmgFromPlayer / dmgReq);
+                quantityObtained += Math.floor(dmgFromEveryone / (dmgReq * 1000));
+                economyUtils.addToInventory(playerData, item, quantityObtained);
+                playerNotification += `${itemData.emoji} ${itemData.name} x${quantityObtained} `;
+            }
+
+            economyUtils.notifyPlayer(playerData, playerNotification);
+            fs.writeFileSync(path.join(__dirname, `../userdata/economy/${id}`), JSON.stringify(playerData));
         }
     },
     getCurrentMonster: function () {
@@ -60,14 +78,14 @@ module.exports = {
 
         return raidData;
     },
-    addPlayerDamage: function(raidData, playerId, damageToAdd) {
+    addPlayerDamage: function (raidData, playerId, damageToAdd) {
         if (raidData.playersDamage[playerId]) {
             raidData.playersDamage[playerId] += damageToAdd;
         } else {
             raidData.playersDamage[playerId] = damageToAdd;
         }
     },
-    saveData: function(raidData) {
+    saveData: function (raidData) {
         fs.writeFileSync(path.join(__dirname, "../userdata/raidboss.json"), JSON.stringify(raidData));
     }
 }

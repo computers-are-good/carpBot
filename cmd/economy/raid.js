@@ -16,17 +16,21 @@ module.exports = {
 
         const enemyInfo = raidUtils.getCurrentMonster();
 
+        const expectedDmgTaken = Math.max(enemyInfo.combat.attack - userInfo.combat.block, 1) * 5;
+        const expectedDmgDealt = Math.max(userInfo.combat.attack - enemyInfo.combat.block, 1) * 5;
         let stringToSend = 
 `${notifications}Current raid boss: ${enemyInfo.currentMonster}
-Time remaining: ${scriptingUtils.getTimeUntilNextDay()}
+Time remaining: ${scriptingUtils.getTimeUntilNextDay()} | Health: ${Math.round((enemyInfo.combat.health / enemyInfo.maxHealth) * 100000) / 1000}%
 ${dungeonUtils.compareStatsString(userInfo.combat, enemyInfo.combat)}
+You will deal around ${expectedDmgDealt} damage. You wil take aaround ${expectedDmgTaken} damage (${userInfo.combat.health}HP -> ${Math.max(userInfo.combat.health - expectedDmgTaken, 0)}HP)
         `
         const results = await economyUtils.confirmation(interaction, stringToSend, "Attack", "Wait, no...");
         const {confirmed, response} = results;
         if (confirmed) {
-            let enemyOldHP = enemyInfo.combat.health;
+            const enemyOldHP = enemyInfo.combat.health;
+            const playerOldHP = userInfo.combat.health;
             dungeonUtils.battle(userInfo.combat, enemyInfo.combat, 5);
-            await response.edit(`You dealt ${enemyOldHP - enemyInfo.combat.health} damage to the enemy!`);
+            await response.edit(`You dealt ${enemyOldHP - enemyInfo.combat.health} damage (${Math.round(((enemyOldHP - enemyInfo.combat.health) / enemyInfo.maxHealth) * 100000) / 1000}%) to the enemy! Took ${playerOldHP - userInfo.combat.health} damage`);
             raidUtils.addPlayerDamage(enemyInfo, interaction.user.id, enemyOldHP - enemyInfo.combat.health);
 
             fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));

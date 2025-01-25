@@ -15,22 +15,43 @@ module.exports = {
         "Monella, Ultimate Master": {
             health: 500000,
             block: 40,
-            attack: 150
+            attack: 100,
+            probabilities: {
+                "doublestrike": 0.3
+            }
         },
         "Sytlar, Demon of the Underworld": {
             health: 7500000,
             block: 10,
-            attack: 40
-        }
+            attack: 130,
+        },
+        "Tratlus, Master of Blocking": {
+            health: 500000,
+            block: 40,
+            attack: 120,
+            probabilities: {
+                "totalblock": 0.5
+            }
+        },
     },
-    raidBossLoot: {
+    raidBossLoot: { //Damage required to obtain that piece of loot: shop ID number
         "Monella, Ultimate Master": {
-            50: 2005,
-            100: 2009
+            2012: 400,
+            2010: 750,
+            2013: 450,
+            3001: 2000,
         },
         "Sytlar, Demon of the Underworld": {
-            50: 2005,
-            100: 2009
+            2005: 300,
+            2012: 400,
+            2013: 450,
+            3011: 2000
+        },
+        "Tratlus, Master of Blocking": {
+            3002: 2500,
+            2012: 500,
+            2013: 450,
+            2009: 250,
         }
     }
 }

@@ -93,7 +93,7 @@ module.exports = {
 
 
         userInfo.moneyOnHand -= cost * quantity;
-        userInfo = economyUtils.addToInventory(userInfo, itemId, quantity);
+        economyUtils.addToInventory(userInfo, itemId, quantity);
 
         userInfo.inventory = userInfo.inventory.sort((a, b) => parseInt(a.Id) - parseInt(b.Id));
 

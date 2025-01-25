@@ -12,6 +12,7 @@ module.exports = {
             block: 10,
             maxHealth: 100,
             attack: 10,
+            probabilities: {}
         },
         abilitiesImproved: {
             maxHealth: 0,

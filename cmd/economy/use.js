@@ -48,8 +48,6 @@ module.exports = {
                 let returnObj
                 for (let i = 0; i < quantity; i++) {
                     returnObj = shopItems[itemId].scripts.onUse(userInfo, userInfo.inventory[item].metadata);
-                    userInfo = returnObj.userInfo;
-                    userInfo.inventory[item].metadata = returnObj.metadata;
                     if (returnObj.messageToUser) stringToReply += `\n${returnObj.messageToUser}`;
                 }
                 if (shopItems[itemId].category.includes("consumable")) {

@@ -3,6 +3,7 @@ const economyUtils = require(path.join(__dirname, "../utils/economy"));
 const { grantEffect } = require(path.join(__dirname, "../utils/grantEffect.js"))
 const scriptingUtils = require(path.join(__dirname, "../utils/scripting"));
 const { calculateLevelUp } = require(path.join(__dirname, "../utils/calculateLevelUp"));
+const dungeonUtils = require(path.join(__dirname, "../utils/dungeon"));
 /* 
 {
     name: Name of the item that will be displayed in /shop and /inventory,
@@ -12,6 +13,7 @@ const { calculateLevelUp } = require(path.join(__dirname, "../utils/calculateLev
         - If an item has a "testing" category, it can only be brought by admins.
         - Other categories, like "income" can be listed to better help users find the items.
     displayInInventory: if set to false, the item will not be displayed when /inventory is used.
+    displayInShop: if set to false, the item will not be displayed in the shop when /shop is used.
     cost: the cost of the item in cents,
     metadataToDisplay: The metadata tags in this array will be displayed when /inventory is used.
     emoji: the emoji representing the data which will be added before the item name in /shop and /inventory
@@ -36,6 +38,7 @@ module.exports = {
             emoji: "🎲",
             oneOff: true,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 generateMetadata: function () {
                     return { Colour: Math.random() < 0.5 ? "White" : "Black" }
@@ -59,6 +62,7 @@ module.exports = {
             metadataToDisplay: ["Colour"],
             oneOff: true,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 generateMetadata: function () {
                     return { Colour: Math.random() < 0.5 ? "White" : "Black" }
@@ -82,6 +86,7 @@ module.exports = {
             metadataToDisplay: ["Colour"],
             emoji: "🎲",
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 generateMetadata: function () {
                     return { Colour: Math.random() < 0.5 ? "White" : "Black" }
@@ -105,6 +110,7 @@ module.exports = {
             metadataToDisplay: ["Colour"],
             oneOff: true,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 generateMetadata: function () {
                     return { Colour: Math.random() < 0.5 ? "White" : "Black" }
@@ -128,6 +134,7 @@ module.exports = {
             metadataToDisplay: ["Colour"],
             oneOff: true,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 generateMetadata: function () {
                     return { Colour: Math.random() < 0.5 ? "White" : "Black" }
@@ -151,6 +158,7 @@ module.exports = {
             metadataToDisplay: ["Colour"],
             emoji: "🎲",
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 generateMetadata: function () {
                     return { Colour: Math.random() < 0.5 ? "White" : "Black" }
@@ -173,6 +181,7 @@ module.exports = {
             emoji: "🪙",
             oneOff: true,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
                     return {
@@ -193,6 +202,7 @@ module.exports = {
             emoji: "🏠",
             oneOff: false,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 generateMetadata: function () {
                     return {
@@ -213,6 +223,7 @@ module.exports = {
             emoji: "📄",
             oneOff: true,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 generateMetadata: function () {
                     return {
@@ -250,6 +261,7 @@ module.exports = {
             emoji: "🥾",
             oneOff: true,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 canBuy: function (userInfo) {
                     if (userInfo.level < 2) {
@@ -273,6 +285,7 @@ module.exports = {
             emoji: "🎫",
             oneOff: false,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
                     let won = Math.random() < 0.1;
@@ -280,8 +293,6 @@ module.exports = {
                         userInfo.moneyOnHand += 2000;
                     }
                     return {
-                        userInfo: userInfo,
-                        metadata: metadata,
                         messageToUser: won ? "You won $20" : "Better learn gambling isn't a good way to make money... You lost."
                     }
                 }
@@ -296,12 +307,11 @@ module.exports = {
             emoji: "☕",
             oneOff: false,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
                     grantEffect(userInfo, "coffee", 60);
                     return {
-                        userInfo: userInfo,
-                        metadata: metadata,
                         messageToUser: "You drank coffee."
                     }
                 }
@@ -316,6 +326,7 @@ module.exports = {
             emoji: "🧋",
             oneOff: false,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
                     let results = calculateLevelUp(userInfo.level, userInfo.expRequired, 250);
@@ -327,8 +338,6 @@ module.exports = {
                     userInfo.expRequired = results.newExpRequired;
 
                     return {
-                        userInfo: userInfo,
-                        metadata: metadata,
                         messageToUser: outputString
                     }
                 }
@@ -343,6 +352,7 @@ module.exports = {
             emoji: "🧋",
             oneOff: false,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
                     let results = calculateLevelUp(userInfo.level, userInfo.expRequired, 2500);
@@ -354,8 +364,6 @@ module.exports = {
                     userInfo.expRequired = results.newExpRequired;
 
                     return {
-                        userInfo: userInfo,
-                        metadata: metadata,
                         messageToUser: outputString
                     }
                 }
@@ -370,6 +378,7 @@ module.exports = {
             emoji: "🧋",
             oneOff: false,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
                     let results = calculateLevelUp(userInfo.level, userInfo.expRequired, 1000);
@@ -381,8 +390,6 @@ module.exports = {
                     userInfo.expRequired = results.newExpRequired;
 
                     return {
-                        userInfo: userInfo,
-                        metadata: metadata,
                         messageToUser: outputString
                     }
                 }
@@ -397,12 +404,11 @@ module.exports = {
             emoji: "🌿",
             oneOff: false,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
                     grantEffect(userInfo, "greenTea", 60);
                     return {
-                        userInfo: userInfo,
-                        metadata: metadata,
                         messageToUser: "You drank some green tea."
                     }
                 }
@@ -417,12 +423,11 @@ module.exports = {
             emoji: "🍁",
             oneOff: false,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
                     grantEffect(userInfo, "redTea", 60);
                     return {
-                        userInfo: userInfo,
-                        metadata: metadata,
                         messageToUser: "You drank some red tea."
                     }
                 }
@@ -437,15 +442,105 @@ module.exports = {
             emoji: "🍎",
             oneOff: false,
             addToInventory: true,
+            displayInShop: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
                     userInfo.combat.health += 20;
                     if (userInfo.combat.health > userInfo.combat.maxHealth + userInfo.level * 5) userInfo.combat.health = userInfo.combat.maxHealth + userInfo.level * 5;
                     return {
-                        userInfo: userInfo,
-                        metadata: metadata,
                         messageToUser: `Healed for 20 HP. You are now on ${userInfo.combat.health} HP.`
                     }
+                }
+            }
+        },
+        2012: {
+            name: "Attack potion",
+            displayInInventory: true,
+            category: ["object", "consumable",],
+            description: "Increases your attack by 1.",
+            emoji: "🧪",
+            oneOff: false,
+            addToInventory: true,
+            displayInShop: false,
+            scripts: {
+                canBuy: _ => false,
+                onUse: function (userInfo, metadata) {
+                    userInfo.combat.attack += 1;
+                    return {
+                        messageToUser: `Increased attack from ${userInfo.combat.attack - 1} to ${userInfo.combat.attack}.`
+                    }
+                }
+            }
+        },
+        2013: {
+            name: "Block potion",
+            displayInInventory: true,
+            category: ["object", "consumable",],
+            description: "Increases your block by 1.",
+            emoji: "🧪",
+            oneOff: false,
+            addToInventory: true,
+            displayInShop: false,
+            scripts: {
+                canBuy: _ => false,
+                onUse: function (userInfo, metadata) {
+                    userInfo.combat.block += 1;
+                    return {
+                        messageToUser: `Increased blocl from ${userInfo.combat.block - 1} to ${userInfo.combat.block}.`
+                    }
+                }
+            }
+        },
+        3001: {
+            name: "Blade of Monella",
+            displayInInventory: true,
+            emoji: "🗡️",
+            category: ["object", "raid"],
+            addToInventory: true,
+            description: "Gives you a 1% chance of doublestrike (attack the enemy twice on one turn)",
+            scripts: {
+                canBuy: _ => false,
+                onUse: function(userData) {
+                    dungeonUtils.addCombatProbability(userData, "doublestrike", 0.01)
+                    return {
+                        messageToUser: `Doublestrike chance increased (${(userData.combat.probabilities.doublestrike - 0.01) * 100}% -> ${userData.combat.probabilities.doublestrike * 100}%).`
+                    };
+                }
+            }
+        },
+        3002: {
+            name: "Flask of Tratlus",
+            displayInInventory: true,
+            emoji: "⚗️",
+            category: ["object", "raid"],
+            addToInventory: true,
+            description: "Gives you a 0.5% chance of totalblock (negates damage for one turn)",
+            scripts: {
+                canBuy: _ => false,
+                onUse: function(userData) {
+                    dungeonUtils.addCombatProbability(userData, "totalblock", 0.005)
+                    return {
+                        messageToUser: `Totalblock chance increased (${(userData.combat.probabilities.totalblock - 0.005) * 100}% -> ${userData.combat.probabilities.totalblock * 100}%).`
+                    };
+                }
+            }
+        },
+        3011: {
+            name: "Meat of the Underworld",
+            displayInInventory: true,
+            emoji: "🍗",
+            category: ["object", "raid"],
+            addToInventory: true,
+            description: "Permanently increases your attack by 35.",
+            scripts: {
+                canBuy: function() {
+                    return false
+                },
+                onUse: function(userData) {
+                    userData.combat.attack += 35;
+                    return {
+                        messageToUser: `Increased attack (${userData.combat.attack - 35} -> ${userData.combat.attack})`
+                    };
                 }
             }
         },
@@ -457,6 +552,9 @@ module.exports = {
             cost: 2000,
             addToInventory: false,
             scripts: {
+                onBuy: function(userData) {
+                    userData.moneyOnHand -= 2000;
+                }
             }
         },
         9992: {
