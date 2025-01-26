@@ -24,29 +24,37 @@ module.exports = {
 		if (category == "healingInterval" && userInfo.abilitiesImproved.healingInterval >= 15) {
 			await interaction.reply(`${notifications}You can only increase your healing interval a maximum of 15 times.`)
 		}
-		const cost = Math.max(userInfo.abilitiesImproved[category] * 500, 100) * 100;
-		let statToImproveReadable = category;
-		if (category == "maxHealth") statToImproveReadable = "max health";
-		let valueToIncrease;
-		let increaseMultiplier = 1;
-		if (userInfo.learned.includes("Efficent Training")) increaseMultiplier = 2;
+		let cost, valueToIncrease
 		switch (category) {
 			case "maxHealth":
 				valueToIncrease = 10 * increaseMultiplier;
+				cost = Math.floor(Math.pow(userInfo.abilitiesImproved[category], 1.8) + 100) * 100;
 				break;
 			case "attack":
 				valueToIncrease = 2 * increaseMultiplier;
+				cost = Math.floor(Math.pow(userInfo.abilitiesImproved[category] + 0.5, 2.0) + 100) * 100;
 				break;
 			case "block":
 				valueToIncrease = 1 * increaseMultiplier;
+				cost = (userInfo.abilitiesImproved[category] * 150) * 100;
 				break;
 			case 'speed':
 				valueToIncrease = 5 * increaseMultiplier;
+				cost = (userInfo.abilitiesImproved[category] * 250) * 100;
 				break;
 			case "healingInterval":
 				valueToIncrease = -2000;
+				cost = Math.max(userInfo.abilitiesImproved[category] * 500, 100) * 100;
 				break;
 		}
+		switch (category) {
+
+		}
+		let statToImproveReadable = category;
+		if (category == "maxHealth") statToImproveReadable = "max health";
+		let increaseMultiplier = 1;
+		if (userInfo.learned.includes("Efficent Training")) increaseMultiplier = 2;
+
 		let msgToSend;
 		if (category == "healingInterval") {
 			msgToSend = `${notifications}You will regenerate 1 health every ${userInfo.healingInterval / 1000}s -> ${(userInfo.healingInterval + valueToIncrease) / 1000}s. Decreasing this will cost ${economyUtils.formatMoney(cost)}. Are you sure?`;
