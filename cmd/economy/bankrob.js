@@ -107,7 +107,7 @@ module.exports = {
             }
             updateButtons();
         } else {
-            response.edit({ content: "Cancelled bank robbery", components: [] })
+            response.edit({ content: "Cancelled bank robbery", components: [] });
         }
     },
 };

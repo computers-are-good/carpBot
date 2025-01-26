@@ -123,7 +123,6 @@ module.exports = {
     },
     saveData: function (userId, userInfo) {
         fs.writeFileSync(path.join(__dirname, `../userdata/economy/${userId}`), JSON.stringify(userInfo));
-
     },
     displayList: async function (interaction, items, itemsPerPage) {
         const previous = new ButtonBuilder()
