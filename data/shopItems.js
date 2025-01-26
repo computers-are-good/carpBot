@@ -497,6 +497,7 @@ module.exports = {
             emoji: "🗡️",
             category: ["object", "raid"],
             addToInventory: true,
+            displayInShop: false,
             description: "Gives you a 1% chance of doublestrike (attack the enemy twice on one turn)",
             scripts: {
                 canBuy: _ => false,
@@ -511,6 +512,7 @@ module.exports = {
         3002: {
             name: "Flask of Tratlus",
             displayInInventory: true,
+            displayInShop: false,
             emoji: "⚗️",
             category: ["object", "raid"],
             addToInventory: true,
@@ -528,14 +530,13 @@ module.exports = {
         3011: {
             name: "Meat of the Underworld",
             displayInInventory: true,
+            displayInShop: false,
             emoji: "🍗",
             category: ["object", "raid"],
             addToInventory: true,
             description: "Permanently increases your attack by 35.",
             scripts: {
-                canBuy: function() {
-                    return false
-                },
+                canBuy: _ => false,
                 onUse: function(userData) {
                     userData.combat.attack += 35;
                     return {
