@@ -15,6 +15,7 @@ module.exports = {
 					{ name: 'Health', value: 'maxHealth' },
 					{ name: 'Attack', value: 'attack' },
 					{ name: 'Block', value: 'block' },
+					{ name: 'Speed', value: 'speed'}
 			)),
 	async execute(interaction) {
 		const {userInfo, notifications} = await economyUtils.prefix(interaction);
@@ -35,6 +36,8 @@ module.exports = {
 			case "block":
 				valueToIncrease = 1 * increaseMultiplier;
 				break;
+			case 'speed':
+				valueToIncrease = 5 * increaseMultiplier;
 		}
 		const val = await economyUtils.confirmation(interaction, `${notifications}You will increase ${statToImproveReadable} (${userInfo.combat[category]} -> ${userInfo.combat[category] + valueToIncrease}). This will cost ${economyUtils.formatMoney(cost)}. Are you sure?`);
 		const { confirmed, response } = val;

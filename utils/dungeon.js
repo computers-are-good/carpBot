@@ -17,27 +17,35 @@ function battle(player, enemy, maxRounds) {
     }
     let roundCounter = 0;
     if (player.health <= 0) return false;
+
+    let fastest, slowest;
+    if (player.speed >= enemy.speed) {
+        fastest = player;
+        slowest = enemy;
+    } else {
+        fastest = enemy;
+        slowest = player;
+    }
     while (true) {
         //Can't defeat the enemy in the specified rounds? You probably can't defeat the enemy. You lose.
         if (roundCounter >= maxRounds) return false;
 
-        player.shield = player.block;
-        enemy.shield = enemy.block;
-        attack(player, enemy);
+        fastest.shield = fastest.block;
+        slowest.shield = slowest.block;
+        attack(fastest, slowest);
 
-        //efffect for doublestrike
-        if (enemy.health <= 0) {
-            enemy.health = 0;
-            delete player.shield;
-            delete enemy.shield;
+        if (slowest.health <= 0) {
+            slowest.health = 0;
+            delete fastest.shield;
+            delete slowest.shield;
             return true;
         }
 
-        attack(enemy, player);
-        if (player.health <= 0) {
-            player.health = 0;
-            delete player.shield;
-            delete enemy.shield;
+        attack(slowest, fastest);
+        if (fastest.health <= 0) {
+            fastest.health = 0;
+            delete fastest.shield;
+            delete slowest.shield;
             return false;
         }
         roundCounter++;
@@ -70,6 +78,7 @@ function compareStatsString(playerStats, enemyStats) {
 Health: ${playerStats.health} (max: ${playerStats.maxHealth})${scriptingUtils.generateSpaces(25 - playerStats.health.toString().length - playerStats.maxHealth.toString().length - 16)}| Health: ${enemyStats.health}${scriptingUtils.generateSpaces(20 - enemyStats.health.toString().length - 8)}
 Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(25 - playerStats.attack.toString().length - 8)}| Attack: ${enemyStats.attack}${scriptingUtils.generateSpaces(20 - enemyStats.attack.toString().length - 8)}
 Block: ${playerStats.block}${scriptingUtils.generateSpaces(25 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}${scriptingUtils.generateSpaces(20 - enemyStats.block.toString().length - 7)}\`
+${playerStats.speed >= enemyStats.speed ? "**You** will attack first." : "**The enemy** will attack first."}
 ${enemyStats.block >= playerStats.attack ? "The enemy has block higher or equal to your attack. **You will only deal damage of one per turn**" : ""}`;
 };
 module.exports = {
