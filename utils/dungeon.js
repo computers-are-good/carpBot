@@ -33,6 +33,8 @@ function battle(player, enemy, maxRounds) {
         fastest.shield = fastest.block;
         slowest.shield = slowest.block;
         attack(fastest, slowest);
+        if (roundCounter == 0) 
+            attack(fastest, slowest);
 
         if (slowest.health <= 0) {
             slowest.health = 0;
@@ -42,6 +44,9 @@ function battle(player, enemy, maxRounds) {
         }
 
         attack(slowest, fastest);
+        if (roundCounter == 0) 
+            attack(slowest, fastest);
+
         if (fastest.health <= 0) {
             fastest.health = 0;
             delete fastest.shield;
@@ -49,7 +54,6 @@ function battle(player, enemy, maxRounds) {
             return false;
         }
         roundCounter++;
-
     }
 }
 const probabilityCaps = {
