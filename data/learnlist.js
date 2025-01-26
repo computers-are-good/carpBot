@@ -1,3 +1,6 @@
+const path = require('node:path');
+const {addCombatProbability} = require(path.join(__dirname, "../utils/dungeon"))
+
 module.exports = {
     learnList: [
         //Generally, the EXP gained should be around half of (cost / 100)
@@ -93,15 +96,15 @@ module.exports = {
         },
         {
             name: "Violin",
-            cost: 99999999,
-            exp: 567765,
-            description: "Learning violin makes you look and sound really cool. Your stats wil double for the first battle of each day as you play a rallying song." //TO IMPLEMENT
+            cost: 999999,
+            exp: 5665,
+            description: "Learning violin makes you look and sound really cool. When you raid a boss, you gain a bonus +50 to your attack."
         },
         {
-            name: "Unreality",
+            name: "Efficent Training",
             cost: 999999999,
             exp: 4999999,
-            description: "After learning unreality, each time you increase your stats via /train, your stats will be increased again for free." //TO IMPLEMENT
+            description: "After learning efficent training, each time you increase your stats via /train, your stats will be increased again for free."
         },
         {
             name: "Chemiscry",
@@ -111,15 +114,18 @@ module.exports = {
         },
         {
             name: "Shapeshifting",
-            cost: 5555555500,
-            exp: 22222222,
-            description: "After you learn shapeshifting, you have a 10% chance to take no damage from the enemy in combat." //TO IMPLEMENT
+            cost: 55555555,
+            exp: 222222,
+            description: "After you learn shapeshifting, you gain a 20% chance of totalblock (take no damage from the enemy in combat). Note that your chance of totalblock cannot exceed 50%",
+            onLearn: function (userInfo) {
+                addCombatProbability(userInfo, "totalblock", 0.2);
+            }
         },
         {
             name: "Haggling",
-            cost: 1240300,
+            cost: 1240000,
             exp: 6000,
-            description: "After you learn haggling, prices in the shop will decrease by 5%." //TO IMPLEMENT
+            description: "After you learn haggling, prices in the shop will decrease by 5%."
         }
     ]
 }

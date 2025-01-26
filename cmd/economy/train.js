@@ -23,15 +23,17 @@ module.exports = {
 		let statToImproveReadable = category;
 		if (category == "maxHealth") statToImproveReadable = "max health";
 		let valueToIncrease;
+		let increaseMultiplier = 1;
+		if (userInfo.learned.includes("Efficent Training")) increaseMultiplier = 2;
 		switch (category) {
 			case "maxHealth":
-				valueToIncrease = 10;
+				valueToIncrease = 10 * increaseMultiplier;
 				break;
 			case "attack":
-				valueToIncrease = 2;
+				valueToIncrease = 2 * increaseMultiplier;
 				break;
 			case "block":
-				valueToIncrease = 1;
+				valueToIncrease = 1 * increaseMultiplier;
 				break;
 		}
 		const val = await economyUtils.confirmation(interaction, `${notifications}You will increase ${statToImproveReadable} (${userInfo.combat[category]} -> ${userInfo.combat[category] + valueToIncrease}). This will cost ${economyUtils.formatMoney(cost)}. Are you sure?`);

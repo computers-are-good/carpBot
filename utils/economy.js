@@ -102,8 +102,7 @@ module.exports = {
     hasEffect: function (userInfo, effects) {
         let toReturn = {}
         let now = new Date().getTime();
-        userInfo.effects = userInfo.effects.filter(a => a.validUntil > now);        //delete expired effects
-
+        userInfo.effects = userInfo.effects.filter(a => a.validUntil > now); //delete expired effects
         for (let effect of effects) {
             let effectFound = false;
             for (let userEffect in userInfo.effects) {
@@ -322,6 +321,7 @@ module.exports = {
             }
         }
         if (priceMultiplier <= 0.42) priceMultiplier = 0.42;
+        if (userInfo.learned.includes("Haggling")) priceMultiplier -= 0.05;
         return Math.floor(shopItem.cost * priceMultiplier);
     },
     profanityCheck: function (phrase) { //returning false means you have failed the profanity check (i.e. the phrase contains bad words)
