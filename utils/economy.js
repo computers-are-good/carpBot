@@ -100,12 +100,10 @@ module.exports = {
     },
 
     hasEffect: function (userInfo, effects) {
-        //delete expired effects
-        let toReturn = {
-
-        }
+        let toReturn = {}
         let now = new Date().getTime();
-        userInfo.effects = userInfo.effects.filter(a => a.validUntil > now);
+        userInfo.effects = userInfo.effects.filter(a => a.validUntil > now);        //delete expired effects
+
         for (let effect of effects) {
             let effectFound = false;
             for (let userEffect in userInfo.effects) {
