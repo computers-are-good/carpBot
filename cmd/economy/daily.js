@@ -9,7 +9,6 @@ module.exports = {
 		.setName('daily')
 		.setDescription('Claims your daily reward!'),
 	async execute(interaction) {
-        userInfo = await economyUtils.prefix(interaction);
         const {userInfo, notifications} = await economyUtils.prefix(interaction);
         const today = scriptingUtils.getCurrentDay();
         if (today == userInfo.lastDaily) {
