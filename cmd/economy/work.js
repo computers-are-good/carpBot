@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { gainExp } = require(path.join(__dirname, "../../utils/levelup"));
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { jobs } = require(path.join(__dirname, "../../data/worktext"));
 
@@ -60,7 +61,7 @@ Wallet: **${economyUtils.formatMoney(userInfo.moneyOnHand)}**\n`;
 
         stringToWrite += `${msg} ${effect.greenTea > 0 ? ` Green tea duration remaining: ${effect.greenTea}s` : ""}${effect.redTea > 0 ? `, Red tea duration remaining: ${effect.redTea}s` : ""}`;
 
-        fs.writeFileSync(dataPath, JSON.stringify(userInfo));
+        saveData(userInfo, interaction.user.id);
 
         await interaction.reply(stringToWrite);
     },

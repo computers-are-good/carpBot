@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { compareStatsString, battle } = require(path.join(__dirname, "../../utils/dungeon"));
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -10,19 +11,19 @@ module.exports = {
         .setDescription('Fight another player for loot!')
         .addUserOption(option => option.setName("player").setDescription("Which player to fight?").setRequired(true)),
     async execute(interaction) {
-        const {userInfo, notifications} = await economyUtils.prefix(interaction);
+        const { userInfo, notifications } = await economyUtils.prefix(interaction);
         const targetPlayer = interaction.options.getUser("player");
-        
+
         let griefTestResults = await economyUtils.canGriefPlayer(targetPlayer.id, userInfo, interaction, notifications);
-		if (!griefTestResults.canGrief) return;
-		let targetPlayerData = griefTestResults.targetUserData;
+        if (!griefTestResults.canGrief) return;
+        let targetPlayerData = griefTestResults.targetUserData;
         const playerStats = userInfo.combat;
         const enemyStats = targetPlayerData.combat;
         //You can earn a maximum of one million dollars from a PvP match
         const moneyEarned = Math.min(Math.floor((targetPlayerData.moneyOnHand + targetPlayerData.moneyBankAccount) * 0.1 + targetPlayerData.level * 500 + 1000), 100000000);
 
         const results = await economyUtils.confirmation(interaction, `${notifications} ${compareStatsString(playerStats, enemyStats)}\nThe player you attack will not lose money. Expect ${economyUtils.formatMoney(moneyEarned)}.`, "Attack", "Wait, no...");
-        const {confirmed, response} = results;
+        const { confirmed, response } = results;
 
         if (confirmed) {
             let won = battle(playerStats, enemyStats);
@@ -34,10 +35,10 @@ module.exports = {
                 economyUtils.notifyPlayer(targetPlayerData, `${interaction.user.id} fought you and lost. Congratulations!`)
                 response.edit(`You lost.`);
             }
-           fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+            saveData(userInfo, interaction.user.id);
         } else {
             response.edit(`PvP cancelled.`);
         }
-        
+
     },
 };

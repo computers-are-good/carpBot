@@ -1,5 +1,4 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
-const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopItems"))
@@ -10,7 +9,6 @@ module.exports = {
         .setDescription('Browse items for sale!')
         .addStringOption(option => option.setName("category").setDescription("Category")),
     async execute(interaction) {
-		const {userInfo, notifications} = await economyUtils.prefix(interaction);
         const category = interaction.options.getString("category");
 
         let objectsFittingCriteria = [];

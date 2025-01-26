@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
-const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 const { petsList } = require(path.join(__dirname, "../../data/petslist"));
 
 module.exports = {
@@ -36,7 +36,7 @@ module.exports = {
             petObject.name = newName;
 
             await interaction.reply(`${notifications}Pet ${oldNameToUseInMsg} renamed to ${petObject.name}.`);
-            fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+            saveData(userInfo, interaction.user.id);
         }
         //Has the user entered a type of pet e.g. "Dog"?
         for (let pet in petsList) {

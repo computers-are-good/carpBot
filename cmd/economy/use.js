@@ -1,9 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require("fs");
 const path = require('node:path');
-const { createUserData } = require(path.join(__dirname, "../../utils/createUserData"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopItems"))
-
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 
 module.exports = {
@@ -56,12 +54,11 @@ module.exports = {
                         userInfo.inventory.splice(item, 1);
                     }
                 }
-                fs.writeFileSync(dataPath, JSON.stringify(userInfo));
+                saveData(userInfo, interaction.user.id);
                 await interaction.reply(stringToReply);
                 return;
             }
         }
-
 
         await interaction.reply("User does not have this item in their inventory.")
     },

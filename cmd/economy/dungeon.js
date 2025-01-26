@@ -6,10 +6,10 @@ const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { gainExp } = require(path.join(__dirname, "../../utils/levelup"));
 const { dungeon } = require(path.join(__dirname, "../../utils/dungeon"));
 const { dungeonText } = require(path.join(__dirname, "../../data/dungeontext"));
-const dataLocks = require(path.join(__dirname, "../../utils/datalocks"));
 const { dungeonList } = require(path.join(__dirname, "../../data/dungeonlist"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
+const { saveData, lockData, unlockData } = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -55,7 +55,7 @@ module.exports = {
                     return;
                 }
             }
-            dataLocks.lockData(interaction.user.id);
+            lockData(interaction.user.id);
             try {
                 dungeon(interaction, dungeonText[targetDungeon], userInfo).then(async success => {
                     if (success.completed) {
@@ -126,18 +126,18 @@ module.exports = {
                     } else {
                         await success.response.edit({ content: `${notifications}Dungeon not completed.`, components: [] });
                     }
-                    dataLocks.unlockData(interaction.user.id);
-                    fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+                    unlockData(interaction.user.id);
+                    saveData(userInfo, interaction.user.id);
 
                 },
                     fail => {
                         fail.response.edit({ content: "Dungeon not completed", components: [] });
-                        dataLocks.unlockData(interaction.user.id);
-                        fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+                        unlockData(interaction.user.id);
+                        saveData(userInfo, interaction.user.id);
                     });
             } catch (e) {
                 console.log(e);
-                dataLocks.unlockData(interaction.user.id);
+                unlockData(interaction.user.id);
             }
         }
 

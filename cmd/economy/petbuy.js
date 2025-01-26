@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require("fs");
 const path = require('node:path');
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { petsList } = require(path.join(__dirname, "../../data/petslist"));
@@ -72,7 +72,7 @@ module.exports = {
                 }
             );
             await interaction.reply(`${notifications}You have brought a ${selectedPet.name} named ${petName}.`);
-            fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+            saveData(userInfo, interaction.user.id);
         }
     },
 };

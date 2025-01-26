@@ -4,8 +4,8 @@ const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const dungeonUtils = require(path.join(__dirname, "../../utils/dungeon"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const raidUtils = require(path.join(__dirname, "../../utils/raid"));
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
-const dataLocks = require(path.join(__dirname, "../../utils/datalocks"));
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -36,7 +36,7 @@ You will deal around ${expectedDmgDealt} damage. You wil take around ${expectedD
             if (userInfo.learned.includes("Violin")) userInfo.combat.attack -= 50;
 
             fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
-            raidUtils.saveData(enemyInfo);
+            saveData(enemyInfo);
         }
     },
 };

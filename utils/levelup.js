@@ -34,6 +34,6 @@ module.exports = {
         if (oldLevel !== results.newLevel) {
             return `Congratulations! You levelled up (${oldLevel} -> ${userInfo.level}). Your stats are increased. Level up bonus: $${userInfo.level * 100}.`;
         }
-        return `You gained ${expToGain} experience. You need ${userInfo.expRequired} experience to level up (${Math.round(userInfo.expRequired / expRequiredToLevelUp(userInfo.level) * 1000) / 10}% there).`;
+        return `You gained ${expToGain} experience. You need ${userInfo.expRequired} experience to level up (${Math.round((1 - (userInfo.expRequired / expRequiredToLevelUp(userInfo.level))) * 1000) / 10}% there).`;
     }
 }

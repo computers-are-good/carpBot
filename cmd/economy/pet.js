@@ -5,6 +5,7 @@ const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const {calculateLevelUp} = require(path.join(__dirname, "../../utils/levelup"))
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { petsList } = require(path.join(__dirname, "../../data/petslist"));
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
 const petMessages = [
     "You took {PETNAME} on a walk.",
@@ -45,6 +46,6 @@ module.exports = {
         toPet.pointsUntilIncrease = levelUpResults.newExpRequired;
 
         await interaction.reply(stringToReply);
-        fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+        saveData(userInfo, interaction.user.id);
 	},
 };

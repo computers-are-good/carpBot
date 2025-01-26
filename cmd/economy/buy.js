@@ -1,11 +1,10 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
-const { createUserData } = require(path.join(__dirname, "../../utils/createUserData"));
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
-const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
 const { developerIds } = require(path.join(__dirname, "../../configs.json"))
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -97,8 +96,8 @@ module.exports = {
 
         userInfo.inventory = userInfo.inventory.sort((a, b) => parseInt(a.Id) - parseInt(b.Id));
 
-        fs.writeFileSync(dataPath, JSON.stringify(userInfo));
-
+        saveData(userInfo, interaction.user.id);
+        
         await interaction.reply(`${notifications}You have brought ${quantity}x ${itemData.name} (ID ${itemId})`);
     },
 };

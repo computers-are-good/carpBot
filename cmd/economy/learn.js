@@ -4,6 +4,7 @@ const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { gainExp } = require(path.join(__dirname, "../../utils/levelup"));
 const { learnList } = require(path.join(__dirname, "../../data/learnlist"));
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
 function skillLearnt(userInfo, skillName) {
 	for (let i in userInfo.learned) {
@@ -76,7 +77,7 @@ module.exports = {
 			string += levelUpResults;
 			await interaction.reply(string);
 
-			fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+			saveData(userInfo, interaction.user.id);
 		}
 	},
 };

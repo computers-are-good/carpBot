@@ -4,7 +4,7 @@ const path = require('node:path');
 const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
 const { createUserData } = require(path.join(__dirname, "/createUserData"));
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
-const dataLocks = require(path.join(__dirname, "/datalocks"));
+const { dataIsLocked } = require(path.join(__dirname, "/userdata"));
 const { dungeonList } = require(path.join(__dirname, "../data/dungeonlist"));
 const { defaultUserData } = require(path.join(__dirname, "../data/defaultuserdata"));
 const { profanities } = require(path.join(__dirname, "../data/profanities"));
@@ -51,7 +51,7 @@ module.exports = {
                 usernames[interaction.user.id] = interaction.user.username;
                 fs.writeFileSync(path.join(__dirname, `../userdata/economy/${usernames}`), JSON.stringify(usernames));
             }
-            if (dataLocks.dataIsLocked(interaction.user.id)) {
+            if (dataIsLocked(interaction.user.id)) {
                 rej(0);
                 return;
             }
@@ -71,7 +71,7 @@ module.exports = {
                 userInfo.lastHealthRestoration = new Date().getTime();
                 infoModified = true;
             }
-            const timeDiff =  now - userInfo.lastHealthRestoration;
+            const timeDiff = now - userInfo.lastHealthRestoration;
             if (timeDiff > healingInterval) {
                 if (userInfo.combat.health == userInfo.combat.maxHealth) {
                     userInfo.lastHealthRestoration = now;
@@ -117,10 +117,11 @@ module.exports = {
                 infoModified = true;
             }
             if (infoModified) fs.writeFileSync(dataPath, JSON.stringify(userInfo));
-            
+
             acc({
                 userInfo: userInfo,
-                notifications: notifs});
+                notifications: notifs
+            });
         });
     },
 
@@ -363,27 +364,27 @@ module.exports = {
         }
         return false;
     },
-    canGriefPlayer: async function(targetPlayerId, userInfo, interaction, notifications) {
+    canGriefPlayer: async function (targetPlayerId, userInfo, interaction, notifications) {
         let canGrief = true;
-		if (!fs.existsSync(path.join(__dirname, `../userdata/economy/${targetPlayerId}`))) {
-			await interaction.reply(`${notifications}This user has not used CrapBot.`);
-			canGrief = false;
-		}
+        if (!fs.existsSync(path.join(__dirname, `../userdata/economy/${targetPlayerId}`))) {
+            await interaction.reply(`${notifications}This user has not used CrapBot.`);
+            canGrief = false;
+        }
 
-		if (userInfo.passiveMode) {
-			await interaction.reply(`${notifications}You are in passive mode.`);
-			canGrief = false;
-		}
-		let targetPlayerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/economy/${targetPlayerId}`)).toString("UTF-8"));
+        if (userInfo.passiveMode) {
+            await interaction.reply(`${notifications}You are in passive mode.`);
+            canGrief = false;
+        }
+        let targetPlayerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/economy/${targetPlayerId}`)).toString("UTF-8"));
 
-		if (targetPlayerData.passiveMode) {
-			await interaction.reply(`${notifications}That user is in passive mode. Please leave them alone.`);
-			canGrief = false;
-		}
-		if (targetPlayerId == interaction.user.id) {
-			await interaction.reply(`${notifications}You can't grief yourself!`);
-			canGrief = false;
-		}
+        if (targetPlayerData.passiveMode) {
+            await interaction.reply(`${notifications}That user is in passive mode. Please leave them alone.`);
+            canGrief = false;
+        }
+        if (targetPlayerId == interaction.user.id) {
+            await interaction.reply(`${notifications}You can't grief yourself!`);
+            canGrief = false;
+        }
         return {
             canGrief: canGrief,
             targetUserData: targetPlayerData

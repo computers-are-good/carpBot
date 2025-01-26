@@ -1,5 +1,4 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
-const fs = require("fs");
+const { SlashCommandBuilder } = require('discord.js');
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopItems"))

@@ -1,8 +1,7 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
-const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
-const dataLocks = require(path.join(__dirname, "../../utils/datalocks"));
+const userData = require(path.join(__dirname, "../../utils/userdata"));
 const {grantEffect} = require(path.join(__dirname, "../../utils/grantEffect.js"));
 
 module.exports = {
@@ -40,8 +39,8 @@ module.exports = {
 			successChance = Math.min(Math.ceil(successChance * ((time - targetPlayerData.lastGotRobbed) / 4000000) * 1000) / 1000, successChance);
 		}
 
-		dataLocks.lockData(targetPlayerId);
-		dataLocks.lockData(interaction.user.id);
+		userData.lockData(targetPlayerId);
+		userData.lockData(interaction.user.id);
 		try {
 			economyUtils.confirmation(interaction, `${notifications}Preparing to rob ${targetPlayer.username} for ${economyUtils.formatMoney(moneyRobbed)} with a ${successChance * 100}% chance of success. Are you sure?`).then(val => {
 				let { confirmed, response } = val;
@@ -69,22 +68,22 @@ module.exports = {
 					targetPlayerData.lastGotRobbed = time;
 					userInfo.lastRobbedSomeone = time;
 
-					fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
-					fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${targetPlayerId}`), JSON.stringify(targetPlayerData));
+					userData.saveData(userInfo, interaction.user.id);
+					userData.saveData(targetPlayerData, targetPlayerId);
 				} else {
 					response.edit("Robbery cancelled.");
 				}
-				dataLocks.unlockData(targetPlayerId);
-				dataLocks.unlockData(interaction.user.id);
+				userData.unlockData(targetPlayerId);
+				userData.unlockData(interaction.user.id);
 			}, val => {
 				let { response } = val;
 				response.edit("The player was not robbed (you have timed out).");
-				dataLocks.unlockData(targetPlayerId);
-				dataLocks.unlockData(interaction.user.id);
+				userData.unlockData(targetPlayerId);
+				userData.unlockData(interaction.user.id);
 			});
 		} catch {
-			dataLocks.unlockData(targetPlayerId);
-			dataLocks.unlockData(interaction.user.id);
+			userData.unlockData(targetPlayerId);
+			userData.unlockData(interaction.user.id);
 		}
 	},
 };

@@ -3,9 +3,9 @@ const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
-const dataLocks = require(path.join(__dirname, "../../utils/datalocks"));
 const {grantEffect} = require(path.join(__dirname, "../../utils/grantEffect"));
 const {masterQuestionsList} = require(path.join(__dirname, "../../data/bankrobquestions"));
+const { saveData, lockData, unlockData } = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -49,8 +49,8 @@ module.exports = {
 
         function robberySuccessful() {
             userInfo.moneyOnHand += moneyToBeEarned;
-            dataLocks.unlockData(interaction.user.id);
-            fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+            unlockData(interaction.user.id);
+            saveData(userInfo, interaction.user.id);
         }
         function robberyFailed() {
             let criminalDuration = 14400;
@@ -62,8 +62,8 @@ module.exports = {
                 if (criminalDuration <= 10) criminalDuration = 10; 
             }
             grantEffect(userInfo, "criminal",  criminalDuration);
-            dataLocks.unlockData(interaction.user.id);
-            fs.writeFileSync(path.join(__dirname, `../../userdata//economy/${interaction.user.id}`), JSON.stringify(userInfo));
+            unlockData(interaction.user.id);
+            saveData(userInfo, interaction.user.id);
         }
 
         let response = await interaction.reply({
@@ -72,7 +72,7 @@ module.exports = {
         });
         let buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
         if (buttons.customId === 'confirm') {
-            dataLocks.lockData(interaction.user.id);
+            lockData(interaction.user.id);
             let questionAsked = 0;
             let questions = [];
             for (let i = 0; i < 5; i++) {

@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,6 +20,6 @@ module.exports = {
         userInfo.moneyOnHand += moneyGained;
         userInfo.lastDaily = today;
         interaction.reply(`${notifications}Thanks for logging in on ${today}. You have gained ${economyUtils.formatMoney(moneyGained)} dollars.`);
-        fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+        saveData(userInfo, interaction.user.id);
 	},
 };

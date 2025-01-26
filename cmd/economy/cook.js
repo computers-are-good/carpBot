@@ -1,11 +1,10 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
-const { createUserData } = require(path.join(__dirname, "../../utils/createUserData"));
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
-const { developerIds } = require(path.join(__dirname, "../../configs.json"))
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -39,7 +38,7 @@ module.exports = {
             economyUtils.addToInventory(userInfo, itemMade, 1);
             await interaction.reply(`${notifications}Congratulations! You made some ${scriptingUtils.fancyText(`Homemade ${shopItems[itemMade].name}`)}.`);
 
-            fs.writeFileSync(dataPath, JSON.stringify(userInfo));
+            saveData(userInfo, interaction.user.id);
         } else {
             await interaction.reply(`
 ${notifications}You blew up the kitchen and failed to make anything. Try levelling up or /cook again.

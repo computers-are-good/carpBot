@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -77,7 +78,7 @@ module.exports = {
 				userInfo.combat[category] += valueToIncrease;
 				response.edit(`Increased ${statToImproveReadable} (${userInfo.combat[category] - valueToIncrease} -> ${userInfo.combat[category]}).`);
 			}
-			fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+			saveData(userInfo, interaction.user.id);
 		} else {
 			response.edit("Training cancelled.");
 		}

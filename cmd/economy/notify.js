@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,7 +22,7 @@ module.exports = {
 		const userInfo = JSON.parse(fs.readFileSync(path.join(__dirname, `../../userdata/economy/${user.id}`), "UTF-8"));
 		economyUtils.notifyPlayer(userInfo, `${interaction.user.username}: ${msg}`);
 
-		fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${user.id}`), JSON.stringify(userInfo));
+		saveData(userInfo, interaction.user.id);
 		await interaction.reply(`Success! ${user.username} should see the message when they next use CrapBot economy.`)
 	},
 };
