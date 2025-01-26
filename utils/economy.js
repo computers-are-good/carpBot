@@ -330,14 +330,6 @@ module.exports = {
         }
         return false;
     },
-    generateUserStats: function (userInfo) {
-        const playerStats = {};
-        playerStats.health = userInfo.combat.health;
-        playerStats.maxHealth = userInfo.combat.maxHealth + 5 * userInfo.level;
-        playerStats.attack = userInfo.combat.attack + Math.floor(userInfo.combat.attack * userInfo.level / 3);
-        playerStats.block = userInfo.combat.block + Math.floor(userInfo.combat.block * userInfo.level / 3);
-        return playerStats;
-    },
     determinePrice: function (userInfo, shopItem) {
         let priceMultiplier = 1;
         for (let pet of userInfo.pets) {
@@ -403,6 +395,6 @@ module.exports = {
             timeDisplay: scriptingUtils.getTimestamp(),
             timeMachineReadable: new Date().getTime(),
             hideable: hideable
-        })
+        });
     }
 }

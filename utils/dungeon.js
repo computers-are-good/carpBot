@@ -2,7 +2,6 @@ const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const path = require('node:path');
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const { monsters } = require(path.join(__dirname, "../data/monsters"));
-const economyUtils = require(path.join(__dirname, "/economy"));
 function battle(player, enemy, maxRounds) {
     function attack(attacker, target) {
         if (getCombatProbability(attacker, "doublestrike")) attack(attacker, enemy);
@@ -33,7 +32,7 @@ function battle(player, enemy, maxRounds) {
         fastest.shield = fastest.block;
         slowest.shield = slowest.block;
         attack(fastest, slowest);
-        if (roundCounter == 0) 
+        if (roundCounter == 0)
             attack(fastest, slowest);
 
         if (slowest.health <= 0) {
@@ -44,7 +43,7 @@ function battle(player, enemy, maxRounds) {
         }
 
         attack(slowest, fastest);
-        if (roundCounter == 0) 
+        if (roundCounter == 0)
             attack(slowest, fastest);
 
         if (fastest.health <= 0) {
@@ -78,13 +77,23 @@ function getCombatProbability(combatObj, probability) { //returns true if the ef
 }
 
 function compareStatsString(playerStats, enemyStats) {
+    let difficultyMsg = "even"
+    const expectedPlayerDamage = playerStats.attack - enemyStats.block;
+    const expectedEnemyDamage = enemyStats.attack - playerStats.block;
+    const difficultyScore = expectedPlayerDamage - expectedEnemyDamage;
+    if (difficultyScore < -5) difficultyMsg = "difficult";
+    if (difficultyScore < -30) difficultyMsg = "arduous";
+    if (difficultyScore > 5) difficultyMsg = "easy";
+    if (difficultyScore > 30) difficultyMsg = "very easy"
+
     return `\`Your stats:              | Enemy stats:
 Health: ${playerStats.health} (max: ${playerStats.maxHealth})${scriptingUtils.generateSpaces(25 - playerStats.health.toString().length - playerStats.maxHealth.toString().length - 16)}| Health: ${enemyStats.health}${scriptingUtils.generateSpaces(20 - enemyStats.health.toString().length - 8)}
 Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(25 - playerStats.attack.toString().length - 8)}| Attack: ${enemyStats.attack}${scriptingUtils.generateSpaces(20 - enemyStats.attack.toString().length - 8)}
 Block: ${playerStats.block}${scriptingUtils.generateSpaces(25 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}${scriptingUtils.generateSpaces(20 - enemyStats.block.toString().length - 7)}\`
-${playerStats.speed >= enemyStats.speed ? "**You** will attack first." : "**The enemy** will attack first."}
+Expected difficulty: **${difficultyMsg}**. ${playerStats.speed >= enemyStats.speed ? "**You** will attack first." : "**The enemy** will attack first."}
 ${enemyStats.block >= playerStats.attack ? "The enemy has block higher or equal to your attack. **You will only deal damage of one per turn**" : ""}`;
 };
+
 module.exports = {
     battle,
     compareStatsString,
@@ -106,7 +115,7 @@ module.exports = {
             const row = new ActionRowBuilder().addComponents(previous, next);
 
             let itemIndex = 0;
-            const playerStats = economyUtils.generateUserStats(userInfo);
+            const playerStats = userInfo.combat;
 
             function processCurrentIndex(itemIndex) {
                 let stringToReply = "";
@@ -115,7 +124,7 @@ module.exports = {
                 switch (currentStep.type) {
                     case "text":
                         stringToReply = script[itemIndex].content;
-                        if (script[itemIndex].img) imageToReplyWith = path.join(__dirname, `../ data / dungeonimg / ${script[itemIndex].img} `);
+                        if (script[itemIndex].img) imageToReplyWith = path.join(__dirname, `../data/dungeonimg/${script[itemIndex].img}`);
                         break;
                     case "prebattle":
                         const enemyStats = generateEnemyStats(itemIndex);

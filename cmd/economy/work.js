@@ -1,10 +1,10 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
-const { calculateLevelUp } = require(path.join(__dirname, "../../utils/calculateLevelUp"));
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const { gainExp } = require(path.join(__dirname, "../../utils/levelup"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
-const {jobs} = require(path.join(__dirname, "../../data/worktext"));
+const { jobs } = require(path.join(__dirname, "../../data/worktext"));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,8 +12,7 @@ module.exports = {
         .setDescription('Work to make some money!'),
     async execute(interaction) {
         const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`);
-        const {userInfo, notifications} = await economyUtils.prefix(interaction);
-
+        const { userInfo, notifications } = await economyUtils.prefix(interaction);
 
         let expGained = Math.ceil((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.4) * 2 + 4);
         let moneyGained = Math.ceil(((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.35) + 1) * 100 * userInfo.permanentWorkMultiplier);
@@ -48,26 +47,20 @@ module.exports = {
         }
 
         if (typeof moneyGained !== "number" || typeof expGained !== "number") throw new Error("Money Gained or Exp Gained is not a number. Please check your code!");
-        
+
         userInfo.moneyOnHand += moneyGained;
         userInfo.lifetimeMoneyFromWorking += moneyGained;
-        let { newLevel, newExpRequired } = calculateLevelUp(userInfo.level, userInfo.expRequired, expGained);
+        let msg = gainExp(userInfo, expGained);
 
         let stringToWrite =
             `${notifications}
 User ${userInfo.username} ${scriptingUtils.choice(jobs)}. 
 Gained **${economyUtils.formatMoney(moneyGained)}**. ${effect.coffee ? `Coffee duration remaining: ${effect.coffee}s` : ""}
-Wallet: **${economyUtils.formatMoney(userInfo.moneyOnHand)}**`
+Wallet: **${economyUtils.formatMoney(userInfo.moneyOnHand)}**\n`;
 
-        userInfo.expRequired = newExpRequired;
-        if (newLevel != userInfo.level) {
-            stringToWrite += `\nLevel up! (${userInfo.level} -> ${newLevel})`;
-            userInfo.level = newLevel
-        } else {
-            stringToWrite += `\nGained ${expGained} exp. (To next level: ${newExpRequired}${effect.greenTea > 0 ? `, Green tea duration remaining: ${effect.greenTea}s` : ""}${effect.redTea > 0 ? `, Red tea duration remaining: ${effect.redTea}s` : ""})`;
-        }
+        stringToWrite += `${msg} ${effect.greenTea > 0 ? ` Green tea duration remaining: ${effect.greenTea}s` : ""}${effect.redTea > 0 ? `, Red tea duration remaining: ${effect.redTea}s` : ""}`;
 
-       fs.writeFileSync(dataPath, JSON.stringify(userInfo));
+        fs.writeFileSync(dataPath, JSON.stringify(userInfo));
 
         await interaction.reply(stringToWrite);
     },

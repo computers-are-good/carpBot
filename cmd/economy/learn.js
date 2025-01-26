@@ -2,8 +2,8 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
-const {learnList} = require(path.join(__dirname, "../../data/learnlist"));
-const {calculateLevelUp} = require(path.join(__dirname, "../../utils/calculateLevelUp"));
+const { gainExp } = require(path.join(__dirname, "../../utils/levelup"));
+const { learnList } = require(path.join(__dirname, "../../data/learnlist"));
 
 function skillLearnt(userInfo, skillName) {
 	for (let i in userInfo.learned) {
@@ -17,7 +17,7 @@ module.exports = {
 		.setDescription('Spends money to learn a skill to gain experience!')
 		.addStringOption(option => option.setName("skill").setDescription("What you want to learn")),
 	async execute(interaction) {
-		const {userInfo, notifications} = await economyUtils.prefix(interaction);
+		const { userInfo, notifications } = await economyUtils.prefix(interaction);
 		//if nothing specified for "skill", then display everything that can be learnt
 		let availableSkills = [];
 		for (let i in learnList) {
@@ -36,8 +36,8 @@ module.exports = {
 			for (let i in availableSkills) {
 				const skill = availableSkills[i];
 				let string = "";
-				string += 
-`**${skill.name}** (**${skill.exp}** exp): ${skill.description ? `${skill.description}\n` : ""}**${economyUtils.formatMoney(skill.cost)}**.
+				string +=
+					`**${skill.name}** (**${skill.exp}** exp): ${skill.description ? `${skill.description}\n` : ""}**${economyUtils.formatMoney(skill.cost)}**.
 `;
 				listToDisplay.push(string);
 			}
@@ -65,21 +65,15 @@ module.exports = {
 					return;
 				}
 			}
-			let string = `${notifications}You learnt ${skill.name} for ${economyUtils.formatMoney(skill.cost)}.`;
+			let string = `${notifications}You learnt ${skill.name} for ${economyUtils.formatMoney(skill.cost)}. `;
 
 			userInfo.moneyOnHand -= skill.cost;
 			userInfo.learned.push(skill.name);
 			if (skill.onLearn) {
 				skill.onLearn(userInfo);
 			}
-			const levelUpResults = calculateLevelUp(userInfo.level, userInfo.expRequired, skill.exp);
-			if (levelUpResults.newLevel !== userInfo.level) {
-				string += `\nYou levelled up! (${userInfo.level} -> ${levelUpResults.newLevel})`;
-			} else {
-				string += `\nYou need ${levelUpResults.newExpRequired} exp to reach the next level.`
-			}
-			userInfo.level = levelUpResults.newLevel;
-			userInfo.expRequired = levelUpResults.newExpRequired;
+			const levelUpResults = gainExp(userInfo, skill.exp);
+			string += levelUpResults;
 			await interaction.reply(string);
 
 			fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));

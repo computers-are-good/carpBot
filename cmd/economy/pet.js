@@ -2,9 +2,9 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const {calculateLevelUp} = require(path.join(__dirname, "../../utils/levelup"))
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { petsList } = require(path.join(__dirname, "../../data/petslist"));
-const { calculateLevelUp } = require(path.join(__dirname, "../../utils/calculateLevelUp"));
 
 const petMessages = [
     "You took {PETNAME} on a walk.",

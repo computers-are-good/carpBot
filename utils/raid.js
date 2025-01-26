@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require('node:path');
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const economyUtils = require(path.join(__dirname, "/economy"));
-const { calculateLevelUp } = require(path.join(__dirname, "/calculateLevelUp"));
+const {gainExp} = require(path.join(__dirname, "/levelup"));
 const { monsters, raidBossLoot } = require(path.join(__dirname, "../data/monsters"));
 const raidBossList = ["Monella, Ultimate Master", "Sytlar, Demon of the Underworld"];
 const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
@@ -19,10 +19,8 @@ module.exports = {
             playerData.moneyOnHand += moneyGained;
             let expGained = dmgFromPlayer;
             expGained += Math.floor(dmgFromEveryone / 1000);
-            let levelUpResults = calculateLevelUp(playerData.level, playerData.expRequired, expGained);
-            playerData.level = levelUpResults.newLevel;
-            playerData.expRequired = levelUpResults.newExpRequired;
-            playerNotification += `Gained ${expGained} EXP and ${economyUtils.formatMoney(moneyGained)}\n`;
+            console.log(expGained);
+            playerNotification += gainExp(playerData, expGained);
 
             playerNotification += `You gained the following items: `;
             const bossLoot = raidBossLoot[currentRaidData.currentMonster];
@@ -33,7 +31,7 @@ module.exports = {
                 quantityObtained += Math.floor(dmgFromPlayer / dmgReq);
                 quantityObtained += Math.floor(dmgFromEveryone / (dmgReq * 1000));
                 economyUtils.addToInventory(playerData, item, quantityObtained);
-                playerNotification += `${itemData.emoji} ${itemData.name} x${quantityObtained} `;
+                playerNotification += `${itemData.emoji} ${itemData.name} x${quantityObtained}\n`;
             }
 
             economyUtils.notifyPlayer(playerData, playerNotification);

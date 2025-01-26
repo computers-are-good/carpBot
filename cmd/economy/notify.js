@@ -2,15 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
-const {learnList} = require(path.join(__dirname, "../../data/learnlist"));
-const {calculateLevelUp} = require(path.join(__dirname, "../../utils/calculateLevelUp"));
 
-function skillLearnt(userInfo, skillName) {
-	for (let i in userInfo.learned) {
-		if (userInfo.learned[i] == skillName) return true;
-	}
-	return false;
-}
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('notify')

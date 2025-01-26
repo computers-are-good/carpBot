@@ -1,8 +1,8 @@
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../utils/economy"));
-const { grantEffect } = require(path.join(__dirname, "../utils/grantEffect.js"))
+const {gainExp} =  require(path.join(__dirname, "../utils/levelup"));
+const { grantEffect } = require(path.join(__dirname, "../utils/grantEffect.js"));
 const scriptingUtils = require(path.join(__dirname, "../utils/scripting"));
-const { calculateLevelUp } = require(path.join(__dirname, "../utils/calculateLevelUp"));
 const dungeonUtils = require(path.join(__dirname, "../utils/dungeon"));
 /* 
 {
@@ -329,16 +329,8 @@ module.exports = {
             displayInShop: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
-                    let results = calculateLevelUp(userInfo.level, userInfo.expRequired, 250);
-                    let outputString = ""
-                    if (userInfo.level != results.newLevel) {
-                        outputString = `Congratulations! Levelled up (${userInfo.level} -> ${results.newLevel})`;
-                    }
-                    userInfo.level = results.newLevel;
-                    userInfo.expRequired = results.newExpRequired;
-
                     return {
-                        messageToUser: outputString
+                        messageToUser: gainExp(userInfo, 250)
                     }
                 }
             }
@@ -355,16 +347,8 @@ module.exports = {
             displayInShop: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
-                    let results = calculateLevelUp(userInfo.level, userInfo.expRequired, 2500);
-                    let outputString = ""
-                    if (userInfo.level != results.newLevel) {
-                        outputString = `Congratulations! Levelled up (${userInfo.level} -> ${results.newLevel})`;
-                    }
-                    userInfo.level = results.newLevel;
-                    userInfo.expRequired = results.newExpRequired;
-
                     return {
-                        messageToUser: outputString
+                        messageToUser: gainExp(userInfo, 2500)
                     }
                 }
             }
@@ -381,16 +365,8 @@ module.exports = {
             displayInShop: true,
             scripts: {
                 onUse: function (userInfo, metadata) {
-                    let results = calculateLevelUp(userInfo.level, userInfo.expRequired, 1000);
-                    let outputString = ""
-                    if (userInfo.level != results.newLevel) {
-                        outputString = `Congratulations! Levelled up (${userInfo.level} -> ${results.newLevel})`;
-                    }
-                    userInfo.level = results.newLevel;
-                    userInfo.expRequired = results.newExpRequired;
-
                     return {
-                        messageToUser: outputString
+                        messageToUser: gainExp(userInfo, 10000)
                     }
                 }
             }

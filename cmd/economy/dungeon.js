@@ -3,11 +3,11 @@ const fs = require("fs");
 const path = require('node:path');
 const { listAvailableDungeons } = require('../../utils/economy');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const { gainExp } = require(path.join(__dirname, "../../utils/levelup"));
 const { dungeon } = require(path.join(__dirname, "../../utils/dungeon"));
 const { dungeonText } = require(path.join(__dirname, "../../data/dungeontext"));
 const dataLocks = require(path.join(__dirname, "../../utils/datalocks"));
 const { dungeonList } = require(path.join(__dirname, "../../data/dungeonlist"));
-const { calculateLevelUp } = require(path.join(__dirname, "../../utils/calculateLevelUp"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 
@@ -17,7 +17,7 @@ module.exports = {
         .setDescription('Visits a dungeon!')
         .addStringOption(option => option.setName("dungeon").setDescription("Which dungeon to enter?")),
     async execute(interaction) {
-        const {userInfo, notifications} = await economyUtils.prefix(interaction);
+        const { userInfo, notifications } = await economyUtils.prefix(interaction);
         const dungeonInput = interaction.options.getString("dungeon");
         let targetDungeon;
         const availableDungeons = listAvailableDungeons(userInfo);
@@ -30,7 +30,7 @@ module.exports = {
             economyUtils.displayList(interaction, list);
         } else {
 
-            if (!economyUtils.inventoryHasItem(userInfo.inventory, 1010)){
+            if (!economyUtils.inventoryHasItem(userInfo.inventory, 1010)) {
                 await interaction.reply(`${notifications}Please buy a pair of Adventurer's boots with \`/buy Adventurer's boots\` before starting a dungeon. It costs $500.`);
                 return;
             }
@@ -48,7 +48,7 @@ module.exports = {
                 return;
             }
             const targetDungeonInfo = dungeonList[targetDungeon];
-    
+
             if ("requirements" in targetDungeonInfo) {
                 if ("level" in targetDungeonInfo.requirements && userInfo.level < targetDungeonInfo.requirements.level) {
                     await interaction.reply(`${notifications}You do not meet the level requirements to do this dungeon. Required: ${targetDungeonInfo.requirements.level}. You: ${userInfo.level}`);
@@ -69,10 +69,14 @@ module.exports = {
                             });
                         let moneyGained = targetDungeonInfo.completeRewards.money;
                         let expGained = targetDungeonInfo.completeRewards.exp;
-    
-                        stringToSend += `\nGained ${economyUtils.formatMoney(moneyGained)} and ${expGained} exp`;
+
+                        stringToSend += `\nGained ${economyUtils.formatMoney(moneyGained)}`;
+                        const levelUpResults = gainExp(userInfo, expGained);
+                        stringToSend += `\n${levelUpResults}`;
+                        userInfo.moneyOnHand += moneyGained;
+                        
+                        let firstStringAdded = false;
                         if ("item" in targetDungeonInfo.completeRewards) {
-                            stringToSend += `\nYou gained the following items:`
                             for (let item in targetDungeonInfo.completeRewards.item) {
                                 const itemObj = targetDungeonInfo.completeRewards.item[item];
                                 if ("probability" in itemObj && Math.random() > itemObj.probability) continue;
@@ -82,7 +86,11 @@ module.exports = {
                                 } else if (typeof itemObj.quantity == "object") {
                                     quantityAdded = scriptingUtils.randIntBetween(itemObj.quantity[0], itemObj.quantity[1]);
                                 }
-                                userInfo = economyUtils.addToInventory(userInfo,
+                                if (quantityAdded > 0 && !firstStringAdded) {
+                                    stringToSend += `\nYou gained the following items:`;
+                                    firstStringAdded = true;
+                                }
+                                economyUtils.addToInventory(userInfo,
                                     itemObj.id,
                                     quantityAdded);
                                 const shopItemObj = shopItems[itemObj.id]
@@ -94,7 +102,7 @@ module.exports = {
                             moneyGained += targetDungeonInfo.firstCompleteRewards.money;
                             expGained += targetDungeonInfo.firstCompleteRewards.exp;
                             stringToSend += `\n${economyUtils.formatMoney(targetDungeonInfo.firstCompleteRewards.money)} and ${targetDungeonInfo.firstCompleteRewards.exp} exp`;
-    
+
                             if ("item" in targetDungeonInfo.firstCompleteRewards) {
                                 stringToSend += `\nFirst time completion items:`
                                 for (let item in targetDungeonInfo.firstCompleteRewards.item) {
@@ -114,23 +122,13 @@ module.exports = {
                                 }
                             }
                         }
-                        const levelUpResults = calculateLevelUp(userInfo.level, userInfo.expRequired, expGained);
-                        if (levelUpResults.newLevel !== userInfo.level) {
-                            stringToSend += `\nCongratulations! You levelled up (${userInfo.level} -> ${levelUpResults.newLevel})`
-                        } else {
-                            stringToSend += `\nExp until next level: ${levelUpResults.newExpRequired}`
-                        }
-                        userInfo.level = levelUpResults.newLevel;
-                        userInfo.moneyOnHand += moneyGained;
-                        userInfo.expRequired = levelUpResults.newExpRequired;
-    
                         await success.response.edit({ content: stringToSend, components: [] });
                     } else {
                         await success.response.edit({ content: `${notifications}Dungeon not completed.`, components: [] });
                     }
                     dataLocks.unlockData(interaction.user.id);
                     fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
-    
+
                 },
                     fail => {
                         fail.response.edit({ content: "Dungeon not completed", components: [] });
