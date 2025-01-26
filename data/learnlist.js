@@ -110,7 +110,7 @@ module.exports = {
             name: "Chemiscry",
             cost: 10,
             exp: 50,
-            descrption: "Chemistry is hard, so we've changed the name to chemiscry."
+            description: "Chemistry is hard, so we've changed the name to chemiscry."
         },
         {
             name: "Shapeshifting",
