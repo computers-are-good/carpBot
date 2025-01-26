@@ -7,6 +7,7 @@ module.exports = {
         moneyOnHand: 0,
         permanentWorkMultiplier: 1,
         lastDaily: "",
+        healingInterval: 60000,
         combat: {
             health: 100,
             block: 10,
@@ -20,7 +21,9 @@ module.exports = {
             block: 0,
             attack: 0,
             speed: 0,
+            healingInterval: 0
         },
+        lastHealthRestoration: 0,
         pets:[],
         moneyBankAccount: 0,
         megaGem: 0,

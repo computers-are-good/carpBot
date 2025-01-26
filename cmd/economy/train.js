@@ -15,11 +15,15 @@ module.exports = {
 					{ name: 'Health', value: 'maxHealth' },
 					{ name: 'Attack', value: 'attack' },
 					{ name: 'Block', value: 'block' },
-					{ name: 'Speed', value: 'speed'}
-			)),
+					{ name: 'Speed', value: 'speed' },
+					{ name: 'Healing interval', value: 'healingInterval' }
+				)),
 	async execute(interaction) {
-		const {userInfo, notifications} = await economyUtils.prefix(interaction);
+		const { userInfo, notifications } = await economyUtils.prefix(interaction);
 		const category = interaction.options.getString('stat');
+		if (category == "healingInterval" && userInfo.abilitiesImproved.healingInterval >= 15) {
+			await interaction.reply(`${notifications}You can only increase your healing interval a maximum of 15 times.`)
+		}
 		const cost = Math.max(userInfo.abilitiesImproved[category] * 500, 100) * 100;
 		let statToImproveReadable = category;
 		if (category == "maxHealth") statToImproveReadable = "max health";
@@ -38,8 +42,18 @@ module.exports = {
 				break;
 			case 'speed':
 				valueToIncrease = 5 * increaseMultiplier;
+				break;
+			case "healingInterval":
+				valueToIncrease = -2000;
+				break;
 		}
-		const val = await economyUtils.confirmation(interaction, `${notifications}You will increase ${statToImproveReadable} (${userInfo.combat[category]} -> ${userInfo.combat[category] + valueToIncrease}). This will cost ${economyUtils.formatMoney(cost)}. Are you sure?`);
+		let msgToSend;
+		if (category == "healingInterval") {
+			msgToSend = `${notifications}You will regenerate 1 health every ${userInfo.healingInterval / 1000}s -> ${(userInfo.healingInterval + valueToIncrease) / 1000}s. Decreasing this will cost ${economyUtils.formatMoney(cost)}. Are you sure?`;
+		} else {
+			msgToSend = `${notifications}You will increase ${statToImproveReadable} (${userInfo.combat[category]} -> ${userInfo.combat[category] + valueToIncrease}). This will cost ${economyUtils.formatMoney(cost)}. Are you sure?`;
+		}
+		const val = await economyUtils.confirmation(interaction, msgToSend);
 		const { confirmed, response } = val;
 		if (confirmed) {
 			if (userInfo.moneyOnHand < cost) {
@@ -48,8 +62,13 @@ module.exports = {
 			}
 			userInfo.moneyOnHand -= cost;
 			userInfo.abilitiesImproved[category]++;
-			userInfo.combat[category] += valueToIncrease;
-			response.edit(`Increased ${statToImproveReadable} (${userInfo.combat[category] - valueToIncrease} -> ${userInfo.combat[category]}).`)
+			if (category == "healingInterval") {
+				userInfo.healingInterval += valueToIncrease;
+				response.edit(`Decreased healing interval (${(userInfo.healingInterval - valueToIncrease) / 1000}s -> ${userInfo.healingInterval / 1000}s)`);
+			} else {
+				userInfo.combat[category] += valueToIncrease;
+				response.edit(`Increased ${statToImproveReadable} (${userInfo.combat[category] - valueToIncrease} -> ${userInfo.combat[category]}).`);
+			}
 			fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
 		} else {
 			response.edit("Training cancelled.");

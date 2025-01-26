@@ -63,7 +63,32 @@ module.exports = {
                     infoModified = true;
                 }
             }
-            let notifs = ""
+
+            const now = new Date().getTime();
+            //players passively heal
+            const healingInterval = userInfo.healingInterval;
+            if (userInfo.lastHealthRestoration == 0) {
+                userInfo.lastHealthRestoration = new Date().getTime();
+                infoModified = true;
+            }
+            const timeDiff =  now - userInfo.lastHealthRestoration;
+            if (timeDiff > healingInterval) {
+                if (userInfo.combat.health == userInfo.combat.maxHealth) {
+                    userInfo.lastHealthRestoration = now;
+                } else {
+                    let healthToRestore = Math.floor(timeDiff / healingInterval);
+                    userInfo.combat.health += healthToRestore;
+                    userInfo.lastHealthRestoration += healthToRestore * healingInterval;
+                    if (userInfo.combat.health >= userInfo.combat.maxHealth) {
+                        userInfo.combat.health = userInfo.combat.maxHealth;
+                        userInfo.lastHealthRestoration = now;
+                    }
+                }
+                infoModified = true;
+            }
+
+            //notifications
+            let notifs = "";
             if (userInfo.notifications.length > 0) {
                 userInfo.notifications.filter(e => {
                     if (e.hideable) {
