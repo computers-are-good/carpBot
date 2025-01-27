@@ -6,6 +6,7 @@ const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const raidUtils = require(path.join(__dirname, "../../utils/raid"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 const { SlashCommandBuilder } = require('discord.js');
+const maxPlayerAttackTimes = 5;
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,20 +15,30 @@ module.exports = {
     async execute(interaction) {
         const {userInfo, notifications} = await economyUtils.prefix(interaction);
 
-        const enemyInfo = raidUtils.getCurrentMonster();
+        let enemyInfo = raidUtils.getCurrentMonster();
         if (userInfo.learned.includes("Violin")) userInfo.combat.attack += 50;
 
         const expectedDmgTaken = Math.max(enemyInfo.combat.attack - userInfo.combat.block, 1) * 5;
         const expectedDmgDealt = Math.max(userInfo.combat.attack - enemyInfo.combat.block, 1) * 5;
+        const attackedTimes = enemyInfo.playersAttackedTimes[interaction.user.id] ?? 0;
         let stringToSend = 
-`${notifications}Current raid boss: ${enemyInfo.currentMonster}
+`${notifications}Current raid boss: ${enemyInfo.currentMonster} ${attackedTimes < maxPlayerAttackTimes ? `(attacked ${attackedTimes} / ${maxPlayerAttackTimes})` : `As you attacked the enemy **${attackedTimes} times**, you need to use **1 unwithering flower** to continue attacking.`}
 Time remaining: ${scriptingUtils.getTimeUntilNextDay()} | Health: ${Math.round((enemyInfo.combat.health / enemyInfo.maxHealth) * 100000) / 1000}%
 ${dungeonUtils.compareStatsString(userInfo.combat, enemyInfo.combat)}
-You will deal around ${expectedDmgDealt} damage. You wil take around ${expectedDmgTaken} damage (${userInfo.combat.health}HP -> ${Math.max(userInfo.combat.health - expectedDmgTaken, 0)}HP)
-        `
+You will deal around ${expectedDmgDealt} damage. You wil take around ${expectedDmgTaken} damage (${userInfo.combat.health}HP -> ${Math.max(userInfo.combat.health - expectedDmgTaken, 0)}HP)       `
         const results = await economyUtils.confirmation(interaction, stringToSend, "Attack", "Wait, no...");
         const {confirmed, response} = results;
         if (confirmed) {
+            //check unwithering flowers count
+            if (attackedTimes >= maxPlayerAttackTimes) {
+                if (userInfo.unwitheringFlowers > 0) {
+                    userInfo.unwitheringFlowers--;
+                } else {
+                    await response.edit(`You are out of unwithering flowers.`);
+                    return;
+                }
+            }
+            enemyInfo = raidUtils.getCurrentMonster(); //in case it changed between confirming and the "yes" button pressed
             const enemyOldHP = enemyInfo.combat.health;
             const playerOldHP = userInfo.combat.health;
             dungeonUtils.battle(userInfo.combat, enemyInfo.combat, 5);
@@ -35,8 +46,8 @@ You will deal around ${expectedDmgDealt} damage. You wil take around ${expectedD
             raidUtils.addPlayerDamage(enemyInfo, interaction.user.id, enemyOldHP - enemyInfo.combat.health);
             if (userInfo.learned.includes("Violin")) userInfo.combat.attack -= 50;
 
-            fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
-            saveData(enemyInfo);
+            fs.writeFileSync(path.join(__dirname, `../../userdata/raidboss.json`), JSON.stringify(enemyInfo));
+            saveData(userInfo, interaction.user.id);
         }
     },
 };

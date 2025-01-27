@@ -19,8 +19,21 @@ module.exports = {
             playerData.moneyOnHand += moneyGained;
             let expGained = dmgFromPlayer;
             expGained += Math.floor(dmgFromEveryone / 1000);
-            console.log(expGained);
             playerNotification += gainExp(playerData, expGained);
+
+            //unwithering flowers
+            let unwitheringFlowersGained = 0;
+            if (currentRaidData.playersAttackedTimes[id] > 3) {
+                unwitheringFlowersGained = 3;
+                currentRaidData.playersAttackedTimes[id] -= 3;
+                for (let i = 0; i < currentRaidData.playersAttackedTimes[id]; i++) {
+                    if (Math.random() < 0.2) unwitheringFlowersGained++
+                }
+            } else {
+                unwitheringFlowersGained = currentRaidData.playersAttackedTimes[id];
+            }
+            playerNotification += ` You gained ${unwitheringFlowersGained} and ${economyUtils.formatMoney(moneyGained)}`;
+            playerData.unwitheringFlowers += unwitheringFlowersGained;
 
             playerNotification += `You gained the following items: `;
             const bossLoot = raidBossLoot[currentRaidData.currentMonster];
@@ -54,6 +67,7 @@ module.exports = {
                 level: Math.floor(Math.random() * 3) + 10,
                 combat: monsters[selectedMonster],
                 playersDamage: {},
+                playersAttackedTimes: {},
             };
             for (let stat in raidData.combat) {
                 if (stat in ["health", "block", "attack"]) raidData.combat[stat] *= raidData.level;
@@ -67,11 +81,11 @@ module.exports = {
             if (raidData.date !== scriptingUtils.getCurrentDay()) {
                 this.distributeRewards(raidData);
                 raidData = generateNewRaidData(raidData);
-                this.saveData(raidData);
+                this.saveRaidData(raidData);
             }
         } else {
             raidData = generateNewRaidData();
-            this.saveData(raidData);
+            this.saveRaidData(raidData);
         }
 
         return raidData;
@@ -82,8 +96,13 @@ module.exports = {
         } else {
             raidData.playersDamage[playerId] = damageToAdd;
         }
+        if (raidData.playersAttackedTimes[playerId]) {
+            raidData.playersAttackedTimes[playerId]++;
+        } else {
+            raidData.playersAttackedTimes[playerId] = 1;
+        }
     },
-    saveData: function (raidData) {
+    saveRaidData: function (raidData) {
         fs.writeFileSync(path.join(__dirname, "../userdata/raidboss.json"), JSON.stringify(raidData));
     }
 }

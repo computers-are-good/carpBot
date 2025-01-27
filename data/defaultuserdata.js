@@ -3,6 +3,7 @@ module.exports = {
         level: 1,
         username: "",
         expRequired: 15,
+        unwitheringFlowers: 0,
         inventory: [],
         moneyOnHand: 0,
         permanentWorkMultiplier: 1,
