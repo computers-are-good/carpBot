@@ -31,11 +31,11 @@ module.exports = {
                 moneyAwarded += i * 10000;
             }
             userInfo.moneyOnHand += moneyAwarded;
+            userInfo.combat.attack += 2;
+            userInfo.combat.maxHealth += 10;
+            userInfo.combat.block += 1;
+            userInfo.combat.speed += 5;
         }
-        userInfo.combat.attack += 2;
-        userInfo.combat.maxHealth += 10;
-        userInfo.combat.block += 1;
-        userInfo.combat.speed += 5;
 
         if (oldLevel !== results.newLevel) {
             return `Congratulations! You levelled up (${oldLevel} -> ${userInfo.level}). Your stats are increased. Level up bonus: $${moneyAwarded / 100}.`;
