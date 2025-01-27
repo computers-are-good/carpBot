@@ -7,7 +7,7 @@ const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('notify')
-		.setDescription('Spends money to learn a skill to gain experience!')
+		.setDescription('Notifies a user with a custom message!')
 		.addUserOption(option => option.setName("user").setDescription("User to notify.").setRequired(true))
 		.addStringOption(option => option.setName("msg").setDescription("Message to the user").setRequired(true)),
 	async execute(interaction) {
