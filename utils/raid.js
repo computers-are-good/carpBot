@@ -68,6 +68,7 @@ module.exports = {
                 combat: monsters[selectedMonster],
                 playersDamage: {},
                 playersAttackedTimes: {},
+                isRaid: true
             };
             for (let stat in raidData.combat) {
                 if (stat in ["health", "block", "attack"]) raidData.combat[stat] *= raidData.level;

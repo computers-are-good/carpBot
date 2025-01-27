@@ -1,8 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { gainExp } = require(path.join(__dirname, "../../utils/levelup"));
+const { hasEffect } = require(path.join(__dirname, "../../utils/effects"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { jobs } = require(path.join(__dirname, "../../data/worktext"));
@@ -18,7 +18,7 @@ module.exports = {
         let expGained = Math.ceil((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.4) * 2 + 4);
         let moneyGained = Math.ceil(((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.35) + 1) * 100 * userInfo.permanentWorkMultiplier);
         if (economyUtils.inventoryHasItem(userInfo.inventory, 1009)) moneyGained += 5000;
-        let effect = economyUtils.hasEffect(userInfo, ["coffee", "greenTea", "redTea", "criminal"]);
+        let effect = hasEffect(userInfo, ["coffee", "greenTea", "redTea", "criminal"]);
 
         if (effect.criminal > 0) {
             await interaction.reply(`${notifications}You are a criminal! Better lay low for a while (remaining: ${effect.effectDurations.criminal}s)`);

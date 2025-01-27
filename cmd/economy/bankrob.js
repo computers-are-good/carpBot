@@ -3,7 +3,7 @@ const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
-const {grantEffect} = require(path.join(__dirname, "../../utils/grantEffect"));
+const {grantEffect, hasEffect} = require(path.join(__dirname, "../../utils/effects"));
 const {masterQuestionsList} = require(path.join(__dirname, "../../data/bankrobquestions"));
 const { saveData, lockData, unlockData } = require(path.join(__dirname, "../../utils/userdata"));
 
@@ -16,7 +16,7 @@ module.exports = {
         const collectorFilter = i => i.user.id === interaction.user.id;
 
         //can't rob banks while you are criminal
-        let effectResults = economyUtils.hasEffect(userInfo, ["criminal"]);
+        let effectResults = hasEffect(userInfo, ["criminal"]);
         if (effectResults.criminal > 0) {
             await interaction.reply(`${notifications}You're already a criminal! Don't want to turn yourself into the one place police love to guard. (Remaining: ${effectResults.criminal}s)`);
             return;

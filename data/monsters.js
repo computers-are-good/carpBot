@@ -50,7 +50,7 @@ module.exports = {
             2005: 300,
             2012: 400,
             2013: 450,
-            3011: 2000
+            3003: 2000
         },
         "Tratlus, Master of Blocking": {
             3002: 2500,

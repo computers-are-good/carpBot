@@ -124,26 +124,6 @@ module.exports = {
             });
         });
     },
-
-    hasEffect: function (userInfo, effects) {
-        let toReturn = {}
-        let now = new Date().getTime();
-        userInfo.effects = userInfo.effects.filter(a => a.validUntil > now); //delete expired effects
-        for (let effect of effects) {
-            let effectFound = false;
-            for (let userEffect in userInfo.effects) {
-                if (userInfo.effects[userEffect].name == effect) {
-                    effectFound = true;
-                    toReturn[effect] = Math.floor((userInfo.effects[userEffect].validUntil - now) / 1000);
-                    break;
-                }
-            }
-            if (!effectFound) {
-                toReturn[effect] = 0;
-            }
-        }
-        return toReturn;
-    },
     saveData: function (userId, userInfo) {
         fs.writeFileSync(path.join(__dirname, `../userdata/economy/${userId}`), JSON.stringify(userInfo));
     },

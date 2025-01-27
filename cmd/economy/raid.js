@@ -45,7 +45,7 @@ You will deal around ${expectedDmgDealt} damage. You wil take around ${expectedD
             enemyInfo = raidUtils.getCurrentMonster(); //in case it changed between confirming and the "yes" button pressed
             const enemyOldHP = enemyInfo.combat.health;
             const playerOldHP = userInfo.combat.health;
-            dungeonUtils.battle(userInfo.combat, enemyInfo.combat, 5);
+            dungeonUtils.battle(userInfo, enemyInfo, 5);
             await response.edit(`You dealt ${enemyOldHP - enemyInfo.combat.health} damage (${Math.round(((enemyOldHP - enemyInfo.combat.health) / enemyInfo.maxHealth) * 100000) / 1000}%) to the enemy! Took ${playerOldHP - userInfo.combat.health} damage`);
             raidUtils.addPlayerDamage(enemyInfo, interaction.user.id, enemyOldHP - enemyInfo.combat.health);
             if (userInfo.learned.includes("Violin")) userInfo.combat.attack -= 50;

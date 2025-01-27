@@ -1,7 +1,7 @@
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../utils/economy"));
 const {gainExp} =  require(path.join(__dirname, "../utils/levelup"));
-const { grantEffect } = require(path.join(__dirname, "../utils/grantEffect.js"));
+const { grantEffect, hasEffect } = require(path.join(__dirname, "../utils/effects"));
 const scriptingUtils = require(path.join(__dirname, "../utils/scripting"));
 const dungeonUtils = require(path.join(__dirname, "../utils/dungeon"));
 /* 
@@ -462,7 +462,7 @@ module.exports = {
                 onUse: function (userInfo, metadata) {
                     userInfo.combat.block += 1;
                     return {
-                        messageToUser: `Increased blocl from ${userInfo.combat.block - 1} to ${userInfo.combat.block}.`
+                        messageToUser: `Increased block from ${userInfo.combat.block - 1} to ${userInfo.combat.block}.`
                     }
                 }
             }
@@ -503,7 +503,7 @@ module.exports = {
                 }
             }
         },
-        3011: {
+        3003: {
             name: "Meat of the Underworld",
             displayInInventory: true,
             displayInShop: false,
@@ -521,7 +521,25 @@ module.exports = {
                 }
             }
         },
-        9991: {
+        3011: {
+            name: "Elusive red rose",
+            displayInInventory: true,
+            displayInShop: true,
+            emoji: "🌹",
+            category: ["object", "unwitheringflower"],
+            addToInventory: true,
+            unwitheringFlowers: 5,
+            description: "When used, for the next five minutes, deal damage equal to 25% of the enemy's health in non-raid battles.",
+            scripts: {
+                onUse: function(userInfo) {
+                    grantEffect(userInfo, "redrose", 300);
+                    return {
+                        messageToUser: "Elusive red rose activated."
+                    }
+                }
+            }
+        },
+        9911: {
             name: "Money sink",
             category: ["testing"],
             displayInInventory: false,

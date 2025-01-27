@@ -2,7 +2,7 @@ const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = re
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const userData = require(path.join(__dirname, "../../utils/userdata"));
-const {grantEffect} = require(path.join(__dirname, "../../utils/grantEffect.js"));
+const {grantEffect, hasEffect} = require(path.join(__dirname, "../../utils/effects"));
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -20,7 +20,7 @@ module.exports = {
 		if (!griefTestResults.canGrief) return;
 		let targetPlayerData = griefTestResults.targetUserData;
 
-		let effectResults = economyUtils.hasEffect(userInfo, ["criminal"]);
+		let effectResults = hasEffect(userInfo, ["criminal"]);
         if (effectResults.criminal > 0) {
             await interaction.reply(`${notifications}You're already a criminal! You shouldn't do more crimes. (Remaining: ${effectResults.criminal}s)`);
             return;

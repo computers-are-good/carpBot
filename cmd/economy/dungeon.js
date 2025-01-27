@@ -114,7 +114,7 @@ module.exports = {
                                     } else if (typeof itemObj.quantity == "object") {
                                         quantityAdded = scriptingUtils.randIntBetween(itemObj.quantity[0], itemObj.quantity[1]);
                                     }
-                                    userInfo = economyUtils.addToInventory(userInfo,
+                                    economyUtils.addToInventory(userInfo,
                                         itemObj.id,
                                         quantityAdded);
                                     const shopItemObj = shopItems[itemObj.id]

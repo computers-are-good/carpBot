@@ -1,8 +1,18 @@
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const path = require('node:path');
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
+const { hasEffect } = require(path.join(__dirname, "/effects"));
 const { monsters } = require(path.join(__dirname, "../data/monsters"));
-function battle(player, enemy, maxRounds) {
+
+function battle(playerData, enemyData, maxRounds) {
+    const player = playerData.combat;
+    const enemy = enemyData.combat;
+    //apply relevant player effects
+    let effects = hasEffect(playerData, ["redrose"]);
+    if ("redrose" in effects && !enemyData.isRaid) {
+        enemy.health *= 0.75;
+    }
+
     function attack(attacker, target) {
         if (getCombatProbability(attacker, "doublestrike")) attack(attacker, enemy);
         if (!getCombatProbability(attacker, "totalblock")) target.shield -= attacker.attack;
@@ -203,7 +213,7 @@ ${compareStatsString(playerStats, enemyStats)}`;
                         } else {
                             if (script[itemIndex].type == "battle") {
                                 const enemyStats = generateEnemyStats(itemIndex);
-                                let won = battle(playerStats, enemyStats);
+                                let won = battle(userInfo, { combat: enemyStats });
                                 if (!won) {
                                     await buttons.update({ content: "Lost battle. Exiting dungeon...", components: [] });
                                     await scriptingUtils.wait(2000);

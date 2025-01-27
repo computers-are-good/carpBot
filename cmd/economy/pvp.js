@@ -26,7 +26,7 @@ module.exports = {
         const { confirmed, response } = results;
 
         if (confirmed) {
-            let won = battle(playerStats, enemyStats);
+            let won = battle(userInfo, targetPlayerData);
             if (won) {
                 response.edit(`Congratulations! You won! The arena master gave you ${economyUtils.formatMoney(moneyEarned)}.`);
                 economyUtils.notifyPlayer(targetPlayerData, `${interaction.user.id} fought you and won. Don't worry. You didn't lose any money.`)

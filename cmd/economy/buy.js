@@ -40,8 +40,13 @@ module.exports = {
         const itemData = shopItems[itemId];
         const cost = economyUtils.determinePrice(userInfo, itemData);
 
-        if (cost * quantity > userInfo.moneyOnHand) {
+        if (itemData.cost && cost * quantity > userInfo.moneyOnHand) {
             await interaction.reply(`${notifications}This item costs ${economyUtils.formatMoney(cost * quantity)} but user only has ${economyUtils.formatMoney(userInfo.moneyOnHand)} on hand. Try working or withdrawing money from your bank account.`);
+            return;
+        }
+
+        if (itemData.unwitheringFlowers && itemData.unwitheringFlowers * quantity > userInfo.unwitheringFlowers) {
+            await interaction.reply(`${notifications}This item costs ${itemData.unwitheringFlowers} unwithering flowers but user only has ${itemData.unwitheringFlowers} on hand. Attack raid bosses to get unwithering flowers.`);
             return;
         }
 
@@ -90,8 +95,8 @@ module.exports = {
             }
         }
 
-
-        userInfo.moneyOnHand -= cost * quantity;
+        if (itemData.cost) userInfo.moneyOnHand -= cost * quantity;
+        if (itemData.unwitheringFlowers) userInfo.unwitheringFlowers -= itemData.unwitheringFlowers;
         economyUtils.addToInventory(userInfo, itemId, quantity);
 
         userInfo.inventory = userInfo.inventory.sort((a, b) => parseInt(a.Id) - parseInt(b.Id));

@@ -10,6 +10,7 @@ module.exports = {
         .addStringOption(option => option.setName("category").setDescription("Category")),
     async execute(interaction) {
         const category = interaction.options.getString("category");
+        const {notifications, userInfo} = await economyUtils.prefix(interaction);
 
         let objectsFittingCriteria = [];
         let stringsToDisplay = [];
@@ -24,7 +25,10 @@ module.exports = {
         }
         for (let i = 0; i < objectsFittingCriteria.length; i++) {
             let object = objectsFittingCriteria[i];
-            stringsToDisplay.push(`${object.emoji ? object.emoji : ""} **${object.name}** (${economyUtils.formatMoney(economyUtils.determinePrice(userInfo, object))}):\nCategories: ${object.category.join(", ")}\n${object.description}\n`);
+            let costs = [];
+            if (object.cost) costs.push(economyUtils.formatMoney(economyUtils.determinePrice(userInfo, object)));
+            if (object.unwitheringFlowers) costs.push(`${object.unwitheringFlowers} unwithering flowers`);
+            stringsToDisplay.push(`${object.emoji ? object.emoji : ""} **${object.name}** (${costs.join(", ")}):\nCategories: ${object.category.join(", ")}\n${object.description}\n`);
         }
 
         economyUtils.displayList(interaction, stringsToDisplay);
