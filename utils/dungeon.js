@@ -88,13 +88,16 @@ function getCombatProbability(combatObj, probability) { //returns true if the ef
 
 function compareStatsString(playerStats, enemyStats) {
     let difficultyMsg = "even"
-    const expectedPlayerDamage = playerStats.attack - enemyStats.block;
-    const expectedEnemyDamage = enemyStats.attack - playerStats.block;
-    const difficultyScore = expectedPlayerDamage - expectedEnemyDamage;
+    const expectedDmgToEnemy = Math.max(playerStats.attack - enemyStats.block, 1);
+    const expectedDmgToPlayer = Math.max(enemyStats.attack - playerStats.block, 1);
+    let difficultyScore = expectedDmgToEnemy - expectedDmgToPlayer;
+    let expectedRoundstoDefeatEnemy = enemyStats.health / expectedDmgToEnemy;
+    let expectedRoundstoDefeatPlayer = playerStats.health / expectedDmgToPlayer;
+    difficultyScore += ( expectedRoundstoDefeatPlayer - expectedRoundstoDefeatEnemy) * 3;
     if (difficultyScore < -5) difficultyMsg = "difficult";
     if (difficultyScore < -30) difficultyMsg = "arduous";
     if (difficultyScore > 5) difficultyMsg = "easy";
-    if (difficultyScore > 30) difficultyMsg = "very easy"
+    if (difficultyScore > 30) difficultyMsg = "very easy";
 
     return `\`Your stats:              | Enemy stats:
 Health: ${playerStats.health} (max: ${playerStats.maxHealth})${scriptingUtils.generateSpaces(25 - playerStats.health.toString().length - playerStats.maxHealth.toString().length - 16)}| Health: ${enemyStats.health}${scriptingUtils.generateSpaces(20 - enemyStats.health.toString().length - 8)}
