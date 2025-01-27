@@ -32,7 +32,7 @@ module.exports = {
             await interaction.reply(`${notifications}You don't have that pet! Reply with the name of the pet, or the type of pet.`);
             return;
         }
-        let pointsGained = scriptingUtils.randIntBetween(1, 50000);
+        let pointsGained = scriptingUtils.randIntBetween(3, 8);
         const levelUpResults = calculateLevelUp(toPet.bondLevel, toPet.pointsUntilIncrease, pointsGained, level => 100 + level * 50);
         let stringToReply = notifications + scriptingUtils.choice(petMessages).replace("{PETNAME}", toPet.name);
         stringToReply += `\nGained ${pointsGained} bond points.`;

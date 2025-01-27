@@ -43,11 +43,21 @@ module.exports = {
                 }
                 let stringToReply = `${notifications}You have used x${quantity} ${shopItems[itemId].name}`;
 
-                let returnObj
+                let returnObj;
+                let excessMessagesCount = 0;
+                let messagesCount = 0;
                 for (let i = 0; i < quantity; i++) {
                     returnObj = shopItems[itemId].scripts.onUse(userInfo, userInfo.inventory[item].metadata);
-                    if (returnObj.messageToUser) stringToReply += `\n${returnObj.messageToUser}`;
+                    if (returnObj.messageToUser) {
+                        if (messagesCount < 10) {
+                            stringToReply += `\n${returnObj.messageToUser}`;
+                            messagesCount++
+                        } else {
+                            excessMessagesCount++
+                        }
+                    }
                 }
+                if (excessMessagesCount > 0) stringToReply += `\n(and ${excessMessagesCount} other messages)`
                 if (shopItems[itemId].category.includes("consumable")) {
                     userInfo.inventory[item].quantity -= quantity;
                     if (userInfo.inventory[item].quantity <= 0) {
