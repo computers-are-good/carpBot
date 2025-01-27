@@ -16,6 +16,10 @@ module.exports = {
         const {userInfo, notifications} = await economyUtils.prefix(interaction);
 
         let enemyInfo = raidUtils.getCurrentMonster();
+        if (enemyInfo.combat.health <= 0) {
+            await interaction.reply(`The raid has finished for the day.`);
+            return;
+        }
         if (userInfo.learned.includes("Violin")) userInfo.combat.attack += 50;
 
         const expectedDmgTaken = Math.max(enemyInfo.combat.attack - userInfo.combat.block, 1) * 5;
