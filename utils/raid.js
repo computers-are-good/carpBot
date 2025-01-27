@@ -32,10 +32,10 @@ module.exports = {
             } else {
                 unwitheringFlowersGained = currentRaidData.playersAttackedTimes[id];
             }
-            playerNotification += ` You gained ${unwitheringFlowersGained} and ${economyUtils.formatMoney(moneyGained)}`;
+            playerNotification += ` You gained ${unwitheringFlowersGained} unwithering flowers and ${economyUtils.formatMoney(moneyGained)} `;
             playerData.unwitheringFlowers += unwitheringFlowersGained;
 
-            playerNotification += `You gained the following items: `;
+            playerNotification += `You gained the following items: \n`;
             const bossLoot = raidBossLoot[currentRaidData.currentMonster];
             for (const item of Object.keys(bossLoot)) {
                 const dmgReq = bossLoot[item];
