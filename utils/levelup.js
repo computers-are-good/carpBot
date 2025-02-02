@@ -1,5 +1,5 @@
 function expRequiredToLevelUp(currentLevel) {
-    return Math.floor(10 * Math.pow(currentLevel, 3) + 10);
+    return Math.floor(10 * Math.pow(currentLevel, 3) - 10 * Math.pow(currentLevel, 2.5) + 10);
 }
 
 function calculateLevelUp(currentLevel, expRequired, expToGain, levelUpFunction = expRequiredToLevelUp) {

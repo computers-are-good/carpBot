@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
+const economy = require('../../utils/economy');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
@@ -37,6 +38,8 @@ module.exports = {
 
         targetPlayerData.moneyOnHand += amountOfMoney;
         userInfo.moneyOnHand -= amountOfMoney;
+
+        economyUtils.notifyPlayer(targetPlayerData, `${interaction.user.username} paid you ${economyUtils.formatMoney(amountOfMoney)}.`);
 
         await interaction.reply(`${notifications}Paid ${targetPlayer.username} ${economyUtils.formatMoney(amountOfMoney)}`)
 
