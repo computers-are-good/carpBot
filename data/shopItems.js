@@ -15,9 +15,11 @@ const dungeonUtils = require(path.join(__dirname, "../utils/dungeon"));
     displayInInventory: if set to false, the item will not be displayed when /inventory is used.
     displayInShop: if set to false, the item will not be displayed in the shop when /shop is used.
     cost: the cost of the item in cents,
+    sellMultiplier: the cost * sellMultiplier = money made during a sale (default: 0.5)
+    canSell: can we sell the item? (default: true)
     metadataToDisplay: The metadata tags in this array will be displayed when /inventory is used.
     emoji: the emoji representing the data which will be added before the item name in /shop and /inventory
-    oneOff: if set to true, crapbot will only allow the item to be brought once
+    oneOff: if set to true, crapbot will only allow the item to be brought once (default: false)
     addToInventory: if set to false, the item will not be added to the user's inventory
     scripts:
         - generateMetadata: generates the metadata of an item to be stored in the inventory.
@@ -198,6 +200,7 @@ module.exports = {
             displayInInventory: false,
             description: "Buy a house and rent it out to earn some money on the side! Collect rent with `/collectrent`",
             cost: 5000000,
+            canSell: false,
             metadataToDisplay: ["Address"],
             emoji: "🏠",
             oneOff: false,
@@ -219,6 +222,7 @@ module.exports = {
             displayInInventory: false,
             description: "If only getting a degree was this simple in real life! Buy this to earn an extra $50 when working.",
             cost: 888800,
+            canSell: false,
             metadataToDisplay: ["subject"],
             emoji: "📄",
             oneOff: true,
@@ -253,6 +257,7 @@ module.exports = {
         },
         1010: {
             name: "Adventurer's boots",
+            canSell: false,
             category: ["object", "income"],
             displayInInventory: false,
             description: "Buy these boots to go on epic adventures in dungeons!",
@@ -283,6 +288,7 @@ module.exports = {
             description: "10% Chance to give you $20.",
             cost: 300,
             emoji: "🎫",
+            canSell: false,
             oneOff: false,
             addToInventory: true,
             displayInShop: true,
@@ -471,6 +477,7 @@ module.exports = {
             name: "Blade of Monella",
             displayInInventory: true,
             emoji: "🗡️",
+            canSell: false,
             category: ["object", "raid"],
             addToInventory: true,
             displayInShop: false,
@@ -490,6 +497,7 @@ module.exports = {
             displayInInventory: true,
             displayInShop: false,
             emoji: "⚗️",
+            canSell: false,
             category: ["object", "raid"],
             addToInventory: true,
             description: "Gives you a 0.5% chance of totalblock (negates damage for one turn)",
@@ -508,6 +516,7 @@ module.exports = {
             displayInInventory: true,
             displayInShop: false,
             emoji: "🍗",
+            canSell: false,
             category: ["object", "raid"],
             addToInventory: true,
             description: "Permanently increases your attack by 35.",
