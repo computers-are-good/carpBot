@@ -7,6 +7,7 @@ module.exports = {
         inventory: [],
         moneyOnHand: 0,
         permanentWorkMultiplier: 1,
+        sellMultiplier: 1,
         lastDaily: "",
         healingInterval: 60000,
         combat: {

@@ -46,12 +46,12 @@ module.exports = {
             return;
         }
 
-        if ("canSell" in itemInfo && itemInfo.canSell === false) {
+        if (("canSell" in itemInfo && itemInfo.canSell === false) || !("cost" in itemInfo)) {
             await interaction.reply(`${notifications}This item can't be sold.`);
             return;
         }
 
-        let moneyEarned = Math.round(quantity * itemInfo.cost * (itemInInventory.sellMultiplier ?? 0.5));
+        let moneyEarned = Math.round(quantity * itemInfo.cost * Math.min((itemInInventory.sellMultiplier ?? 0.5) * userInfo.sellMultiplier, 0.95));
 
         let { confirmed, response } = await economyUtils.confirmation(interaction, `${notifications}Sell x${quantity} ${itemInfo.name}? You will earn ${economyUtils.formatMoney(moneyEarned)}`);
 
