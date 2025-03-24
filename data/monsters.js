@@ -14,6 +14,12 @@ module.exports = {
             speed: 25,
             img: "rat.jpg",
         },
+        "Squirrel": {
+            health: 25,
+            block: 5,
+            attack: 15,
+            speed: 15
+        },
         "Monella, Ultimate Master": {
             health: 500000,
             block: 40,

@@ -440,6 +440,7 @@ module.exports = {
             displayInInventory: true,
             category: ["object", "consumable",],
             description: "Increases your attack by 1.",
+            cost: 10000,
             emoji: "🧪",
             oneOff: false,
             addToInventory: true,
@@ -457,6 +458,7 @@ module.exports = {
         2013: {
             name: "Block potion",
             displayInInventory: true,
+            cost: 10000,
             category: ["object", "consumable",],
             description: "Increases your block by 1.",
             emoji: "🧪",
@@ -547,6 +549,17 @@ module.exports = {
                     }
                 }
             }
+        },
+        4001: {
+            name: "Diamond",
+            displayInInventory: true,
+            displayInShop: false,
+            addToInventory: true,
+            emoji: "💎",
+            category: ["object", "sellable"],
+            description: "It looks shiny. It should be sold",
+            sellable: true,
+            cost: 199900
         },
         9911: {
             name: "Money sink",

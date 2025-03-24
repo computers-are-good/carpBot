@@ -18,7 +18,10 @@ module.exports = {
         .addStringOption(option => option.setName("dungeon").setDescription("Which dungeon to enter?")),
     async execute(interaction) {
         const { userInfo, notifications } = await economyUtils.prefix(interaction);
-        const dungeonInput = interaction.options.getString("dungeon");
+        let dungeonInput = interaction.options.getString("dungeon");
+        let exp = /^["']?(.*?)["']?$/
+        const match = dungeonInput.match(exp)
+        dungeonInput = match[1];
         let targetDungeon;
         const availableDungeons = listAvailableDungeons(userInfo);
         if (!dungeonInput) {
@@ -117,6 +120,7 @@ module.exports = {
                                     economyUtils.addToInventory(userInfo,
                                         itemObj.id,
                                         quantityAdded);
+                                    console.log(userInfo.inventory);
                                     const shopItemObj = shopItems[itemObj.id]
                                     stringToSend += ` ${shopItemObj.name} x${quantityAdded}`
                                 }
