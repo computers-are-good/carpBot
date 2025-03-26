@@ -44,6 +44,15 @@ module.exports = {
                 "totalblock": 0.5
             }
         },
+        "Goldiar, Dragon Hoarder": {
+            health: 1000,
+            block: 40,
+            speed: 60,
+            attack: 15000,
+            probabilities: {
+                "doublestrike": 0.5
+            }
+        },
     },
     raidBossLoot: { //Damage required to obtain that piece of loot: shop ID number
         "Monella, Ultimate Master": {
@@ -60,6 +69,12 @@ module.exports = {
         },
         "Tratlus, Master of Blocking": {
             3002: 2500,
+            2012: 500,
+            2013: 450,
+            2009: 250,
+        },
+        "Goldiar, Dragon Hoarder": {
+            3004: 1,
             2012: 500,
             2013: 450,
             2009: 250,

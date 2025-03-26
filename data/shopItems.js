@@ -532,6 +532,19 @@ module.exports = {
                 }
             }
         },
+        3004: {
+            name: "Sands lost to time",
+            displayInInventory: true,
+            displayInShop: false,
+            description: "An condensed grain of dreams from deep within Goldiar's hoards. Should be sold for money.",
+            emoji: "⌛",
+            canSell: true,
+            category: ["object", "raid", "sellable"],
+            cost: 1000000,
+            scripts: {
+                canBuy: _ => false
+            }
+        },
         3011: {
             name: "Elusive red rose",
             displayInInventory: true,
@@ -560,6 +573,16 @@ module.exports = {
             description: "It looks shiny. It should be sold",
             sellable: true,
             cost: 199900
+        },
+        5001: {
+            name: "Wooden Sword",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "⚔️",
+            category: ["object", "equipment"],
+            cost: 10000,
+            description: "It ain't much, but it's better than nothing. +3 to attack when equipped."
         },
         9911: {
             name: "Money sink",

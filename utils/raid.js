@@ -4,7 +4,7 @@ const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const economyUtils = require(path.join(__dirname, "/economy"));
 const {gainExp} = require(path.join(__dirname, "/levelup"));
 const { monsters, raidBossLoot } = require(path.join(__dirname, "../data/monsters"));
-const raidBossList = ["Monella, Ultimate Master", "Sytlar, Demon of the Underworld"];
+const raidBossList = ["Monella, Ultimate Master", "Sytlar, Demon of the Underworld", "Tratlus, Master of Blocking", "Goldiar, Dragon Hoarder"];
 const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
 
 module.exports = {

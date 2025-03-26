@@ -25,6 +25,12 @@ module.exports = {
             speed: 0,
             healingInterval: 0
         },
+        equipment: {
+            sword: 0,
+            armor: 0,
+            boots: 0,
+            ring: 0,
+        },
         lastHealthRestoration: 0,
         pets:[],
         moneyBankAccount: 0,

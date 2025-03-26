@@ -13,8 +13,9 @@ function battle(playerData, enemyData, maxRounds) {
         enemy.health *= 0.75;
     }
 
+
     function attack(attacker, target) {
-        if (getCombatProbability(attacker, "doublestrike")) attack(attacker, enemy);
+        if (getCombatProbability(attacker, "doublestrike")) attack(attacker, target);
         if (!getCombatProbability(attacker, "totalblock")) target.shield -= attacker.attack;
         if (target.shield < 0) {
             target.health += target.shield;

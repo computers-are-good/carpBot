@@ -50,8 +50,8 @@ You will deal around ${expectedDmgDealt} damage. You wil take around ${expectedD
             raidUtils.addPlayerDamage(enemyInfo, interaction.user.id, enemyOldHP - enemyInfo.combat.health);
             if (userInfo.learned.includes("Violin")) userInfo.combat.attack -= 50;
 
-            fs.writeFileSync(path.join(__dirname, `../../userdata/raidboss.json`), JSON.stringify(enemyInfo));
-            saveData(userInfo, interaction.user.id);
+           // fs.writeFileSync(path.join(__dirname, `../../userdata/raidboss.json`), JSON.stringify(enemyInfo));
+            //saveData(userInfo, interaction.user.id);
         }
     },
 };
