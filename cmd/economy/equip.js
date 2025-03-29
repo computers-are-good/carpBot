@@ -46,6 +46,7 @@ module.exports = {
             }
         }
         const equipmentSlot = equipment[equipmentId].slot;
+        
         //If we have it equipped, we unequip it
         if (userInfo.equipment[equipmentSlot] == equipmentId) {
             userInfo.equipment[equipmentSlot] = 0;
@@ -53,8 +54,9 @@ module.exports = {
             saveData(userInfo, interaction.user.id);
             return;
         }
+
         //Do we have it in our inventory?
-        if (economyUtils.inventoryHasItem(userInfo.inventory, equipmentId)) {
+        if (!economyUtils.inventoryHasItem(userInfo.inventory, equipmentId)) {
             interaction.reply(`${notifications}You do not have a ${shopItems[equipmentId].name} in your inventory.`);
             return;
         }

@@ -13,6 +13,9 @@ function changeEquipmentStats(combatData, equipmentData, removeStats = false) {
             let piece = equipment[itemId];
             for (let stat in piece.improvements) {
                 combatData[stat] += piece.improvements[stat] * (removeStats ? -1 : 1);
+                if (stat == "maxHealth") {
+                    combatData.health += piece.improvements.maxHealth * (removeStats ? -1 : 1); //Max health is increased? Your health will also increase.
+                }
             }
         }
     }

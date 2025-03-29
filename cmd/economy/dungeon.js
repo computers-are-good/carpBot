@@ -22,7 +22,6 @@ module.exports = {
         let dungeonInput = interaction.options.getString("dungeon");
         const availableDungeons = listAvailableDungeons(userInfo);
         if (!dungeonInput) {
-
             economyUtils.displayList(interaction, [notifications, ...generateDungeonList(userInfo, true)]);
         } else {
             let exp = /^["']?(.*?)["']?$/
@@ -30,7 +29,7 @@ module.exports = {
             dungeonInput = match[1];
             let targetDungeon;
             if (!economyUtils.inventoryHasItem(userInfo.inventory, 1010)) {
-                await interaction.reply(`${notifications}Please buy a pair of Adventurer's boots with \`/buy Adventurer's boots\` before starting a dungeon. It costs $500.`);
+                await interaction.reply(`${notifications}Please buy a map with \`/buy Adventurer's map\` before starting a dungeon. It costs $500.`);
                 return;
             }
 

@@ -256,11 +256,11 @@ module.exports = {
             }
         },
         1010: {
-            name: "Adventurer's boots",
+            name: "Adventurer's map",
             canSell: false,
             category: ["object", "income"],
             displayInInventory: false,
-            description: "Buy these boots to go on epic adventures in dungeons!",
+            description: "Buy this map to go on epic adventures in dungeons!",
             cost: 50000,
             metadataToDisplay: [""],
             emoji: "🥾",
@@ -583,6 +583,105 @@ module.exports = {
             category: ["object", "equipment"],
             cost: 10000,
             description: "It ain't much, but it's better than nothing. +3 to attack when equipped."
+        },
+        5002: {
+            name: "Leather Armor",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "👚",
+            category: ["object", "equipment"],
+            cost: 20000,
+            description: "At least it's light. +3 to block when equipped."
+        },
+        5003: {
+            name: "Running Shoes",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "👞",
+            category: ["object", "equipment"],
+            cost: 10000,
+            description: "You can buy this anywhere. +1 to speed and +1 to block when equipped."
+        },
+        5004: {
+            name: "Stone Sword",
+            displayInInventory: true,
+            displayInShop: true,
+            emoji: "⚔️",
+            category: ["object", "equipment"],
+            cost: 20000,
+            description: "It's bad. +5 to attack when equipped."
+        },
+        5090: {
+            name: "Ring of Light",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "💍",
+            category: ["object", "equipment"],
+            cost: 5000000,
+            description: "A ring forged from pure light. +50 to max health, +10 to block, and +5 to speed when equipped."
+        },
+        5091: {
+            name: "Ring of Flame",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "💍",
+            category: ["object", "equipment"],
+            cost: 7500000,
+            description: "A ring forged from the flames of the underworld. +20 to attack, +15 to block, and +10 to speed when equipped."
+        },
+        5092: {
+            name: "Ring of Ice",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "💍",
+            category: ["object", "equipment"],
+            cost: 7500000,
+            description: "A ring forged ice on another world. +35 to block when equipped."
+        },
+        5093: {
+            name: "Ring of Vitality",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "🛟",
+            category: ["object", "equipment"],
+            cost: 10000000,
+            description: "A ring that gives you energy. +200 to max health and +5 to block when equipped."
+        },
+        5094: {
+            name: "Ring of the Blizzard",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "💍",
+            category: ["object", "equipment"],
+            cost: 10000000,
+            description: "Forged at the core of ice storms raging on a distant world, this ring will give you +50 to block when equipped."
+        },
+        5095: {
+            name: "Ring of Rings",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "💍",
+            category: ["object", "equipment"],
+            cost: 15000000,
+            description: "It's a ring made of other rings! +50 to max health, +20 to block, +15 to attack, and +10 to speed when equipped."
+        },
+        5099: {
+            name: "Ring of the void",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "💍",
+            category: ["object", "equipment"],
+            cost: 98765432100,
+            description: "The energy contained in one of these rings can erase all of reality. +500 to max halth, +100 to attack, +75 to block, and +50 to speed."
         },
         9911: {
             name: "Money sink",
