@@ -6,7 +6,7 @@ const { monsters } = require(path.join(__dirname, "../data/monsters"));
 const { equipment } = require(path.join(__dirname, "../data/equipment"));
 
 function changeEquipmentStats(combatData, equipmentData, removeStats = false) {
-    for (let item in equipmentData) {
+/*     for (let item in equipmentData) {
         if (equipmentData[item]) {
             //do this shit later
             let itemId = equipmentData[item];
@@ -18,11 +18,11 @@ function changeEquipmentStats(combatData, equipmentData, removeStats = false) {
                 }
             }
         }
-    }
+    } */
+    console.log("STOP USING THIS FUNCTION PLS")
 }
 function battle(playerData, enemyData, maxRounds) {
     let player = playerData.combat;
-    changeEquipmentStats(player, playerData.equipment); //add stats from equipment
     const enemy = enemyData.combat;
     //apply relevant player effects
     let effects = hasEffect(playerData, ["redrose"]);
@@ -43,7 +43,6 @@ function battle(playerData, enemyData, maxRounds) {
     }
     let roundCounter = 0;
     if (player.health <= 0) {
-        changeEquipmentStats(playerData.combat, playerData.equipment, true);
         return false;
     }
 
@@ -58,7 +57,6 @@ function battle(playerData, enemyData, maxRounds) {
     while (true) {
         //Can't defeat the enemy in the specified rounds? You probably can't defeat the enemy. You lose.
         if (roundCounter >= maxRounds) {
-            changeEquipmentStats(playerData.combat, playerData.equipment, true);
             return false;
         }
 
@@ -72,7 +70,6 @@ function battle(playerData, enemyData, maxRounds) {
             slowest.health = 0;
             delete fastest.shield;
             delete slowest.shield;
-            changeEquipmentStats(playerData.combat, playerData.equipment, true);
             return true;
         }
 
@@ -84,7 +81,6 @@ function battle(playerData, enemyData, maxRounds) {
             fastest.health = 0;
             delete fastest.shield;
             delete slowest.shield;
-            changeEquipmentStats(playerData.combat, playerData.equipment, true);
             return false;
         }
         roundCounter++;
@@ -116,7 +112,6 @@ function compareStatsString(playerStats, equipmentStats, enemyStats, roundsToCal
 
     let difficultyMsg = "even"
     playerStats = scriptingUtils.deepClone(playerStats);
-    changeEquipmentStats(playerStats, equipmentStats);
     const expectedDmgToEnemy = Math.max(playerStats.attack - enemyStats.block, 1) * (playerStats.probabilities.doubleStrike ? playerStats.probabilities.doubleStrike + 1 : 1);
     const expectedDmgToPlayer = Math.max(enemyStats.attack - playerStats.block, 1) * (enemyStats.probabilities.doubleStrike ? enemyStats.probabilities.doubleStrike + 1 : 1);;
     let difficultyScore = expectedDmgToEnemy - expectedDmgToPlayer;

@@ -613,6 +613,14 @@ module.exports = {
             cost: 20000,
             description: "It's bad. +5 to attack when equipped."
         },
+        5080: {
+            name: "Bronze ring",
+            displayInInventory: true,
+            addToInventory: true,
+            emoji: "💍",
+            cost: 50000,
+            description: "Your grandma probably has one of these. +3 to attack and +3 to block."
+        },
         5090: {
             name: "Ring of Light",
             displayInInventory: true,

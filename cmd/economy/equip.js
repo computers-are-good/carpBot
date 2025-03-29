@@ -6,6 +6,23 @@ const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 const { equipment } = require(path.join(__dirname, "../../data/equipment"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopitems"));
 
+function applyEquipmentStats(combatData, improvements) {
+    for (let i in improvements) {
+        combatData[i] += improvements[i];
+        if (i == "maxHealth") {
+            combatData.health += improvements[i];
+        }
+    }
+}
+function removeEquipmentStats(combatData, improvements) {
+    for (let i in improvements) {
+        combatData[i] -= improvements[i];
+        if (i == "maxHealth") {
+            combatData.health -= improvements[i];
+        }
+    }
+}
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('equip')
@@ -46,11 +63,12 @@ module.exports = {
             }
         }
         const equipmentSlot = equipment[equipmentId].slot;
-        
+
         //If we have it equipped, we unequip it
         if (userInfo.equipment[equipmentSlot] == equipmentId) {
             userInfo.equipment[equipmentSlot] = 0;
             interaction.reply(`${notifications}Unequipped ${shopItems[equipmentId].name}.`);
+            removeEquipmentStats(userInfo.combat, equipment[equipmentId].improvements);
             saveData(userInfo, interaction.user.id);
             return;
         }
@@ -62,6 +80,7 @@ module.exports = {
         }
         userInfo.equipment[equipmentSlot] = equipmentId;
         interaction.reply(`${notifications}Equipped ${shopItems[equipmentId].name}.`);
+        applyEquipmentStats(userInfo.combat, equipment[equipmentId].improvements);
         saveData(userInfo, interaction.user.id);
     },
 };

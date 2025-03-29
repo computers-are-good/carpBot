@@ -18,8 +18,6 @@ module.exports = {
 		let stringToReply = notifications;
 		stringToReply += `${interaction.user.username} (LV ${userInfo.level})\n`;
 
-		changeEquipmentStats(userInfo.combat, userInfo.equipment);
-
 		//health
 		const healthPercent = Math.round((userInfo.combat.health / userInfo.combat.maxHealth) * 1000) / 10
 		stringToReply += `Health: ${userInfo.combat.health} / ${userInfo.combat.maxHealth} (${healthPercent}%) `;
