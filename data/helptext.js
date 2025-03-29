@@ -14,10 +14,6 @@ module.exports = {
             "Some commands like `/rob` and `/dungeon` will lock you in. CrapBot will not respond to other commands until you finish what you're doing.",
             "That's all for now! We hope you have fun with CrapBot.",
         ],
-        work: [
-            "Usage: `/work`. Work to earn some money and experience.",
-            "Various items, such as green tea and coffee from the shop, can boost the amount of money or experience you earn."
-        ],
         balance: [
             "Usage: `/balance`. Checks your level, and much money you have in your wallet and bank account."
         ],
@@ -60,6 +56,10 @@ module.exports = {
             "Usage: `/dungeonlist [incomplete]`, where completed is true or false. If incomplete is true, then only the dungeons you haven't done will be shown.",
             "This command lists all the dungeons you can do and filters out the ones you can't. If a dungeon is not shown to you, try levelling up."
         ],
+        equip: [
+            "Usage: `/equip [item]`. Equip an item from your inventory to improve your stats.",
+            "If the item is already equipped, it will be unequipped."
+        ],
         inventory: [
             "Usage: `/inventory`. Displays what's in your inventory."
         ],
@@ -67,7 +67,10 @@ module.exports = {
             "Usage: `/leaderboard`. Displays the top 5 users with the most money. This is updated periodically."
         ],
         learn: [
-            "Ūsage: `/learn [skill]`. Spend money to learn a skill and gain a large amount of experience."
+            "Usage: `/learn [skill]`. Spend money to learn a skill and gain a large amount of experience."
+        ],
+        notify: [
+            "Usage: `/notify [@player] [message]`. The next time that player performs an action in CrapBot, they will see your notification."
         ],
         passivemode: [
             "Usage: `/passivemode`. Toggles passive mode on or off. While you are in passive mode, you cannot be grieved by commands like `/rob`, but you also can't grieve other players",
@@ -82,6 +85,9 @@ module.exports = {
         petbuy: [
             "Usage: `/petbuy [type]`. Buys a pet (e.g. dog or cat). If type is not specified, then CrapBot will list all types of pet available."
         ],
+        petlist: [
+            "Usage: `/petlist`. Lists the pets you have"
+        ],
         petrename: [
             "Usage: `/petrename [oldname] [newname]`. Renames a pet. For oldname, you can either put the type of pet (e.g. dog) or the name of your pet.",
             "Please note that a profanity filter is in use."
@@ -89,13 +95,35 @@ module.exports = {
         ping: [
             "Usage: `/ping`. CrapBot will reply with \"Pong!\""
         ],
+        pvp: [
+            "Usage: `/pvp [@player]`. Engage in a PvP battle with another player! Cannot be used if the target player has passive mode enabled.",
+            "If you win, you will win some money, but the opposing player will not lose money."
+        ],
+        raid: [
+            "Usage: `/raid`. Raid a boss! Everyone playing CrapBot has the same boss to attack.",
+            "You will only do a small amount of damage to the boss, but don't worry! The boss is difficult for everyone involved.",
+            "The more damage you deal to the raid boss, the more rewards you will get from it, including boss-exclusive loot.",
+            "Each time you attack the boss, you have a 20% chance of obtaining an unwithering flower, which can be used to purchase items in the shop.",
+            "You can attack a boss a maximum of five times in a day. If you want to attack the boss more, you need to use unwithering flowers."
+        ],
         rob: [
             "Usage: `/rob [player]`. This will rob some money from another player. You can only rob the money in their wallet, not their bank account.",
             "If successful, you will gain 10% of the target's money. If unsuccessful, the target will get 2% of yours.",
             "Robberies against players recently robbed are less likely to be successful."
         ],
+        sell: [
+            "Usage: `/sell [item]`. Sells something to the shop.",
+            "You will sell items for 50% of their cost. This can be improved to a maximum of 95%."
+        ],
         shop: [
             "Usage: `/shop [category]`. Browses the shop. You can optionally enter a category and only items in that category will be shown to you."
+        ],
+        stats: [
+            "Usage: `/stats`. Displays your combat stats."
+        ],
+        train: [
+            "Usage: `/train [\"Health\"|\"Attack\"|\"Block\"|\"Speed\"|\"Healing Interval\"]`. Spend some money to improve your stats.",
+            "The more times you improve a stat, the more money you need to upgrade it."
         ],
         unban: [
             "Usage: `/unban [user]`. Unbans a user."
