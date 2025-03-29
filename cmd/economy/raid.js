@@ -23,7 +23,7 @@ module.exports = {
         if (userInfo.learned.includes("Violin")) userInfo.combat.attack += 50;
         const attackedTimes = enemyInfo.playersAttackedTimes[interaction.user.id] ?? 0;
         let stringToSend = 
-`${notifications}Current raid boss: ${enemyInfo.currentMonster} ${attackedTimes < maxPlayerAttackTimes ? `(attacked ${attackedTimes} / ${maxPlayerAttackTimes})` : `As you attacked the enemy **${attackedTimes} times**, you need to use **1 unwithering flower** to continue attacking.`}
+`${notifications}Current raid boss: ${enemyInfo.currentMonster} ${attackedTimes < maxPlayerAttackTimes ? `(attacked ${attackedTimes} / ${maxPlayerAttackTimes})` : `\nYou attacked the enemy **${attackedTimes} times**; you need to use 1 unwithering flower to continue attacking (you have ${userInfo.unwitheringFlowers}).\n`}
 Time remaining: ${scriptingUtils.getTimeUntilNextDay()} | Health: ${Math.round((enemyInfo.combat.health / enemyInfo.maxHealth) * 100000) / 1000}%
 ${dungeonUtils.compareStatsString(userInfo.combat, userInfo.equipment, enemyInfo.combat, 5)}`
         const results = await economyUtils.confirmation(interaction, stringToSend, "Attack", "Wait, no...");
