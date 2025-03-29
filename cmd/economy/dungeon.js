@@ -10,6 +10,7 @@ const { dungeonList } = require(path.join(__dirname, "../../data/dungeonlist"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { saveData, lockData, unlockData } = require(path.join(__dirname, "../../utils/userdata"));
+const { generateDungeonList } = require(path.join(__dirname, "./dungeonlist"));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -21,12 +22,8 @@ module.exports = {
         let dungeonInput = interaction.options.getString("dungeon");
         const availableDungeons = listAvailableDungeons(userInfo);
         if (!dungeonInput) {
-            let list = [];
-            for (let i of availableDungeons) {
-                let completed = economyUtils.dungeonCompleted(userInfo, dungeonList[i]);
-                list.push(`${i}: ${dungeonList[i].content} ${completed ? "(complete)" : ""}`);
-            }
-            economyUtils.displayList(interaction, list);
+
+            economyUtils.displayList(interaction, [notifications, ...generateDungeonList(userInfo, true)]);
         } else {
             let exp = /^["']?(.*?)["']?$/
             const match = dungeonInput.match(exp)
@@ -76,7 +73,7 @@ module.exports = {
                         const levelUpResults = gainExp(userInfo, expGained);
                         stringToSend += `\n${levelUpResults}`;
                         userInfo.moneyOnHand += moneyGained;
-                        
+
                         let firstStringAdded = false;
                         if ("item" in targetDungeonInfo.completeRewards) {
                             for (let item in targetDungeonInfo.completeRewards.item) {
