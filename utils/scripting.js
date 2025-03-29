@@ -30,7 +30,7 @@ module.exports = {
         output[item] = input[item]
       } else {
         if (Object.keys(input[item]).length > 0) {
-          output[item] = cloneDB(input[item])
+          output[item] = this.deepClone(input[item])
         } else {
           output[item] = input[item]
         }

@@ -5,35 +5,18 @@ const { hasEffect } = require(path.join(__dirname, "/effects"));
 const { monsters } = require(path.join(__dirname, "../data/monsters"));
 const { equipment } = require(path.join(__dirname, "../data/equipment"));
 
-function changeEquipmentStats(combatData, equipmentData, removeStats = false) {
-/*     for (let item in equipmentData) {
-        if (equipmentData[item]) {
-            //do this shit later
-            let itemId = equipmentData[item];
-            let piece = equipment[itemId];
-            for (let stat in piece.improvements) {
-                combatData[stat] += piece.improvements[stat] * (removeStats ? -1 : 1);
-                if (stat == "maxHealth") {
-                    combatData.health += piece.improvements.maxHealth * (removeStats ? -1 : 1); //Max health is increased? Your health will also increase.
-                }
-            }
-        }
-    } */
-    console.log("STOP USING THIS FUNCTION PLS")
-}
 function battle(playerData, enemyData, maxRounds) {
     let player = playerData.combat;
     const enemy = enemyData.combat;
     //apply relevant player effects
     let effects = hasEffect(playerData, ["redrose"]);
-    if ("redrose" in effects && !enemyData.isRaid) {
+    if ("redrose" in effects && effects.redrose > 0 && !enemyData.isRaid) {
         enemy.health *= 0.75;
     }
 
     function attack(attacker, target, doubleStrikeTriggered = 0) { //the chances of doublestrike activating decrease with each time it is activated.
         if (getCombatProbability(attacker, "doublestrike") && Math.random() < (1 / doubleStrikeTriggered)) attack(attacker, target, doubleStrikeTriggered + 1);
         if (!getCombatProbability(attacker, "totalblock")) target.shield -= attacker.attack;
-        console.log(attacker, target, target.shield)
         if (target.shield < 0) {
             target.health += target.shield;
             target.shield = 0;
@@ -112,41 +95,30 @@ function getCombatProbability(combatObj, probability) { //returns true if the ef
 }
 
 function compareStatsString(playerStats, equipmentStats, enemyStats, roundsToCalculate = 999) {
-    let difficultyMsg = "even";
     playerStats = scriptingUtils.deepClone(playerStats);
-    const expectedDmgToEnemyOneRound = Math.max(playerStats.attack - enemyStats.block, 1) * (playerStats.probabilities.doubleStrike ? playerStats.probabilities.doubleStrike + 1 : 1);
-    const expectedDmgToPlayerOneRound = Math.max(enemyStats.attack - playerStats.block, 1) * (enemyStats.probabilities.doubleStrike ? enemyStats.probabilities.doubleStrike + 1 : 1);
-    const expectedDmgToEnemyFirstRound = Math.max(playerStats.attack * 2 * (playerStats.probabilities.doubleStrike ? playerStats.probabilities.doubleStrike + 1 : 1) - enemyStats.block, 1);
-    const expectedDmgToPlayerFirstRound = Math.max(enemyStats.attack * 2  * (enemyStats.probabilities.doubleStrike ? enemyStats.probabilities.doubleStrike + 1 : 1) - playerStats.block, 1);
+    let initialPlayerHealth = playerStats.health;
+    enemyStats = scriptingUtils.deepClone(enemyStats);
+    let initialEnemyHealth = enemyStats.health;
+    //simulate a battle with fake player and enemy stats
 
-    let difficultyScore = expectedDmgToEnemyOneRound - expectedDmgToPlayerOneRound;
-    let expectedRoundstoDefeatEnemy = Math.ceil(enemyStats.health / expectedDmgToEnemyOneRound);
-    let expectedRoundstoDefeatPlayer = Math.ceil(playerStats.health / expectedDmgToPlayerOneRound);
-    difficultyScore += (expectedRoundstoDefeatPlayer - expectedRoundstoDefeatEnemy) * 3;
-    let damageDealthToEnemy = Math.min(expectedDmgToEnemyOneRound * (expectedRoundstoDefeatPlayer - 1) + expectedDmgToEnemyFirstRound, enemyStats.health);
-    let damageDealtToPlayer = Math.min(expectedDmgToPlayerOneRound * (expectedRoundstoDefeatEnemy - 1) + expectedDmgToPlayerFirstRound, playerStats.health);
-
-    if (difficultyScore < -5) difficultyMsg = "difficult";
-    if (difficultyScore < -30) difficultyMsg = "arduous";
-    if (difficultyScore > 5) difficultyMsg = "easy";
-    if (difficultyScore > 30) difficultyMsg = "trivial";
+    let won = battle({combat: playerStats, effects: []}, {combat: enemyStats}, roundsToCalculate);
+    let dmgDealtToEnemy = initialEnemyHealth - enemyStats.health;
+    let dmgDealtToPlayer = initialPlayerHealth - playerStats.health;
 
     return `\`Your stats:              | Enemy stats:
 Health: ${playerStats.health} (max: ${playerStats.maxHealth})${scriptingUtils.generateSpaces(25 - playerStats.health.toString().length - playerStats.maxHealth.toString().length - 16)}| Health: ${enemyStats.health}${scriptingUtils.generateSpaces(20 - enemyStats.health.toString().length - 8)}
 Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(25 - playerStats.attack.toString().length - 8)}| Attack: ${enemyStats.attack}${scriptingUtils.generateSpaces(20 - enemyStats.attack.toString().length - 8)}
 Block: ${playerStats.block}${scriptingUtils.generateSpaces(25 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}${scriptingUtils.generateSpaces(20 - enemyStats.block.toString().length - 7)}\`
-Expected difficulty: **${difficultyMsg}**. ${playerStats.speed >= enemyStats.speed ? "**You** will attack first." : "**The enemy** will attack first."}
-${enemyStats.block >= playerStats.attack ? "The enemy has block higher or equal to your attack. **You will only deal one damage per turn**" : ""}
-You will deal around ${damageDealthToEnemy} damage. You will take around ${damageDealtToPlayer} damage (${playerStats.health}HP -> ${Math.max(playerStats.health - damageDealtToPlayer, 0)}HP)`;
+Expected outcome: **${won ? "victory" : "defeat"}**. ${playerStats.speed >= enemyStats.speed ? "**You** will attack first." : "**The enemy** will attack first."}
+${enemyStats.block >= playerStats.attack ? "The enemy has block higher or equal to your attack. **You will only deal one damage per turn**." : ""}
+You will deal around ${dmgDealtToEnemy} damage. You will take around ${dmgDealtToPlayer} damage (${playerStats.health}HP -> ${Math.max(playerStats.health - dmgDealtToPlayer, 0)}HP)`;
 };
-
 
 module.exports = {
     battle,
     compareStatsString,
     addCombatProbability,
     getCombatProbability,
-    changeEquipmentStats,
     dungeon: async function (interaction, script, userInfo) {
         return new Promise(async (res, rej) => {
             let weAreFinished = false;
