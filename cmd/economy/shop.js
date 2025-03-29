@@ -16,7 +16,7 @@ module.exports = {
         let stringsToDisplay = [];
         if (notifications) stringsToDisplay.push(notifications);
         for (let item in shopItems) {
-            if (shopItems[item].category?.includes("testing") || shopItems[item].displayInShop == false) continue;
+            if (shopItems[item].category.includes("testing") || shopItems[item].displayInShop == false) continue;
             if (!category) {
                 objectsFittingCriteria.push(shopItems[item]);
             } else if (category && shopItems[item].category.includes(category)) {

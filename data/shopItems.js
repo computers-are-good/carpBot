@@ -263,7 +263,7 @@ module.exports = {
             description: "Buy this map to go on epic adventures in dungeons!",
             cost: 50000,
             metadataToDisplay: [""],
-            emoji: "🥾",
+            emoji: "🗺️",
             oneOff: true,
             addToInventory: true,
             displayInShop: true,
