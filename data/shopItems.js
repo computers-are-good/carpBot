@@ -617,6 +617,7 @@ module.exports = {
             name: "Bronze ring",
             displayInInventory: true,
             addToInventory: true,
+            category: ["object", "equipment"],
             emoji: "💍",
             cost: 50000,
             description: "Your grandma probably has one of these. +3 to attack and +3 to block."
