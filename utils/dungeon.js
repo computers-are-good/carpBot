@@ -3,9 +3,23 @@ const path = require('node:path');
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const { hasEffect } = require(path.join(__dirname, "/effects"));
 const { monsters } = require(path.join(__dirname, "../data/monsters"));
+const { equipment } = require(path.join(__dirname, "../data/equipment"));
 
+function changeEquipmentStats(combatData, equipmentData, removeStats = false) {
+    for (let item in equipmentData) {
+        if (equipmentData[item]) {
+            //do this shit later
+            let itemId = equipmentData[item];
+            let piece = equipment[itemId];
+            for (let stat in piece.improvements) {
+                combatData[stat] += piece.improvements[stat] * removeStats ? 1 : -1;
+            }
+        }
+    }
+}
 function battle(playerData, enemyData, maxRounds) {
-    const player = playerData.combat;
+    let player = playerData.combat;
+    changeEquipmentStats(player, playerData.equipment); //add stats from equipment
     const enemy = enemyData.combat;
     //apply relevant player effects
     let effects = hasEffect(playerData, ["redrose"]);
@@ -13,9 +27,8 @@ function battle(playerData, enemyData, maxRounds) {
         enemy.health *= 0.75;
     }
 
-
-    function attack(attacker, target) {
-        if (getCombatProbability(attacker, "doublestrike")) attack(attacker, target);
+    function attack(attacker, target, doubleStrikeTriggered = 0) { //the chances of doublestrike activating decrease with each time it is activated.
+        if (getCombatProbability(attacker, "doublestrike") && Math.random() < (1 / doubleStrikeTriggered)) attack(attacker, target, doubleStrikeTriggered + 1);
         if (!getCombatProbability(attacker, "totalblock")) target.shield -= attacker.attack;
         if (target.shield < 0) {
             target.health += target.shield;
@@ -26,7 +39,10 @@ function battle(playerData, enemyData, maxRounds) {
         return target;
     }
     let roundCounter = 0;
-    if (player.health <= 0) return false;
+    if (player.health <= 0) {
+        changeEquipmentStats(playerData.combat, playerData.equipment, true);
+        return false;
+    }
 
     let fastest, slowest;
     if (player.speed >= enemy.speed) {
@@ -38,7 +54,10 @@ function battle(playerData, enemyData, maxRounds) {
     }
     while (true) {
         //Can't defeat the enemy in the specified rounds? You probably can't defeat the enemy. You lose.
-        if (roundCounter >= maxRounds) return false;
+        if (roundCounter >= maxRounds) {
+            changeEquipmentStats(playerData.combat, playerData.equipment, true);
+            return false;
+        }
 
         fastest.shield = fastest.block;
         slowest.shield = slowest.block;
@@ -50,6 +69,7 @@ function battle(playerData, enemyData, maxRounds) {
             slowest.health = 0;
             delete fastest.shield;
             delete slowest.shield;
+            changeEquipmentStats(playerData.combat, playerData.equipment, true);
             return true;
         }
 
@@ -61,10 +81,12 @@ function battle(playerData, enemyData, maxRounds) {
             fastest.health = 0;
             delete fastest.shield;
             delete slowest.shield;
+            changeEquipmentStats(playerData.combat, playerData.equipment, true);
             return false;
         }
         roundCounter++;
     }
+    
 }
 const probabilityCaps = {
     doublestrike: 0.7,
@@ -87,14 +109,20 @@ function getCombatProbability(combatObj, probability) { //returns true if the ef
     return false;
 }
 
-function compareStatsString(playerStats, enemyStats) {
+function compareStatsString(playerStats, equipmentStats, enemyStats, roundsToCalculate = 999) {
+
     let difficultyMsg = "even"
-    const expectedDmgToEnemy = Math.max(playerStats.attack - enemyStats.block, 1);
-    const expectedDmgToPlayer = Math.max(enemyStats.attack - playerStats.block, 1);
+    playerStats = scriptingUtils.deepClone(playerStats);
+    changeEquipmentStats(playerStats, equipmentStats);
+    const expectedDmgToEnemy = Math.max(playerStats.attack - enemyStats.block, 1) * (playerStats.probabilities.doubleStrike ? playerStats.probabilities.doubleStrike + 1 : 1);
+    const expectedDmgToPlayer = Math.max(enemyStats.attack - playerStats.block, 1) * (enemyStats.probabilities.doubleStrike ? enemyStats.probabilities.doubleStrike + 1 : 1);;
     let difficultyScore = expectedDmgToEnemy - expectedDmgToPlayer;
-    let expectedRoundstoDefeatEnemy = enemyStats.health / expectedDmgToEnemy;
-    let expectedRoundstoDefeatPlayer = playerStats.health / expectedDmgToPlayer;
-    difficultyScore += ( expectedRoundstoDefeatPlayer - expectedRoundstoDefeatEnemy) * 3;
+    let expectedRoundstoDefeatEnemy = Math.ceil(enemyStats.health / expectedDmgToEnemy);
+    let expectedRoundstoDefeatPlayer = Math.ceil(playerStats.health / expectedDmgToPlayer);
+    difficultyScore += (expectedRoundstoDefeatPlayer - expectedRoundstoDefeatEnemy) * 3;
+
+    const expectedDmgTaken = Math.floor(Math.max(enemyStats.attack - playerStats.block, 1) * Math.min(expectedRoundstoDefeatPlayer, roundsToCalculate));
+    const expectedDmgDealt = Math.floor(Math.max(playerStats.attack - enemyStats.block, 1) * Math.min(expectedRoundstoDefeatEnemy, roundsToCalculate));
     if (difficultyScore < -5) difficultyMsg = "difficult";
     if (difficultyScore < -30) difficultyMsg = "arduous";
     if (difficultyScore > 5) difficultyMsg = "easy";
@@ -105,8 +133,10 @@ Health: ${playerStats.health} (max: ${playerStats.maxHealth})${scriptingUtils.ge
 Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(25 - playerStats.attack.toString().length - 8)}| Attack: ${enemyStats.attack}${scriptingUtils.generateSpaces(20 - enemyStats.attack.toString().length - 8)}
 Block: ${playerStats.block}${scriptingUtils.generateSpaces(25 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}${scriptingUtils.generateSpaces(20 - enemyStats.block.toString().length - 7)}\`
 Expected difficulty: **${difficultyMsg}**. ${playerStats.speed >= enemyStats.speed ? "**You** will attack first." : "**The enemy** will attack first."}
-${enemyStats.block >= playerStats.attack ? "The enemy has block higher or equal to your attack. **You will only deal damage of one per turn**" : ""}`;
+${enemyStats.block >= playerStats.attack ? "The enemy has block higher or equal to your attack. **You will only deal one damage per turn**" : ""}
+You will deal around ${expectedDmgDealt} damage. You will take around ${expectedDmgTaken} damage (${playerStats.health}HP -> ${Math.max(playerStats.health - expectedDmgTaken, 0)}HP)`;
 };
+
 
 module.exports = {
     battle,
@@ -143,7 +173,7 @@ module.exports = {
                     case "prebattle":
                         const enemyStats = generateEnemyStats(itemIndex);
                         stringToReply = `You are about to enter battle with a ${currentStep.content.name}
-${compareStatsString(playerStats, enemyStats)}`;
+${compareStatsString(playerStats, userInfo.equipment, enemyStats)}`;
                         if (enemyStats.img) {
                             imageToReplyWith = path.join(__dirname, `../data/dungeonimg/${enemyStats.img}`);
                         }
@@ -217,6 +247,7 @@ ${compareStatsString(playerStats, enemyStats)}`;
                         } else {
                             if (script[itemIndex].type == "battle") {
                                 const enemyStats = generateEnemyStats(itemIndex);
+                                let oldHealth = userInfo.combat.health;
                                 let won = battle(userInfo, { combat: enemyStats });
                                 if (!won) {
                                     await buttons.update({ content: "Lost battle. Exiting dungeon...", components: [] });
@@ -230,7 +261,7 @@ ${compareStatsString(playerStats, enemyStats)}`;
                                 } else {
                                     buttons.update({
                                         content: `Congratulations! You won!
-\`Health remaining: ${userInfo.combat.health}\``, components: [row]
+\`Health remaining: ${userInfo.combat.health} (took ${oldHealth - userInfo.combat.health} damage)\``, components: [row]
                                     })
                                 }
                             } else {

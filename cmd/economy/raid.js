@@ -21,15 +21,11 @@ module.exports = {
             return;
         }
         if (userInfo.learned.includes("Violin")) userInfo.combat.attack += 50;
-
-        const expectedDmgTaken = Math.max(enemyInfo.combat.attack - userInfo.combat.block, 1) * 5;
-        const expectedDmgDealt = Math.max(userInfo.combat.attack - enemyInfo.combat.block, 1) * 5;
         const attackedTimes = enemyInfo.playersAttackedTimes[interaction.user.id] ?? 0;
         let stringToSend = 
 `${notifications}Current raid boss: ${enemyInfo.currentMonster} ${attackedTimes < maxPlayerAttackTimes ? `(attacked ${attackedTimes} / ${maxPlayerAttackTimes})` : `As you attacked the enemy **${attackedTimes} times**, you need to use **1 unwithering flower** to continue attacking.`}
 Time remaining: ${scriptingUtils.getTimeUntilNextDay()} | Health: ${Math.round((enemyInfo.combat.health / enemyInfo.maxHealth) * 100000) / 1000}%
-${dungeonUtils.compareStatsString(userInfo.combat, enemyInfo.combat)}
-You will deal around ${expectedDmgDealt} damage. You wil take around ${expectedDmgTaken} damage (${userInfo.combat.health}HP -> ${Math.max(userInfo.combat.health - expectedDmgTaken, 0)}HP)       `
+${dungeonUtils.compareStatsString(userInfo.combat, userInfo.equipment, enemyInfo.combat, 5)}`
         const results = await economyUtils.confirmation(interaction, stringToSend, "Attack", "Wait, no...");
         const {confirmed, response} = results;
         if (confirmed) {
@@ -50,8 +46,8 @@ You will deal around ${expectedDmgDealt} damage. You wil take around ${expectedD
             raidUtils.addPlayerDamage(enemyInfo, interaction.user.id, enemyOldHP - enemyInfo.combat.health);
             if (userInfo.learned.includes("Violin")) userInfo.combat.attack -= 50;
 
-           // fs.writeFileSync(path.join(__dirname, `../../userdata/raidboss.json`), JSON.stringify(enemyInfo));
-            //saveData(userInfo, interaction.user.id);
+           fs.writeFileSync(path.join(__dirname, `../../userdata/raidboss.json`), JSON.stringify(enemyInfo));
+            saveData(userInfo, interaction.user.id);
         }
     },
 };

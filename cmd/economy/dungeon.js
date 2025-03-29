@@ -19,10 +19,6 @@ module.exports = {
     async execute(interaction) {
         const { userInfo, notifications } = await economyUtils.prefix(interaction);
         let dungeonInput = interaction.options.getString("dungeon");
-        let exp = /^["']?(.*?)["']?$/
-        const match = dungeonInput.match(exp)
-        dungeonInput = match[1];
-        let targetDungeon;
         const availableDungeons = listAvailableDungeons(userInfo);
         if (!dungeonInput) {
             let list = [];
@@ -32,7 +28,10 @@ module.exports = {
             }
             economyUtils.displayList(interaction, list);
         } else {
-
+            let exp = /^["']?(.*?)["']?$/
+            const match = dungeonInput.match(exp)
+            dungeonInput = match[1];
+            let targetDungeon;
             if (!economyUtils.inventoryHasItem(userInfo.inventory, 1010)) {
                 await interaction.reply(`${notifications}Please buy a pair of Adventurer's boots with \`/buy Adventurer's boots\` before starting a dungeon. It costs $500.`);
                 return;
