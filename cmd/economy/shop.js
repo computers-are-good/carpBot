@@ -17,6 +17,7 @@ module.exports = {
         if (notifications) stringsToDisplay.push(notifications);
         for (let item in shopItems) {
             if (shopItems[item].category.includes("testing") || shopItems[item].displayInShop == false) continue;
+            if (shopItems[item].oneOff && economyUtils.inventoryHasItem(userInfo.inventory, item)) continue;
             if (!category) {
                 objectsFittingCriteria.push(shopItems[item]);
             } else if (category && shopItems[item].category.includes(category)) {
