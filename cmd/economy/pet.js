@@ -22,6 +22,7 @@ module.exports = {
         let toPet;
         if (userInfo.pets.length == 0) {
             await interaction.reply(`${notifications}Welcome to the CrapBot pets system! To get started, buy a pet with \`/petbuy\`.`);
+            return;
         }
         for (let pet of userInfo.pets) {
             if (pet.name.toLowerCase() == selectedPet.toLowerCase() || petsList[pet.id].name.toLowerCase() == selectedPet.toLowerCase()) {

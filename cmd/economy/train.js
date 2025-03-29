@@ -26,6 +26,7 @@ module.exports = {
 			await interaction.reply(`${notifications}You can only increase your healing interval a maximum of 15 times.`)
 		}
 		let cost, valueToIncrease
+		let increaseMultiplier = 1;
 		switch (category) {
 			case "maxHealth":
 				valueToIncrease = 10 * increaseMultiplier;
@@ -48,12 +49,8 @@ module.exports = {
 				cost = Math.max(userInfo.abilitiesImproved[category] * 500, 100) * 100;
 				break;
 		}
-		switch (category) {
-
-		}
 		let statToImproveReadable = category;
 		if (category == "maxHealth") statToImproveReadable = "max health";
-		let increaseMultiplier = 1;
 		if (userInfo.learned.includes("Efficent Training")) increaseMultiplier = 2;
 
 		let msgToSend;
