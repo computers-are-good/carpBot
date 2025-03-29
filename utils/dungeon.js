@@ -33,27 +33,30 @@ function battle(playerData, enemyData, maxRounds) {
     function attack(attacker, target, doubleStrikeTriggered = 0) { //the chances of doublestrike activating decrease with each time it is activated.
         if (getCombatProbability(attacker, "doublestrike") && Math.random() < (1 / doubleStrikeTriggered)) attack(attacker, target, doubleStrikeTriggered + 1);
         if (!getCombatProbability(attacker, "totalblock")) target.shield -= attacker.attack;
+        console.log(attacker, target, target.shield)
         if (target.shield < 0) {
             target.health += target.shield;
             target.shield = 0;
         } else {
             target.health--; //Minimum damage of one.
         }
-        return target;
     }
     let roundCounter = 0;
     if (player.health <= 0) {
         return false;
     }
 
+    let playerIsTheFastest = false;
     let fastest, slowest;
     if (player.speed >= enemy.speed) {
         fastest = player;
         slowest = enemy;
+        playerIsTheFastest = true;
     } else {
         fastest = enemy;
         slowest = player;
     }
+
     while (true) {
         //Can't defeat the enemy in the specified rounds? You probably can't defeat the enemy. You lose.
         if (roundCounter >= maxRounds) {
@@ -63,14 +66,14 @@ function battle(playerData, enemyData, maxRounds) {
         fastest.shield = fastest.block;
         slowest.shield = slowest.block;
         attack(fastest, slowest);
-        if (roundCounter == 0)
+        if (roundCounter == 0) {}
             attack(fastest, slowest);
 
         if (slowest.health <= 0) {
             slowest.health = 0;
             delete fastest.shield;
             delete slowest.shield;
-            return true;
+            return playerIsTheFastest;
         }
 
         attack(slowest, fastest);
@@ -81,7 +84,7 @@ function battle(playerData, enemyData, maxRounds) {
             fastest.health = 0;
             delete fastest.shield;
             delete slowest.shield;
-            return false;
+            return !playerIsTheFastest;
         }
         roundCounter++;
     }
@@ -109,22 +112,24 @@ function getCombatProbability(combatObj, probability) { //returns true if the ef
 }
 
 function compareStatsString(playerStats, equipmentStats, enemyStats, roundsToCalculate = 999) {
-
-    let difficultyMsg = "even"
+    let difficultyMsg = "even";
     playerStats = scriptingUtils.deepClone(playerStats);
-    const expectedDmgToEnemy = Math.max(playerStats.attack - enemyStats.block, 1) * (playerStats.probabilities.doubleStrike ? playerStats.probabilities.doubleStrike + 1 : 1);
-    const expectedDmgToPlayer = Math.max(enemyStats.attack - playerStats.block, 1) * (enemyStats.probabilities.doubleStrike ? enemyStats.probabilities.doubleStrike + 1 : 1);;
-    let difficultyScore = expectedDmgToEnemy - expectedDmgToPlayer;
-    let expectedRoundstoDefeatEnemy = Math.ceil(enemyStats.health / expectedDmgToEnemy);
-    let expectedRoundstoDefeatPlayer = Math.ceil(playerStats.health / expectedDmgToPlayer);
-    difficultyScore += (expectedRoundstoDefeatPlayer - expectedRoundstoDefeatEnemy) * 3;
+    const expectedDmgToEnemyOneRound = Math.max(playerStats.attack - enemyStats.block, 1) * (playerStats.probabilities.doubleStrike ? playerStats.probabilities.doubleStrike + 1 : 1);
+    const expectedDmgToPlayerOneRound = Math.max(enemyStats.attack - playerStats.block, 1) * (enemyStats.probabilities.doubleStrike ? enemyStats.probabilities.doubleStrike + 1 : 1);
+    const expectedDmgToEnemyFirstRound = Math.max(playerStats.attack * 2 * (playerStats.probabilities.doubleStrike ? playerStats.probabilities.doubleStrike + 1 : 1) - enemyStats.block, 1);
+    const expectedDmgToPlayerFirstRound = Math.max(enemyStats.attack * 2  * (enemyStats.probabilities.doubleStrike ? enemyStats.probabilities.doubleStrike + 1 : 1) - playerStats.block, 1);
 
-    const expectedDmgTaken = Math.floor(Math.max(enemyStats.attack - playerStats.block, 1) * Math.min(expectedRoundstoDefeatPlayer, roundsToCalculate));
-    const expectedDmgDealt = Math.floor(Math.max(playerStats.attack - enemyStats.block, 1) * Math.min(expectedRoundstoDefeatEnemy, roundsToCalculate));
+    let difficultyScore = expectedDmgToEnemyOneRound - expectedDmgToPlayerOneRound;
+    let expectedRoundstoDefeatEnemy = Math.ceil(enemyStats.health / expectedDmgToEnemyOneRound);
+    let expectedRoundstoDefeatPlayer = Math.ceil(playerStats.health / expectedDmgToPlayerOneRound);
+    difficultyScore += (expectedRoundstoDefeatPlayer - expectedRoundstoDefeatEnemy) * 3;
+    let damageDealthToEnemy = Math.min(expectedDmgToEnemyOneRound * (expectedRoundstoDefeatPlayer - 1) + expectedDmgToEnemyFirstRound, enemyStats.health);
+    let damageDealtToPlayer = Math.min(expectedDmgToPlayerOneRound * (expectedRoundstoDefeatEnemy - 1) + expectedDmgToPlayerFirstRound, playerStats.health);
+
     if (difficultyScore < -5) difficultyMsg = "difficult";
     if (difficultyScore < -30) difficultyMsg = "arduous";
     if (difficultyScore > 5) difficultyMsg = "easy";
-    if (difficultyScore > 30) difficultyMsg = "very easy";
+    if (difficultyScore > 30) difficultyMsg = "trivial";
 
     return `\`Your stats:              | Enemy stats:
 Health: ${playerStats.health} (max: ${playerStats.maxHealth})${scriptingUtils.generateSpaces(25 - playerStats.health.toString().length - playerStats.maxHealth.toString().length - 16)}| Health: ${enemyStats.health}${scriptingUtils.generateSpaces(20 - enemyStats.health.toString().length - 8)}
@@ -132,7 +137,7 @@ Attack: ${playerStats.attack}${scriptingUtils.generateSpaces(25 - playerStats.at
 Block: ${playerStats.block}${scriptingUtils.generateSpaces(25 - playerStats.block.toString().length - 7)}| Block: ${enemyStats.block}${scriptingUtils.generateSpaces(20 - enemyStats.block.toString().length - 7)}\`
 Expected difficulty: **${difficultyMsg}**. ${playerStats.speed >= enemyStats.speed ? "**You** will attack first." : "**The enemy** will attack first."}
 ${enemyStats.block >= playerStats.attack ? "The enemy has block higher or equal to your attack. **You will only deal one damage per turn**" : ""}
-You will deal around ${expectedDmgDealt} damage. You will take around ${expectedDmgTaken} damage (${playerStats.health}HP -> ${Math.max(playerStats.health - expectedDmgTaken, 0)}HP)`;
+You will deal around ${damageDealthToEnemy} damage. You will take around ${damageDealtToPlayer} damage (${playerStats.health}HP -> ${Math.max(playerStats.health - damageDealtToPlayer, 0)}HP)`;
 };
 
 
