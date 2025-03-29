@@ -6,16 +6,19 @@ const statDescriptions = {
 	attack: "Your attack is first blocked, before dealing damage to the enemy",
 	speed: "The party with the highest speed attacks first. **You and your enemy's first attack is done twice**, so speed is a crucial stat."
 }
+const { changeEquipmentStats } = require(path.join(__dirname, "../../utils/dungeon"));
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('stats')
 		.setDescription('Views your combat stats!'),
 	async execute(interaction) {
-        const {userInfo, notifications} = await economyUtils.prefix(interaction);
+		const { userInfo, notifications } = await economyUtils.prefix(interaction);
 
 		let stringToReply = notifications;
 		stringToReply += `${interaction.user.username} (LV ${userInfo.level})\n`;
+
+		changeEquipmentStats(userInfo.combat, userInfo.equipment);
 
 		//health
 		const healthPercent = Math.round((userInfo.combat.health / userInfo.combat.maxHealth) * 1000) / 10

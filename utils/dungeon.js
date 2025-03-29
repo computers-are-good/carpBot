@@ -12,7 +12,7 @@ function changeEquipmentStats(combatData, equipmentData, removeStats = false) {
             let itemId = equipmentData[item];
             let piece = equipment[itemId];
             for (let stat in piece.improvements) {
-                combatData[stat] += piece.improvements[stat] * removeStats ? 1 : -1;
+                combatData[stat] += piece.improvements[stat] * (removeStats ? -1 : 1);
             }
         }
     }
@@ -143,6 +143,7 @@ module.exports = {
     compareStatsString,
     addCombatProbability,
     getCombatProbability,
+    changeEquipmentStats,
     dungeon: async function (interaction, script, userInfo) {
         return new Promise(async (res, rej) => {
             let weAreFinished = false;
