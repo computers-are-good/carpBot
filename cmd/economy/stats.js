@@ -43,6 +43,9 @@ module.exports = {
 		for (let probability in userInfo.combat.probabilities) {
 			stringToReply += `${probability}: ${userInfo.combat.probabilities[probability] * 100}%`;
 		}
+		if (Object.keys(userInfo.combat.probabilities).length == 0) {
+			stringToReply += "(there's nothing here; probabilities are effects with a chance to trigger during combat.)"
+		}
 
 		await interaction.reply(stringToReply);
 	},
