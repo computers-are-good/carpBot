@@ -1,6 +1,6 @@
 //https://discordjs.guide/creating-your-bot/command-deployment.html
 const { REST, Routes } = require('discord.js');
-const { clientId, guildId } = require('./configs.json');
+const { clientId, guildIds } = require('./configs.json');
 const fs = require('node:fs');
 const token = JSON.parse(fs.readFileSync("configs.json", "utf-8")).token;
 const path = require('node:path');
@@ -33,7 +33,7 @@ for (const folder of commandFolders) {
 					const folderArr = folder.split('');
 					folderArr[0] = folderArr[0].toUpperCase()
 					category = folderArr.join("");
-			}			
+			}
 			command.data.description = `${category}: ${command.data.description}`;
 			commands.push(command.data.toJSON());
 		} else {
@@ -49,12 +49,14 @@ const rest = new REST().setToken(token);
 	try {
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
-		const data = await rest.put(
-			Routes.applicationGuildCommands(clientId, guildId),
-			{ body: commands },
-		);
+		guildIds.forEach(async e => {
+			const data = await rest.put(
+				Routes.applicationGuildCommands(clientId, e),
+				{ body: commands });
+			console.log(`Successfully reloaded ${data.length} application (/) commands (${e}).`);
+		})
 
-		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+
 	} catch (error) {
 		console.error(error);
 	}
