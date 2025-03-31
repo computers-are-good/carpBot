@@ -42,7 +42,7 @@ module.exports = {
                 let excessMessagesCount = 0;
                 let messagesCount = 0;
                 let quantityUsed = 0;
-                let stringToReply = ``;
+                let stringToReply = `${notifications}`;
 
                 if (userInfo.inventory[item].quantity < quantity) {
                     await interaction.reply(`${notifications}Not enough items: you only have ${userInfo.inventory[item].quantity}`);
@@ -115,8 +115,8 @@ module.exports = {
                     }
                     quantityUsed++
                 }
-                if (excessMessagesCount > 0) stringToReply += `\n(and ${excessMessagesCount} other messages)\n`;
-                stringToReply += `${notifications}You have used x${quantityUsed} ${shopItems[itemId].name}`;
+                if (excessMessagesCount > 0) stringToReply += `\n(and ${excessMessagesCount} other messages)`;
+                stringToReply += `\nYou have used x${quantityUsed} ${shopItems[itemId].name}`;
                 if (shopItems[itemId].category.includes("consumable")) {
                     userInfo.inventory[item].quantity -= quantity;
                     if (userInfo.inventory[item].quantity <= 0) {

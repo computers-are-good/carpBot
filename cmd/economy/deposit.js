@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
@@ -25,14 +26,14 @@ module.exports = {
         amountOfMoney = Math.floor(amountOfMoney);
 
         if (amountOfMoney > userInfo.moneyOnHand) {
-            await interaction.reply(`${notifications}You only have ${economyUtils.formatMoney(userInfo.moneyOnHand)} in your wallet but you tried to deposit ${economyUtils.formatMoney(amountOfMoney)}`);
+            await interaction.reply(`${notifications}You only have ${scriptingUtils.formatMoney(userInfo.moneyOnHand)} in your wallet but you tried to deposit ${scriptingUtils.formatMoney(amountOfMoney)}`);
             return;
         }
 
         userInfo.moneyOnHand -= amountOfMoney;
         userInfo.moneyBankAccount += amountOfMoney;
 
-        await interaction.reply(`${notifications}Deposited ${economyUtils.formatMoney(amountOfMoney)}`)
+        await interaction.reply(`${notifications}Deposited ${scriptingUtils.formatMoney(amountOfMoney)}`)
 
         saveData(userInfo, interaction.user.id);
     },

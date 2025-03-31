@@ -1,7 +1,8 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
-const { shopItems } = require(path.join(__dirname, "../../data/shopItems"))
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
+const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -27,7 +28,7 @@ module.exports = {
         for (let i = 0; i < objectsFittingCriteria.length; i++) {
             let object = objectsFittingCriteria[i];
             let costs = [];
-            if (object.cost) costs.push(economyUtils.formatMoney(economyUtils.determinePrice(userInfo, object)));
+            if (object.cost) costs.push(scriptingUtils.formatMoney(economyUtils.determinePrice(userInfo, object)));
             if (object.unwitheringFlowers) costs.push(`${object.unwitheringFlowers} unwithering flowers`);
             stringsToDisplay.push(`${object.emoji ? object.emoji : ""} **${object.name}** (${costs.join(", ")}):\nCategories: ${object.category.join(", ")}\n${object.description}\n`);
         }

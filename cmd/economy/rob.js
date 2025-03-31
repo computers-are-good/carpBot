@@ -1,6 +1,7 @@
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const userData = require(path.join(__dirname, "../../utils/userdata"));
 const {grantEffect, hasEffect} = require(path.join(__dirname, "../../utils/effects"));
 
@@ -42,19 +43,19 @@ module.exports = {
 		userData.lockData(targetPlayerId);
 		userData.lockData(interaction.user.id);
 		try {
-			economyUtils.confirmation(interaction, `${notifications}Preparing to rob ${targetPlayer.username} for ${economyUtils.formatMoney(moneyRobbed)} with a ${successChance * 100}% chance of success. Are you sure?`).then(val => {
+			economyUtils.confirmation(interaction, `${notifications}Preparing to rob ${targetPlayer.username} for ${scriptingUtils.formatMoney(moneyRobbed)} with a ${successChance * 100}% chance of success. Are you sure?`).then(val => {
 				let { confirmed, response } = val;
 				if (confirmed) {
 					if (Math.random() < successChance) {
 						//success
 						targetPlayerData.moneyOnHand -= moneyRobbed;
 						userInfo.moneyOnHand += moneyRobbed;
-						economyUtils.notifyPlayer(targetPlayerData, `${interaction.user.username} robbed you for ${economyUtils.formatMoney(moneyRobbed)}`, true);
+						economyUtils.notifyPlayer(targetPlayerData, `${interaction.user.username} robbed you for ${scriptingUtils.formatMoney(moneyRobbed)}`, true);
 						response.edit("Successfully robbed the guy!");
 					} else {
 						targetPlayerData.moneyOnHand += moneyLostOnFail;
 						userInfo.moneyOnHand -= moneyLostOnFail;
-						response.edit(`You failed robbing the guy. You lost ${economyUtils.formatMoney(moneyLostOnFail)}`);
+						response.edit(`You failed robbing the guy. You lost ${scriptingUtils.formatMoney(moneyLostOnFail)}`);
 						let criminalDuration = 300;
 						//Birds reduce duration of "criminal"
 						for (let pet of userInfo.pets) {

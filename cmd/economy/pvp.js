@@ -2,7 +2,8 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
-const { compareStatsString, battle, changeEquipmentStats} = require(path.join(__dirname, "../../utils/dungeon"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
+const { compareStatsString, battle} = require(path.join(__dirname, "../../utils/dungeon"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
@@ -22,13 +23,13 @@ module.exports = {
         //You can earn a maximum of one million dollars from a PvP match
         const moneyEarned = Math.min(Math.floor((targetPlayerData.moneyOnHand + targetPlayerData.moneyBankAccount) * 0.1 + targetPlayerData.level * 500 + 1000), 10000);
 
-        const results = await economyUtils.confirmation(interaction, `${notifications} ${compareStatsString(playerStats, userInfo.equipment, enemyStats)}\nThe player you attack will not lose money. Expect ${economyUtils.formatMoney(moneyEarned)}.`, "Attack", "Wait, no...");
+        const results = await economyUtils.confirmation(interaction, `${notifications} ${compareStatsString(playerStats, userInfo.equipment, enemyStats)}\nThe player you attack will not lose money. Expect ${scriptingUtils.formatMoney(moneyEarned)}.`, "Attack", "Wait, no...");
         const { confirmed, response } = results;
 
         if (confirmed) {
             let won = battle(userInfo, targetPlayerData);
             if (won) {
-                response.edit(`Congratulations! You won! The arena master gave you ${economyUtils.formatMoney(moneyEarned)}.`);
+                response.edit(`Congratulations! You won! The arena master gave you ${scriptingUtils.formatMoney(moneyEarned)}.`);
                 economyUtils.notifyPlayer(targetPlayerData, `${interaction.user.id} fought you and won. Don't worry. You didn't lose any money.`)
                 userInfo.moneyOnHand += moneyEarned;
             } else {

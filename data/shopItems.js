@@ -1,5 +1,4 @@
 const path = require('node:path');
-const economyUtils = require(path.join(__dirname, "../utils/economy"));
 const { gainExp } = require(path.join(__dirname, "../utils/levelup"));
 const { grantEffect, hasEffect } = require(path.join(__dirname, "../utils/effects"));
 const scriptingUtils = require(path.join(__dirname, "../utils/scripting"));
@@ -20,7 +19,7 @@ const dungeonUtils = require(path.join(__dirname, "../utils/dungeon"));
     metadataToDisplay: The metadata tags in this array will be displayed when /inventory is used.
     emoji: the emoji representing the data which will be added before the item name in /shop and /inventory
     oneOff: if set to true, crapbot will only allow the item to be brought once (default: false)
-    addToInventory: if set to false, the item will not be added to the user's inventory once brought
+    addToInventory: if set to false, the item will not be added to the user's inventory once brought (default: false)
     scripts:
         - generateMetadata: generates the metadata of an item to be stored in the inventory.
         - onUse: is ran when the item is used.
@@ -246,7 +245,7 @@ module.exports = {
                             messagesToUser += "You must be level 10 or above to buy this item. "
                         }
                         if (userInfo.lifetimeMoneyFromWorking < 500000) {
-                            messagesToUser += `You must have earned at least $5,000 from working before buying this (you have earned ${economyUtils.formatMoney(userInfo.lifetimeMoneyFromWorking)})`
+                            messagesToUser += `You must have earned at least $5,000 from working before buying this (you have earned ${scriptingUtils.formatMoney(userInfo.lifetimeMoneyFromWorking)})`
                         }
                         return {
                             canBuy: false,
@@ -626,6 +625,25 @@ module.exports = {
                     grantEffect(userInfo, "redrose", 300);
                     return {
                         messageToUser: "Elusive red rose activated."
+                    }
+                }
+            }
+        },
+        3012: {
+            name: "Box of Treasures",
+            displayInInventory: true,
+            displayInShop: true,
+            emoji: "🎁",
+            addToInventory: true,
+            category: ["object", "unwitheringflower"],
+            unwitheringFlowers: 1,
+            descriptions: "When used, gives you anywhere between $500,000 and $750,000",
+            scripts: {
+                onUse: function(userInfo) {
+                    const moneyGained = Math.ceil(25000000 * Math.random()) + 50000000;
+                    userInfo.moneyOnHand += moneyGained;
+                    return {
+                        messageToUser: `You gained ${scriptingUtils.formatMoney(moneyGained)}`
                     }
                 }
             }

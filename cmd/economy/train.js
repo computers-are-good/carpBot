@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
@@ -55,9 +55,9 @@ module.exports = {
 
 		let msgToSend;
 		if (category == "healingInterval") {
-			msgToSend = `${notifications}You will regenerate 1 health every ${userInfo.healingInterval / 1000}s -> ${(userInfo.healingInterval + valueToIncrease) / 1000}s. Decreasing this will cost ${economyUtils.formatMoney(cost)}. Are you sure?`;
+			msgToSend = `${notifications}You will regenerate 1 health every ${userInfo.healingInterval / 1000}s -> ${(userInfo.healingInterval + valueToIncrease) / 1000}s. Decreasing this will cost ${scriptingUtils.formatMoney(cost)}. Are you sure?`;
 		} else {
-			msgToSend = `${notifications}You will increase ${statToImproveReadable} (${userInfo.combat[category]} -> ${userInfo.combat[category] + valueToIncrease}). This will cost ${economyUtils.formatMoney(cost)}. Are you sure?`;
+			msgToSend = `${notifications}You will increase ${statToImproveReadable} (${userInfo.combat[category]} -> ${userInfo.combat[category] + valueToIncrease}). This will cost ${scriptingUtils.formatMoney(cost)}. Are you sure?`;
 		}
 		const val = await economyUtils.confirmation(interaction, msgToSend);
 		const { confirmed, response } = val;

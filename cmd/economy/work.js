@@ -56,8 +56,8 @@ module.exports = {
         let stringToWrite =
             `${notifications}
 User ${userInfo.username} ${scriptingUtils.choice(jobs)}. 
-Gained **${economyUtils.formatMoney(moneyGained)}**. ${effect.coffee ? `Coffee duration remaining: ${effect.coffee}s` : ""}
-Wallet: **${economyUtils.formatMoney(userInfo.moneyOnHand)}**\n`;
+Gained **${scriptingUtils.formatMoney(moneyGained)}**. ${effect.coffee ? `Coffee duration remaining: ${effect.coffee}s` : ""}
+Wallet: **${scriptingUtils.formatMoney(userInfo.moneyOnHand)}**\n`;
 
         stringToWrite += `${msg} ${effect.greenTea > 0 ? ` Green tea duration remaining: ${effect.greenTea}s` : ""}${effect.redTea > 0 ? `, Red tea duration remaining: ${effect.redTea}s` : ""}`;
 

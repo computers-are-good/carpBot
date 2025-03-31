@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
@@ -25,7 +25,7 @@ module.exports = {
 
 		const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`)
 		saveData(userInfo, interaction.user.id);
-		await interaction.reply(`${notifications}Gained ${economyUtils.formatMoney(moneyGained)}.`);
+		await interaction.reply(`${notifications}Gained ${scriptingUtils.formatMoney(moneyGained)}.`);
 
 	},
 };

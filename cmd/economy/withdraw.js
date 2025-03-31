@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -25,15 +26,15 @@ module.exports = {
         amountOfMoney = Math.floor(amountOfMoney);
 
         if (amountOfMoney > userInfo.moneyBankAccount) {
-            await interaction.reply(`${notifications}You only have ${economyUtils.formatMoney(userInfo.moneyBankAccount)} in your bank account but you tried to deposit ${economyUtils.formatMoney(amountOfMoney)}`);
+            await interaction.reply(`${notifications}You only have ${scriptingUtils.formatMoney(userInfo.moneyBankAccount)} in your bank account but you tried to deposit ${scriptingUtils.formatMoney(amountOfMoney)}`);
             return;
         }
 
         userInfo.moneyOnHand += amountOfMoney;
         userInfo.moneyBankAccount -= amountOfMoney;
 
-        await interaction.reply(`${notifications}Withdrew ${economyUtils.formatMoney(amountOfMoney)}`)
+        await interaction.reply(`${notifications}Withdrew ${scriptingUtils.formatMoney(amountOfMoney)}`)
 
-        fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(userInfo));
+        saveData(userInfo, interaction.user.id);
     },
 };

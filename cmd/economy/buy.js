@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
 const { developerIds } = require(path.join(__dirname, "../../configs.json"))
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
@@ -41,7 +42,7 @@ module.exports = {
         const cost = economyUtils.determinePrice(userInfo, itemData);
 
         if (itemData.cost && cost * quantity > userInfo.moneyOnHand) {
-            await interaction.reply(`${notifications}This item costs ${economyUtils.formatMoney(cost * quantity)} but user only has ${economyUtils.formatMoney(userInfo.moneyOnHand)} on hand. Try working or withdrawing money from your bank account.`);
+            await interaction.reply(`${notifications}This item costs ${scriptingUtils.formatMoney(cost * quantity)} but user only has ${scriptingUtils.formatMoney(userInfo.moneyOnHand)} on hand. Try working or withdrawing money from your bank account.`);
             return;
         }
 

@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 
 function createLeaderboard() {
     const dirpath = path.join(__dirname, "../../userdata/economy");
@@ -46,7 +47,7 @@ module.exports = {
         const placesToDisplay = Math.min(5, leaderboard.users.length);
         for (let i = 0; i < placesToDisplay; i++) {
             let user = leaderboard.users[leaderboard.users.length - i - 1];
-            string += `\n${i + 1}.${user.username}: ${economyUtils.formatMoney(user.balance)}`
+            string += `\n${i + 1}.${user.username}: ${scriptingUtils.formatMoney(user.balance)}`
         }
         await interaction.reply(string);
     },

@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { gainExp } = require(path.join(__dirname, "../../utils/levelup"));
 const { learnList } = require(path.join(__dirname, "../../data/learnlist"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
@@ -38,7 +38,7 @@ module.exports = {
 				const skill = availableSkills[i];
 				let string = "";
 				string +=
-					`**${skill.name}** (**${skill.exp}** exp): ${skill.description ? `${skill.description}\n` : ""}**${economyUtils.formatMoney(skill.cost)}**.
+					`**${skill.name}** (**${skill.exp}** exp): ${skill.description ? `${skill.description}\n` : ""}**${scriptingUtils.formatMoney(skill.cost)}**.
 `;
 				listToDisplay.push(string);
 			}
@@ -66,7 +66,7 @@ module.exports = {
 					return;
 				}
 			}
-			let string = `${notifications}You learnt ${skill.name} for ${economyUtils.formatMoney(skill.cost)}. `;
+			let string = `${notifications}You learnt ${skill.name} for ${scriptingUtils.formatMoney(skill.cost)}. `;
 
 			userInfo.moneyOnHand -= skill.cost;
 			userInfo.learned.push(skill.name);

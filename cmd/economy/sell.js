@@ -1,10 +1,10 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
-const { developerIds } = require(path.join(__dirname, "../../configs.json"))
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('sell')
@@ -63,7 +63,7 @@ module.exports = {
         if (itemInfo.category.includes("equipment") && quantity >= itemInInventory.quantity && playerHasEquipped(itemInfo.id)) {
             lastEquipmentLeft = true;
         }
-        let { confirmed, response } = await economyUtils.confirmation(interaction, `${notifications}Sell x${quantity} ${itemInfo.name}? You will earn ${economyUtils.formatMoney(moneyEarned)}${lastEquipmentLeft ? `\n**Your ${itemInfo.name} will be unequipped.**` : ""}`);
+        let { confirmed, response } = await economyUtils.confirmation(interaction, `${notifications}Sell x${quantity} ${itemInfo.name}? You will earn ${scriptingUtils.formatMoney(moneyEarned)}${lastEquipmentLeft ? `\n**Your ${itemInfo.name} will be unequipped.**` : ""}`);
 
         if (confirmed) {
             userInfo.moneyOnHand += moneyEarned;
@@ -78,7 +78,7 @@ module.exports = {
             if (itemInInventory.quantity <= 0) {
                 userInfo.inventory.splice(index, 1);
             }
-            await response.edit(`You have sold x${quantity} ${itemInfo.name} for ${economyUtils.formatMoney(moneyEarned)}`);
+            await response.edit(`You have sold x${quantity} ${itemInfo.name} for ${scriptingUtils.formatMoney(moneyEarned)}`);
         } else {
             await response.edit("Transaction cancelled");
         }

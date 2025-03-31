@@ -67,7 +67,7 @@ module.exports = {
         }
 
         let response = await interaction.reply({
-            content: `${notifications}You are about to rob a bank for ${economyUtils.formatMoney(moneyToBeEarned)}. You will need to answer five true or false questions correctly. Press confirm to start`,
+            content: `${notifications}You are about to rob a bank for ${scriptingUtils.formatMoney(moneyToBeEarned)}. You will need to answer five true or false questions correctly. Press confirm to start`,
             components: [initialRow]
         });
         let buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
@@ -88,7 +88,7 @@ module.exports = {
                     if (userResponse == questions[questionAsked].correct) {
                         questionAsked++
                         if (questionAsked >= 5) {
-                            response.edit({content: `Congratulations! You are successful and have gained ${economyUtils.formatMoney(moneyToBeEarned)}`, components: []});
+                            response.edit({content: `Congratulations! You are successful and have gained ${scriptingUtils.formatMoney(moneyToBeEarned)}`, components: []});
                             robberySuccessful();
                             
                         } else {

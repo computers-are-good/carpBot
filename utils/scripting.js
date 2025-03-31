@@ -41,6 +41,28 @@ module.exports = {
   wait: function (ms) {
     return new Promise(res => setTimeout(res, ms));
   },
+  formatMoney: function (val) {
+    a = val / 100;
+    a = a.toString().split('');
+    let output = [];
+    let tempSliced = [];
+    if (a.includes('.')) {
+        let index = a.indexOf('.');
+        let spliceCount = a.length - index;
+        tempSliced = a.splice(index, spliceCount);
+        a.splice(index, spliceCount);
+    }
+    for (let i = a.length - 1; i >= 0; i--) {
+        if (Math.abs(a.length - 1 - i) % 3 == 0) {
+            output.unshift(`,`);
+            output.unshift(a[i]);
+        } else {
+            output.unshift(a[i]);
+        }
+    }
+    output.pop();
+    return `$${output.join('').concat(tempSliced.join(''))}`;
+},
   getCurrentDay: function () {
     var a = new Date();
     var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];

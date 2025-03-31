@@ -10,28 +10,6 @@ const { defaultUserData } = require(path.join(__dirname, "../data/defaultuserdat
 const { profanities } = require(path.join(__dirname, "../data/profanities"));
 
 module.exports = {
-    formatMoney: function (val) {
-        a = val / 100;
-        a = a.toString().split('');
-        let output = [];
-        let tempSliced = [];
-        if (a.includes('.')) {
-            let index = a.indexOf('.');
-            let spliceCount = a.length - index;
-            tempSliced = a.splice(index, spliceCount);
-            a.splice(index, spliceCount);
-        }
-        for (let i = a.length - 1; i >= 0; i--) {
-            if (Math.abs(a.length - 1 - i) % 3 == 0) {
-                output.unshift(`,`);
-                output.unshift(a[i]);
-            } else {
-                output.unshift(a[i]);
-            }
-        }
-        output.pop();
-        return `$${output.join('').concat(tempSliced.join(''))}`;
-    },
     prefix: function (interaction) {
         return new Promise((acc, rej) => {
             const dataPath = path.join(__dirname, `../userdata/economy/${interaction.user.id}`);

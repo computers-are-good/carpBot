@@ -32,7 +32,7 @@ module.exports = {
             } else {
                 unwitheringFlowersGained = currentRaidData.playersAttackedTimes[id];
             }
-            playerNotification += ` You gained ${unwitheringFlowersGained} unwithering flowers and ${economyUtils.formatMoney(moneyGained)} `;
+            playerNotification += ` You gained ${unwitheringFlowersGained} unwithering flowers and ${scriptingUtils.formatMoney(moneyGained)} `;
             playerData.unwitheringFlowers += unwitheringFlowersGained;
 
             playerNotification += `You gained the following items: \n`;

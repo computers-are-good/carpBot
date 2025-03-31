@@ -68,7 +68,7 @@ module.exports = {
                         let moneyGained = targetDungeonInfo.completeRewards.money;
                         let expGained = targetDungeonInfo.completeRewards.exp;
 
-                        stringToSend += `\nGained ${economyUtils.formatMoney(moneyGained)}`;
+                        stringToSend += `\nGained ${scriptingUtils.formatMoney(moneyGained)}`;
                         const levelUpResults = gainExp(userInfo, expGained);
                         stringToSend += `\n${levelUpResults}`;
                         userInfo.moneyOnHand += moneyGained;
@@ -99,7 +99,7 @@ module.exports = {
                             stringToSend += `\nFirst time completion rewards:`
                             moneyGained += targetDungeonInfo.firstCompleteRewards.money;
                             expGained += targetDungeonInfo.firstCompleteRewards.exp;
-                            stringToSend += `\n${economyUtils.formatMoney(targetDungeonInfo.firstCompleteRewards.money)} and ${targetDungeonInfo.firstCompleteRewards.exp} exp`;
+                            stringToSend += `\n${scriptingUtils.formatMoney(targetDungeonInfo.firstCompleteRewards.money)} and ${targetDungeonInfo.firstCompleteRewards.exp} exp`;
 
                             if ("item" in targetDungeonInfo.firstCompleteRewards) {
                                 stringToSend += `\nFirst time completion items:`

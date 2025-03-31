@@ -30,7 +30,7 @@ module.exports = {
 			if (houseToSearch.metadata.Address.toLowerCase() == house.toLowerCase()) {
 				houseFound = true;
 				const upgradeCost = moneyRequiredLevelUp(houseToSearch.metadata.level)
-				economyUtils.confirmation(interaction, `${notifications}Upgrade this house? This costs ${economyUtils.formatMoney(upgradeCost)}`).then(async val => {
+				economyUtils.confirmation(interaction, `${notifications}Upgrade this house? This costs ${scriptingUtils.formatMoney(upgradeCost)}`).then(async val => {
 					let {confirmed, response} = val;
 					if  (confirmed) {
 						//enough money?

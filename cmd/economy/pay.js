@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
-const economy = require('../../utils/economy');
+const scriptingUtils = require('../../utils/scripting');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 
@@ -32,16 +32,16 @@ module.exports = {
         amountOfMoney *= 100;
         amountOfMoney = Math.floor(amountOfMoney);
         if (amountOfMoney > userInfo.moneyOnHand) {
-            await interaction.reply(`${notifications}You only have ${economyUtils.formatMoney(userInfo.moneyOnHand)} in your wallet but you tried to pay ${targetPlayer.username} ${economyUtils.formatMoney(amountOfMoney)}`);
+            await interaction.reply(`${notifications}You only have ${scriptingUtils.formatMoney(userInfo.moneyOnHand)} in your wallet but you tried to pay ${targetPlayer.username} ${scriptingUtils.formatMoney(amountOfMoney)}`);
             return;
         }
 
         targetPlayerData.moneyOnHand += amountOfMoney;
         userInfo.moneyOnHand -= amountOfMoney;
 
-        economyUtils.notifyPlayer(targetPlayerData, `${interaction.user.username} paid you ${economyUtils.formatMoney(amountOfMoney)}.`);
+        economyUtils.notifyPlayer(targetPlayerData, `${interaction.user.username} paid you ${scriptingUtils.formatMoney(amountOfMoney)}.`);
 
-        await interaction.reply(`${notifications}Paid ${targetPlayer.username} ${economyUtils.formatMoney(amountOfMoney)}`)
+        await interaction.reply(`${notifications}Paid ${targetPlayer.username} ${scriptingUtils.formatMoney(amountOfMoney)}`)
 
         saveData(userInfo, interaction.user.id);
         saveData(targetPlayerData, targetPlayerId);

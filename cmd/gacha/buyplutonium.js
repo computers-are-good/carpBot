@@ -3,6 +3,7 @@ const path = require('node:path');
 const fs = require("fs")
 const gachaUtils = require(path.join(__dirname, "../../utils/gacha"));
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { settings } = require(path.join(__dirname, "../../data/defaultgachadata"));
 
 module.exports = {
@@ -38,12 +39,12 @@ module.exports = {
 
 		const moneyRequired = settings.costOfPlutonium * amountOfPlutonium;
 		if (moneyRequired > economyInfo.moneyOnHand) {
-			await interaction.reply(`You don't have the needed money! The cost is ${economyUtils.formatMoney(moneyRequired)} but you only have ${economyUtils.formatMoney(userInfo.moneyOnHand)}. Keep \`/work\`ing!`);
+			await interaction.reply(`You don't have the needed money! The cost is ${scriptingUtils.formatMoney(moneyRequired)} but you only have ${scriptingUtils.formatMoney(userInfo.moneyOnHand)}. Keep \`/work\`ing!`);
 			return;
 		}
 
 		economyInfo.moneyOnHand -= moneyRequired;
-		await interaction.reply(`You have brought ${amountOfPlutonium} plutonium for ${economyUtils.formatMoney(moneyRequired)}.`);
+		await interaction.reply(`You have brought ${amountOfPlutonium} plutonium for ${scriptingUtils.formatMoney(moneyRequired)}.`);
 
 		fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(economyInfo));
 		fs.writeFileSync(path.join(__dirname, `../../userdata/gacha/${interaction.user.id}`), JSON.stringify(userInfo));
