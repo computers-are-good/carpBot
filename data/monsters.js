@@ -20,6 +20,18 @@ module.exports = {
             attack: 15,
             speed: 15
         },
+        "Bat": {
+            health: 10,
+            block: 5,
+            attack: 8,
+            speed: 100
+        },
+        "Mosquito": {
+            health: 1,
+            block: 1,
+            attack: 1,
+            speed: 999
+        },
         "Monella, Ultimate Master": {
             health: 500000,
             block: 40,

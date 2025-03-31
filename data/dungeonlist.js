@@ -62,6 +62,11 @@ module.exports = {
                     quantity: 1,
                     probability: 0.8
                 },
+                {
+                    id: 2015,
+                    quantity: 1,
+                    probability: 0.02
+                }
                 ]
             },
             firstCompleteRewards: {
@@ -79,5 +84,42 @@ module.exports = {
                 ]
             }
         },
+        "Green Plains 3": {
+            content: "It's a pretty peaceful evening by the hut.",
+            seriesName: "plains",
+            seriesNumber: 2,
+            requirements: {
+                level: 5
+            },
+            completeRewards: {
+                exp: 200,
+                money: 5000,
+                item: [{
+                    id: 2010,
+                    quantity: [2, 5],
+                    probability: 0.5
+                },
+                {
+                    id: 2009,
+                    quantity: [2, 5],
+                    probability: 0.3
+                },
+                {
+                    id: 2012,
+                    quantity: 1,
+                    probability: 0.05
+                },
+                {
+                    id: 2002,
+                    quantity: 1,
+                    probability: 0.8
+                },
+                {
+                    id: 2015,
+                    quantity: 1,
+                    probability: 0.05
+                }]
+            }
+        }
     }
 }

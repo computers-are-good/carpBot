@@ -20,12 +20,16 @@ const dungeonUtils = require(path.join(__dirname, "../utils/dungeon"));
     metadataToDisplay: The metadata tags in this array will be displayed when /inventory is used.
     emoji: the emoji representing the data which will be added before the item name in /shop and /inventory
     oneOff: if set to true, crapbot will only allow the item to be brought once (default: false)
-    addToInventory: if set to false, the item will not be added to the user's inventory
+    addToInventory: if set to false, the item will not be added to the user's inventory once brought
     scripts:
         - generateMetadata: generates the metadata of an item to be stored in the inventory.
         - onUse: is ran when the item is used.
         - onBuy: is ran when the item is brought.
         - canBuy: Can the user buy this item?
+        - getInteractionOptions: parameters which can be fed into onUse. Return {
+            msg: Message to user,
+            options: ["option 1", "option 2"...]
+        }
 }
 */
 module.exports = {
@@ -440,7 +444,7 @@ module.exports = {
             displayInInventory: true,
             category: ["object", "consumable",],
             description: "Increases your attack by 1.",
-            cost: 10000,
+            cost: 1000000,
             emoji: "🧪",
             oneOff: false,
             addToInventory: true,
@@ -458,7 +462,7 @@ module.exports = {
         2013: {
             name: "Block potion",
             displayInInventory: true,
-            cost: 10000,
+            cost: 1000000,
             category: ["object", "consumable",],
             description: "Increases your block by 1.",
             emoji: "🧪",
@@ -484,17 +488,46 @@ module.exports = {
             emoji: "🪙",
             addToInventory: true,
             oneOff: false,
-            displayInShop: true,
-            interactionOptions: {
-                msg: "What would you like?",
-                options: ["$100", "250 EXP"],
-            },
+            displayInShop: false,
             scripts: {
                 onUse: function (userInfo, metadata, optionChosen) {
                     if (optionChosen === "$100") userInfo.moneyOnHand += 10000;
                     if (optionChosen === "250 EXP") gainExp(userInfo, 250);
                     return {
                         messageToUser: optionChosen === "$100" ? `You gained $100.` : gainExp(userInfo, 250)
+                    }
+                },
+                canBuy: _ => false,
+                getInteractionOptions: function(userInfo) {
+                    return {
+                        msg: "What would you like?",
+                        options: ["$100", "250 EXP"],
+                    }
+                }
+            }
+        },
+        2015: {
+            name: "Pot of fortune",
+            displayInInventory: true,
+            category: ["object", "consumable"],
+            description: "This can either give you $1000 or 2500 EXP",
+            emoji: "🪙",
+            addToInventory: true,
+            oneOff: false,
+            displayInShop: false,
+            scripts: {
+                onUse: function (userInfo, metadata, optionChosen) {
+                    if (optionChosen === "$1000") userInfo.moneyOnHand += 100000;
+                    if (optionChosen === "2500 EXP") gainExp(userInfo, 2500);
+                    return {
+                        messageToUser: optionChosen === "$1000" ? `You gained $1000.` : gainExp(userInfo, 2500)
+                    }
+                },
+                canBuy: _ => false,
+                getInteractionOptions: function(userInfo) {
+                    return {
+                        msg: "What would you like?",
+                        options: ["$1000", "2500 EXP"],
                     }
                 }
             }

@@ -143,6 +143,80 @@ module.exports = {
                 type: "text",
                 content: "The cottage is small but cozy, with a window overlooking the territory below. You decide to stop here for the night."
             }
+        ],
+        "Green Plains 3": [
+            {
+                type: "text",
+                content: "The cottage overlooks the waterfall. However, it's long abandoned, and the wood on the front door is starting to rot."
+            },
+            {
+                type: "text",
+                content: "As you step inside, you are suddenly greeted by a hoard of monsters!"
+            },
+            {
+                type: "prebattle",
+                content: {
+                    name: "Bat",
+                    level: 2,
+                }
+            },
+            {
+                type: "battle",
+                content: {
+                    name: "Bat",
+                    level: 2,
+                }
+            },
+            {
+                type: "prebattle",
+                content: {
+                    name: "Bat",
+                    level: 2,
+                }
+            },
+            {
+                type: "battle",
+                content: {
+                    name: "Bat",
+                    level: 2,
+                }
+            },
+            {
+                type: "prebattle",
+                content: {
+                    name: "Large Rat",
+                    level: 1,
+                }
+            },
+            {
+                type: "battle",
+                content: {
+                    name: "Large Rat",
+                    level: 1,
+                }
+            },
+            {
+                type: "prebattle",
+                content: {
+                    name: "Mosquito",
+                    level: 2,
+                }
+            },
+            {
+                type: "battle",
+                content: {
+                    name: "Mosquito",
+                    level: 2,
+                }
+            },
+            {
+                type: "text",
+                content: "It looks like you have cleared the place out. There's a pretty cozy corner next to the fireplace."
+            },
+            {
+                type: "text",
+                content: "You light up the fire and settle down next to it, preparing for whatever is coming the next morning."
+            }
         ]
     }
 

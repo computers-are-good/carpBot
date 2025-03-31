@@ -51,8 +51,9 @@ module.exports = {
                 let response = await interaction.reply("Using item...");
                 for (let i = 0; i < quantity; i++) {
                     let interactOptionChosen;
-                    if ("interactionOptions" in shopItems[itemId]) {
-                        const interactionOptions = shopItems[itemId].interactionOptions;
+                    if ("getInteractionOptions" in shopItems[itemId].scripts) {
+                        const interactionOptions = shopItems[itemId].scripts.getInteractionOptions(userInfo);
+
                         const buttons = [];
                         for (let option in interactionOptions.options) {
                             const newButton = new ButtonBuilder()
