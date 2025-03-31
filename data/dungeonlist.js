@@ -25,6 +25,11 @@ module.exports = {
                     quantity: 1,
                     probability: 0.8
                 },
+                {
+                    id: 2014,
+                    quantity: 1,
+                    probability: 0.5
+                }
                 ]
             },
             firstCompleteRewards: {
@@ -66,6 +71,10 @@ module.exports = {
                     {
                         id: 4001,
                         quantity: 1,
+                    },
+                    {
+                        id: 2014,
+                        quantity: 5
                     }
                 ]
             }

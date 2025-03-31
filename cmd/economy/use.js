@@ -1,8 +1,9 @@
-const { SlashCommandBuilder } = require('discord.js');
 const path = require('node:path');
-const { shopItems } = require(path.join(__dirname, "../../data/shopItems"))
+const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SlashCommandBuilder } = require('discord.js');
+
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,7 +13,7 @@ module.exports = {
         .addStringOption(option => option.setName("quantity").setDescription("How many you want to use")),
     async execute(interaction) {
         const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`)
-		const {userInfo, notifications} = await economyUtils.prefix(interaction);
+        const { userInfo, notifications } = await economyUtils.prefix(interaction);
 
         let itemToUse = interaction.options.getString("item");
         let quantity = 1;
@@ -46,8 +47,39 @@ module.exports = {
                 let returnObj;
                 let excessMessagesCount = 0;
                 let messagesCount = 0;
+
+                let response = await interaction.reply("Using item...");
                 for (let i = 0; i < quantity; i++) {
-                    returnObj = shopItems[itemId].scripts.onUse(userInfo, userInfo.inventory[item].metadata);
+                    let interactOptionChosen;
+                    if ("interactionOptions" in shopItems[itemId]) {
+                        const interactionOptions = shopItems[itemId].interactionOptions;
+                        const buttons = [];
+                        for (let option in interactionOptions.options) {
+                            const newButton = new ButtonBuilder()
+                                .setCustomId(interactionOptions.options[option])
+                                .setLabel(interactionOptions.options[option])
+                                .setStyle(ButtonStyle.Secondary);
+                            buttons.push(newButton);
+                        }
+
+                        const row = new ActionRowBuilder().addComponents(...buttons);
+                        response = await response.edit({
+                            content: interactionOptions.msg,
+                            components: [row]
+                        });
+
+                        try {
+                            const collectorFilter = i => i.user.id === interaction.user.id;
+                            const chosenButton = await response.awaitMessageComponent({ filter: collectorFilter, time: 30_000 });
+                            interactOptionChosen = chosenButton.customId;
+                            await chosenButton.update({ content: `Chosen ${interactOptionChosen}`, components: [] });
+                        } catch (e) {
+                            await chosenButton.update({ content: "Timed out.", components: [] });
+                            console.log(e)
+                        }
+                    }
+
+                    returnObj = shopItems[itemId].scripts.onUse(userInfo, userInfo.inventory[item].metadata, interactOptionChosen);
                     if (returnObj.messageToUser) {
                         if (messagesCount < 10) {
                             stringToReply += `\n${returnObj.messageToUser}`;
@@ -65,7 +97,7 @@ module.exports = {
                     }
                 }
                 saveData(userInfo, interaction.user.id);
-                await interaction.reply(stringToReply);
+                await response.edit(stringToReply);
                 return;
             }
         }

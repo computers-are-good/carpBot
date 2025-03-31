@@ -85,28 +85,28 @@ module.exports = {
                 type: "prebattle",
                 content: {
                     name: "Rat",
-                    level: 2,
+                    level: 3,
                 }
             },
             {
                 type: "battle",
                 content: {
                     name: "Rat",
-                    level: 2,
+                    level: 3,
                 }
             },
             {
                 type: "prebattle",
                 content: {
                     name: "Rat",
-                    level: 2,
+                    level: 3,
                 }
             },
             {
                 type: "battle",
                 content: {
                     name: "Rat",
-                    level: 2,
+                    level: 3,
                 }
             },
             {
