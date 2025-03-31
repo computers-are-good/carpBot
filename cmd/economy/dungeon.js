@@ -68,10 +68,14 @@ module.exports = {
                         let moneyGained = targetDungeonInfo.completeRewards.money;
                         let expGained = targetDungeonInfo.completeRewards.exp;
 
-                        stringToSend += `\nGained ${scriptingUtils.formatMoney(moneyGained)}`;
-                        const levelUpResults = gainExp(userInfo, expGained);
-                        stringToSend += `\n${levelUpResults}`;
-                        userInfo.moneyOnHand += moneyGained;
+                        if (moneyGained) {
+                            stringToSend += `\nGained ${scriptingUtils.formatMoney(moneyGained)}`;
+                            userInfo.moneyOnHand += moneyGained;
+                        }
+                        if (expGained) {
+                            const levelUpResults = gainExp(userInfo, expGained);
+                            stringToSend += `\n${levelUpResults}`;
+                        }
 
                         let firstStringAdded = false;
                         if ("item" in targetDungeonInfo.completeRewards) {
@@ -95,10 +99,10 @@ module.exports = {
                                 stringToSend += ` ${shopItemObj.name} x${quantityAdded}`
                             }
                         }
-                        if (!previouslyCompleted) {
+                        if (!previouslyCompleted && targetDungeonInfo.firstCompleteRewards) {
                             stringToSend += `\nFirst time completion rewards:`
-                            moneyGained += targetDungeonInfo.firstCompleteRewards.money;
-                            expGained += targetDungeonInfo.firstCompleteRewards.exp;
+                            if (targetDungeonInfo.firstCompleteRewards.money) moneyGained += targetDungeonInfo.firstCompleteRewards.money;
+                            if (targetDungeonInfo.firstCompleteRewards.exp) expGained += targetDungeonInfo.firstCompleteRewards.exp;
                             stringToSend += `\n${scriptingUtils.formatMoney(targetDungeonInfo.firstCompleteRewards.money)} and ${targetDungeonInfo.firstCompleteRewards.exp} exp`;
 
                             if ("item" in targetDungeonInfo.firstCompleteRewards) {

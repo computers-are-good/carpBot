@@ -199,14 +199,14 @@ module.exports = {
                 type: "prebattle",
                 content: {
                     name: "Mosquito",
-                    level: 2,
+                    level: 1,
                 }
             },
             {
                 type: "battle",
                 content: {
                     name: "Mosquito",
-                    level: 2,
+                    level: 1,
                 }
             },
             {
@@ -216,6 +216,76 @@ module.exports = {
             {
                 type: "text",
                 content: "You light up the fire and settle down next to it, preparing for whatever is coming the next morning."
+            }
+        ],
+        "Path of Diamonds": [
+            {
+                type: "text",
+                content: "As you stand outside the path, you see a word of warning carved into stone: Pass the trials along the way, and you shall be handsomely rewarded."
+            },
+            {
+                type: "text",
+                content: "Under the words is a sign that says 'Just kill the monsters and get diamonds'."
+            },
+            {
+                type: "prebattle",
+                content: {
+                    name: "Snake",
+                    level: 2,
+                }
+            },
+            {
+                type: "battle",
+                content: {
+                    name: "Snake",
+                    level: 2,
+                }
+            },
+            {
+                type: "prebattle",
+                content: {
+                    name: "Goblin",
+                    level: 2,
+                }
+            },
+            {
+                type: "battle",
+                content: {
+                    name: "Goblin",
+                    level: 2,
+                }
+            },
+            {
+                type: "prebattle",
+                content: {
+                    name: "Snake",
+                    level: 2,
+                }
+            },
+            {
+                type: "battle",
+                content: {
+                    name: "Snake",
+                    level: 2,
+                }
+            },
+            {
+                type: "prebattle",
+                content: {
+                    name: "Rat",
+                    level: 4,
+                }
+            },
+            {
+                type: "battle",
+                content: {
+                    name: "Rat",
+                    level: 4,
+                }
+            },
+            {
+                type: "text",
+                content: "As you reach the end of the path, you find some diamonds lying around on the ground. Who could have put them there?"
             }
         ]
     }

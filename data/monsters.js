@@ -32,6 +32,18 @@ module.exports = {
             attack: 1,
             speed: 999
         },
+        "Goblin": {
+            health: 15,
+            block: 7,
+            attack: 15,
+            speed: 50
+        },
+        "Snake": {
+            health: 20,
+            block: 10,
+            attack: 10,
+            speed: 75
+        },
         "Monella, Ultimate Master": {
             health: 500000,
             block: 40,

@@ -243,7 +243,7 @@ ${compareStatsString(playerStats, userInfo.equipment, enemyStats)}`;
                             } else {
                                 let results = processCurrentIndex(itemIndex);
                                 let stringToReply = results.string;
-                                if (userInfo.health <= 20) {
+                                if (userInfo.combat.health <= 20) {
                                     stringToReply += "**You are low on health. Buy and use a healing item. To see healing items, go /shop healing**"
                                 }
                                 if (results.image) {

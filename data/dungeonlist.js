@@ -120,6 +120,24 @@ module.exports = {
                     probability: 0.05
                 }]
             }
+        },
+        "Path of Diamonds": {
+            content: "You heard rumours about a monster-infested trail which promises to reward those who attempt it with fortunes",
+            seriesName: "path",
+            seriesNumber: 1,
+            requirements: {
+                level: 10
+            },
+            completeRewards: {
+                exp: 100,
+                item: [
+                    {
+                        id: 4001,
+                        quantity: [2,4],
+                        probability: 1
+                    }
+                ]
+            }
         }
     }
 }

@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('discord.js');
 const fs = require("fs");
 const path = require('node:path');
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
+const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 
 
 module.exports = {
