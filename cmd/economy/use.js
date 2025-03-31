@@ -38,18 +38,37 @@ module.exports = {
 
         for (let item in userInfo.inventory) {
             if (userInfo.inventory[item].Id == itemId) {
+                let returnObj;
+                let excessMessagesCount = 0;
+                let messagesCount = 0;
+                let quantityUsed = 0;
+                let stringToReply = ``;
+
                 if (userInfo.inventory[item].quantity < quantity) {
                     await interaction.reply(`${notifications}Not enough items: you only have ${userInfo.inventory[item].quantity}`);
                     return;
                 }
-                let stringToReply = `${notifications}You have used x${quantity} ${shopItems[itemId].name}`;
 
-                let returnObj;
-                let excessMessagesCount = 0;
-                let messagesCount = 0;
-
+                function addMessageToUser(message) {
+                    if (messagesCount < 10) {
+                        stringToReply += message;
+                        messagesCount++
+                    } else {
+                        excessMessagesCount++
+                    }
+                }
                 let response = await interaction.reply("Using item...");
                 for (let i = 0; i < quantity; i++) {
+                    if (shopItems[itemId]?.scripts?.canUse) {
+                        const results = shopItems[itemId].scripts.canUse(userInfo, userInfo.inventory[item].metadata);
+                        if (!results.canUse) {
+                            if (results.messageToUser) {
+                                addMessageToUser(`${results.messageToUser}\n`);
+                            }
+                            continue;
+                        }
+                    }
+
                     let interactOptionChosen;
                     if ("getInteractionOptions" in shopItems[itemId].scripts) {
                         const interactionOptions = shopItems[itemId].scripts.getInteractionOptions(userInfo);
@@ -82,15 +101,12 @@ module.exports = {
 
                     returnObj = shopItems[itemId].scripts.onUse(userInfo, userInfo.inventory[item].metadata, interactOptionChosen);
                     if (returnObj.messageToUser) {
-                        if (messagesCount < 10) {
-                            stringToReply += `\n${returnObj.messageToUser}`;
-                            messagesCount++
-                        } else {
-                            excessMessagesCount++
-                        }
+                        addMessageToUser(`\n${returnObj.messageToUser}`)
                     }
+                    quantityUsed++
                 }
-                if (excessMessagesCount > 0) stringToReply += `\n(and ${excessMessagesCount} other messages)`
+                if (excessMessagesCount > 0) stringToReply += `\n(and ${excessMessagesCount} other messages)\n`;
+                stringToReply += `${notifications}You have used x${quantityUsed} ${shopItems[itemId].name}`;
                 if (shopItems[itemId].category.includes("consumable")) {
                     userInfo.inventory[item].quantity -= quantity;
                     if (userInfo.inventory[item].quantity <= 0) {

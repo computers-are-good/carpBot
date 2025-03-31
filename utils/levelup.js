@@ -27,14 +27,15 @@ module.exports = {
         userInfo.expRequired = results.newExpRequired;
         let moneyAwarded = 0;
         if (oldLevel !== userInfo.level) {
+            let levelsGained = userInfo.level - oldLevel;
             for (let i = oldLevel + 1; i < userInfo.level + 1; i++) {
                 moneyAwarded += i * 10000;
             }
             userInfo.moneyOnHand += moneyAwarded;
-            userInfo.combat.attack += 2;
-            userInfo.combat.maxHealth += 10;
-            userInfo.combat.block += 1;
-            userInfo.combat.speed += 5;
+            userInfo.combat.attack += 2 * levelsGained;
+            userInfo.combat.maxHealth += 10 * levelsGained;
+            userInfo.combat.block += 1 * levelsGained;
+            userInfo.combat.speed += 3 * levelsGained;
         }
 
         if (oldLevel !== results.newLevel) {

@@ -26,6 +26,7 @@ const dungeonUtils = require(path.join(__dirname, "../utils/dungeon"));
         - onUse: is ran when the item is used.
         - onBuy: is ran when the item is brought.
         - canBuy: Can the user buy this item?
+        - canUse: can we use this item?
         - getInteractionOptions: parameters which can be fed into onUse. Return {
             msg: Message to user,
             options: ["option 1", "option 2"...]
@@ -432,9 +433,18 @@ module.exports = {
             scripts: {
                 onUse: function (userInfo, metadata) {
                     userInfo.combat.health += 20;
-                    if (userInfo.combat.health > userInfo.combat.maxHealth + userInfo.level * 5) userInfo.combat.health = userInfo.combat.maxHealth + userInfo.level * 5;
+                    if (userInfo.combat.health > userInfo.combat.maxHealth) userInfo.combat.health = userInfo.combat.maxHealth;
                     return {
                         messageToUser: `Healed for 20 HP. You are now on ${userInfo.combat.health} HP.`
+                    }
+                },
+                canUse: function(userInfo, metadata) {
+                    return userInfo.combat.health >= userInfo.combat.maxHealth ? {
+                        canUse: false,
+                        messageToUser: "Cannot use because you are already at max health"
+                    } : {
+                        canUse: true,
+                        messageToUser: "You can use this item."
                     }
                 }
             }
