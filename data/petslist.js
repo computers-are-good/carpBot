@@ -29,6 +29,12 @@ module.exports = {
             cost: 25000,
             description: "A pet rabbit will reduce the cost of items at the shop!",
             names: ["Nibles", "Flower", "Thumper", "Blueberry", "Lily", "Peter", "Scruffy"]
+        },
+        105: {
+            name: "Snake",
+            cost: 75000,
+            description: "A pet snake will help you in battle! Gain a +10 to attack whenever you raise the bond level of your snake!",
+            names: ["Frank"]
         }
     }
 }

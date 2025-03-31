@@ -40,6 +40,9 @@ module.exports = {
 
         if (levelUpResults.newLevel !== toPet.bondLevel) {
             stringToReply += `\nYour bond with ${toPet.name} has deepened! (${toPet.bondLevel} -> ${levelUpResults.newLevel})`;
+            if (toPet.id == 105) {
+                userInfo.combat.attack += 10 * (levelUpResults.newLevel - toPet.bondLevel);
+            }
         } else {
             stringToReply += `\nYou need ${levelUpResults.newExpRequired} more points to increase your bond with ${toPet.name}`;
         }
