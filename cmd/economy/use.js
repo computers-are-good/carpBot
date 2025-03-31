@@ -99,6 +99,16 @@ module.exports = {
                         }
                     }
 
+                    if (shopItems[itemId]?.scripts?.canUse) { //maybe we can't use the item again with the new option chosen?
+                        const results = shopItems[itemId].scripts.canUse(userInfo, userInfo.inventory[item].metadata, interactOptionChosen);
+                        if (!results.canUse) {
+                            if (results.messageToUser) {
+                                addMessageToUser(`${results.messageToUser}\n`);
+                            }
+                            continue;
+                        }
+                    }
+
                     returnObj = shopItems[itemId].scripts.onUse(userInfo, userInfo.inventory[item].metadata, interactOptionChosen);
                     if (returnObj.messageToUser) {
                         addMessageToUser(`\n${returnObj.messageToUser}`)

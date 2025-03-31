@@ -1,6 +1,6 @@
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../utils/economy"));
-const {gainExp} =  require(path.join(__dirname, "../utils/levelup"));
+const { gainExp } = require(path.join(__dirname, "../utils/levelup"));
 const { grantEffect, hasEffect } = require(path.join(__dirname, "../utils/effects"));
 const scriptingUtils = require(path.join(__dirname, "../utils/scripting"));
 const dungeonUtils = require(path.join(__dirname, "../utils/dungeon"));
@@ -438,7 +438,7 @@ module.exports = {
                         messageToUser: `Healed for 20 HP. You are now on ${userInfo.combat.health} HP.`
                     }
                 },
-                canUse: function(userInfo, metadata) {
+                canUse: function (userInfo, metadata) {
                     return userInfo.combat.health >= userInfo.combat.maxHealth ? {
                         canUse: false,
                         messageToUser: "Cannot use because you are already at max health"
@@ -508,7 +508,7 @@ module.exports = {
                     }
                 },
                 canBuy: _ => false,
-                getInteractionOptions: function(userInfo) {
+                getInteractionOptions: function (userInfo) {
                     return {
                         msg: "What would you like?",
                         options: ["$100", "250 EXP"],
@@ -534,7 +534,7 @@ module.exports = {
                     }
                 },
                 canBuy: _ => false,
-                getInteractionOptions: function(userInfo) {
+                getInteractionOptions: function (userInfo) {
                     return {
                         msg: "What would you like?",
                         options: ["$1000", "2500 EXP"],
@@ -553,7 +553,7 @@ module.exports = {
             description: "Gives you a 1% chance of doublestrike (attack the enemy twice on one turn)",
             scripts: {
                 canBuy: _ => false,
-                onUse: function(userData) {
+                onUse: function (userData) {
                     dungeonUtils.addCombatProbability(userData, "doublestrike", 0.01)
                     return {
                         messageToUser: `Doublestrike chance increased (${(userData.combat.probabilities.doublestrike - 0.01) * 100}% -> ${userData.combat.probabilities.doublestrike * 100}%).`
@@ -572,7 +572,7 @@ module.exports = {
             description: "Gives you a 0.5% chance of totalblock (negates damage for one turn)",
             scripts: {
                 canBuy: _ => false,
-                onUse: function(userData) {
+                onUse: function (userData) {
                     dungeonUtils.addCombatProbability(userData, "totalblock", 0.005)
                     return {
                         messageToUser: `Totalblock chance increased (${(userData.combat.probabilities.totalblock - 0.005) * 100}% -> ${userData.combat.probabilities.totalblock * 100}%).`
@@ -591,7 +591,7 @@ module.exports = {
             description: "Permanently increases your attack by 35.",
             scripts: {
                 canBuy: _ => false,
-                onUse: function(userData) {
+                onUse: function (userData) {
                     userData.combat.attack += 35;
                     return {
                         messageToUser: `Increased attack (${userData.combat.attack - 35} -> ${userData.combat.attack})`
@@ -622,7 +622,7 @@ module.exports = {
             unwitheringFlowers: 5,
             description: "When used, for the next five minutes, deal damage equal to 25% of the enemy's health in non-raid battles.",
             scripts: {
-                onUse: function(userInfo) {
+                onUse: function (userInfo) {
                     grantEffect(userInfo, "redrose", 300);
                     return {
                         messageToUser: "Elusive red rose activated."
@@ -759,45 +759,125 @@ module.exports = {
             cost: 98765432100,
             description: "The energy contained in one of these rings can erase all of reality. +500 to max halth, +100 to attack, +75 to block, and +50 to speed."
         },
-        9911: {
-            name: "Money sink",
-            category: ["testing"],
-            displayInInventory: false,
-            description: "TESTING ITEM: Deletes $20 from your wallet, and does nothing else",
-            cost: 2000,
-            addToInventory: false,
+        6001: {
+            name: "Conversion apparatus",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            oneOff: true,
+            emoji: "🥡",
+            category: ["object"],
+            description: "Convert 1000 health to 1 unwithering flower, or the do the opposite. You can only do this once per day.",
+            cost: 50000000,
             scripts: {
-                onBuy: function(userData) {
-                    userData.moneyOnHand -= 2000;
+                canBuy: function (userInfo) {
+                    if (userInfo.level < 30) {
+                        return {
+                            canBuy: false,
+                            messageToUser: "You must be at least level 30 to buy this item."
+                        }
+                    }
+                    return {
+                        canBuy: true
+                    }
+                },
+                canUse: function (userInfo, metadata, optionChosen) {
+                    let date = scriptingUtils.getCurrentDay();
+                    if (userInfo.lastConversionApparatus === date) {
+                        return {
+                            canUse: false,
+                            messageToUser: "You have already used the conversion apparatus today."
+                        }
+                    } else {
+                        if (optionChosen === "health -> flower") {
+                            if (userInfo.combat.health <= 1000) {
+                                return {
+                                    canUse: false,
+                                    messageToUser: "You do not have enough health to use the conversion apparatus."
+                                }
+                            }
+                        } else {
+                            if (optionChosen === "flower -> health") {
+                                if (userInfo.combat.health >= userInfo.maxHealth) {
+                                    return {
+                                        canUse: false,
+                                        messageToUser: "Cannot convert unwithering flowers to health; you are already at max health!"
+                                    }
+                                }
+                                if (userInfo.unwitheringFlowers <= 0) {
+                                    return {
+                                        canUse: false,
+                                        messageToUse: "You don't have any unwithering flowers remaining!"
+                                    }
+                                }
+                            }
+                        }
+                        return {
+                            canUse: true,
+                            messageToUser: "You can use this item."
+                        }
+                    }
+                },
+                getInteractionOptions: _ => {
+                    return {
+                        msg: "What would you like to do?",
+                        options: ["health -> flower", "flower -> health"],
+                    }
+                },
+                onUse(userInfo, metadata, optionChosen) {
+                    if (optionChosen === "health -> flower") {
+                        userInfo.combat.health -= 1000;
+                        userInfo.unwitheringFlowers++
+                    } else {
+                        userInfo.unwitheringFlowers--;
+                        userInfo.combat.health += 1000;
+                    }
+                    userInfo.lastConversionApparatus = scriptingUtils.getCurrentDay();
+                    return {
+                        messageToUser: `You are now on ${userInfo.combat.health} health with ${userInfo.unwitheringFlowers} unwithering flowers.\n`
+                    }
                 }
             }
-        },
-        9992: {
-            name: "Bank Note",
-            category: ["testing"],
-            displayInInventory: false,
-            description: "Gives you money",
-            cost: 0,
-            emoji: "💀",
-            addToInventory: false,
-            scripts: {
-                onBuy: function (userData) {
-                    userData.moneyOnHand += 2000
-                }
+        }
+    },
+    9911: {
+        name: "Money sink",
+        category: ["testing"],
+        displayInInventory: false,
+        description: "TESTING ITEM: Deletes $20 from your wallet, and does nothing else",
+        cost: 2000,
+        addToInventory: false,
+        scripts: {
+            onBuy: function (userData) {
+                userData.moneyOnHand -= 2000;
             }
-        },
-        9993: {
-            name: "Large Bank Note",
-            displayInInventory: false,
-            category: ["testing"],
-            description: "Gives you a lot of money",
-            cost: 0,
-            emoji: "💀",
-            addToInventory: false,
-            scripts: {
-                onBuy: function (userData) {
-                    userData.moneyOnHand += 9999999
-                }
+        }
+    },
+    9992: {
+        name: "Bank Note",
+        category: ["testing"],
+        displayInInventory: false,
+        description: "Gives you money",
+        cost: 0,
+        emoji: "💀",
+        addToInventory: false,
+        scripts: {
+            onBuy: function (userData) {
+                userData.moneyOnHand += 2000
+            }
+        }
+    },
+    9993: {
+        name: "Large Bank Note",
+        displayInInventory: false,
+        category: ["testing"],
+        description: "Gives you a lot of money",
+        cost: 0,
+        emoji: "💀",
+        addToInventory: false,
+        scripts: {
+            onBuy: function (userData) {
+                userData.moneyOnHand += 9999999
             }
         }
     }

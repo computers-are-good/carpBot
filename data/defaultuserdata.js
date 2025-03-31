@@ -45,5 +45,6 @@ module.exports = {
         learned: [],
         lifetimeMoneyFromWorking: 0,
         notifications: [],
+        lastConversionApparatus: ""
     }
 }
