@@ -38,11 +38,11 @@ module.exports = {
 				break;
 			case "block":
 				valueToIncrease = 1 * increaseMultiplier;
-				cost = (userInfo.abilitiesImproved[category] * 150) * 100;
+				cost = (userInfo.abilitiesImproved[category] * 150 + 100) * 100;
 				break;
 			case 'speed':
 				valueToIncrease = 5 * increaseMultiplier;
-				cost = (userInfo.abilitiesImproved[category] * 250) * 100;
+				cost = (userInfo.abilitiesImproved[category] * 250 + 100) * 100;
 				break;
 			case "healingInterval":
 				valueToIncrease = -2000;
