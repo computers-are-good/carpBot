@@ -4,7 +4,7 @@ const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 const { equipment } = require(path.join(__dirname, "../../data/equipment"));
-const { shopItems } = require(path.join(__dirname, "../../data/shopitems"));
+const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
 
 function applyEquipmentStats(combatData, improvements) {
     for (let i in improvements) {
