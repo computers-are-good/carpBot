@@ -104,7 +104,7 @@ module.exports = {
 
         saveData(userInfo, interaction.user.id);
         
-        await interaction.reply(`${notifications}You have brought ${quantity}x ${itemData.name} (ID ${itemId})`);
+        await interaction.reply(`${notifications}You have brought ${quantity}x ${itemData.name} (ID ${itemId}) for ${scriptingUtils.formatMoney(itemData.cost ? cost * quantity : 0)}`);
     },
 };
 

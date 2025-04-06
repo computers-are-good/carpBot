@@ -24,8 +24,12 @@ module.exports = {
 		for (let i in learnList) {
 			const skill = learnList[i];
 			if (skillLearnt(userInfo, skill.name)) continue;
-			if (skill.cost > userInfo.moneyOnHand + userInfo.moneyBankAccount) continue;
-			availableSkills.push(skill);
+			if (skill.cost > userInfo.moneyOnHand + userInfo.moneyBankAccount) {
+				skill.description += " (too expensive)"
+				availableSkills.push(skill);
+			} else {
+				availableSkills.push(skill);
+			}
 		}
 		const selectedSkill = interaction.options.getString("skill");
 		if (!selectedSkill) {
@@ -38,7 +42,7 @@ module.exports = {
 				const skill = availableSkills[i];
 				let string = "";
 				string +=
-					`**${skill.name}** (**${skill.exp}** exp): ${skill.description ? `${skill.description}\n` : ""}**${scriptingUtils.formatMoney(skill.cost)}**.
+					`**${skill.name}** (gain **${skill.exp}** exp): ${skill.description ? `${skill.description}\n` : ""}**${scriptingUtils.formatMoney(skill.cost)}**.
 `;
 				listToDisplay.push(string);
 			}

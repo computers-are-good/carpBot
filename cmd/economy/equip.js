@@ -62,6 +62,10 @@ module.exports = {
                 break;
             }
         }
+        if (!equipmentFound) {
+            await interaction.reply(`${notifications}This item is not in the shop.`)
+            return;
+        }
         const equipmentSlot = equipment[equipmentId].slot;
 
         //If we have it equipped, we unequip it

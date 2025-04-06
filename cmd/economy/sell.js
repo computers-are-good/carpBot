@@ -10,7 +10,7 @@ module.exports = {
         .setName('sell')
         .addStringOption(option => option.setName("item").setDescription("Item to sell").setRequired(true))
         .addStringOption(option => option.setName("quantity").setDescription("How much you want to sell?"))
-        .setDescription('Buys something from the shop!'),
+        .setDescription('Sells something to the shop!'),
     async execute(interaction) {
         const { userInfo, notifications } = await economyUtils.prefix(interaction);
 

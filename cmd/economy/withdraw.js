@@ -17,6 +17,7 @@ module.exports = {
             amountOfMoney = parseFloat(interaction.options.getString("amount"));
         } catch {
             await interaction.reply(`${notifications}Failed to parse that amount of money! Did you enter a number? Do not include dollar signs in your amount`);
+            return;
         }
         if (!amountOfMoney) {
             await interaction.reply(`${notifications}Failed to parse that amount of money! Did you enter a number? Do not include dollar signs in your amount`);

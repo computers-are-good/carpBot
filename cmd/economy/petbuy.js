@@ -56,7 +56,7 @@ module.exports = {
             
             //Do we have the money?
             if (userInfo.moneyOnHand < selectedPet.cost) {
-                await interaction.reply(`${notifications}The pet costs ${scriptingUtils.formatMoney(selectedPet.cost)} but you only have ${userInfo.moneyOnHand}`);
+                await interaction.reply(`${notifications}The pet costs ${scriptingUtils.formatMoney(selectedPet.cost)} but you only have ${scriptingUtils.formatMoney(userInfo.moneyOnHand)}`);
                 return;
             }
 

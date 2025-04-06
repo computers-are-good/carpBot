@@ -14,6 +14,13 @@ function battle(playerData, enemyData, maxRounds) {
         enemy.health *= 0.75;
     }
 
+    if (player.health <= 0) {
+        return false;
+    }
+    if (enemy.health <= 0) {
+        return true;
+    }
+
     function attack(attacker, target, doubleStrikeTriggered = 0) { //the chances of doublestrike activating decrease with each time it is activated.
         if (getCombatProbability(attacker, "doublestrike") && Math.random() < (1 / doubleStrikeTriggered)) attack(attacker, target, doubleStrikeTriggered + 1);
         if (!getCombatProbability(attacker, "totalblock")) target.shield -= attacker.attack;
@@ -24,10 +31,8 @@ function battle(playerData, enemyData, maxRounds) {
             target.health--; //Minimum damage of one.
         }
     }
+
     let roundCounter = 0;
-    if (player.health <= 0) {
-        return false;
-    }
 
     let playerIsTheFastest = false;
     let fastest, slowest;

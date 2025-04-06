@@ -12,6 +12,6 @@ module.exports = {
 	async execute(interaction) {
         const {userInfo, notifications} = await economyUtils.prefix(interaction);
 
-		await interaction.reply(`${notifications}Kia ora ${interaction.user.username}. You are level **${userInfo.level}** (to next ${userInfo.expRequired}). You have ${scriptingUtils.formatMoney(userInfo.moneyOnHand)} dollars in your wallet and ${scriptingUtils.formatMoney(userInfo.moneyBankAccount)} in your bank account. You have ${userInfo.unwitheringFlowers} unwithering flowers.`);
+		await interaction.reply(`${notifications}Kia ora ${interaction.user.username}. You are level **${userInfo.level}** (to next ${userInfo.expRequired} exp). You have ${scriptingUtils.formatMoney(userInfo.moneyOnHand)} dollars in your wallet and ${scriptingUtils.formatMoney(userInfo.moneyBankAccount)} in your bank account. You have ${userInfo.unwitheringFlowers} unwithering flowers.`);
 	},
 };

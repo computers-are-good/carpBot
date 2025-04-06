@@ -5,6 +5,7 @@ const gachaUtils = require(path.join(__dirname, "../../utils/gacha"));
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const scriptingUtils = require(path.join(__dirname, "../../utils/scripting"));
 const { settings } = require(path.join(__dirname, "../../data/defaultgachadata"));
+const {saveData} = require(path.join(__dirname, "../../utils/userdata"));
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,8 +13,8 @@ module.exports = {
 		.setDescription('Buys some plutonium to make nukes!')
 		.addStringOption(option => option.setName("quantity").setDescription("How much plutonium do you want?")),
 	async execute(interaction) {
-		let userInfo = gachaUtils.prefix(interaction);
-		let economyInfo = await economyUtils.prefix(interaction);
+		let gachaInfo = gachaUtils.prefix(interaction);
+		const { userInfo, notifications } =  await economyUtils.prefix(interaction);
 
 		let amountOfPlutonium = 0;
 		const stringOption = interaction.options.getString("quantity");
@@ -32,21 +33,21 @@ module.exports = {
 			return;
 		}
 		
-		if (economyInfo.moneyOnHand == 0) {
+		if (userInfo.moneyOnHand == 0) {
 			await interaction.reply("You don't have any money so you can't buy any nukes. Go out there and make some money with `/work`.");
 			return;
 		}
 
 		const moneyRequired = settings.costOfPlutonium * amountOfPlutonium;
-		if (moneyRequired > economyInfo.moneyOnHand) {
+		if (moneyRequired > userInfo.moneyOnHand) {
 			await interaction.reply(`You don't have the needed money! The cost is ${scriptingUtils.formatMoney(moneyRequired)} but you only have ${scriptingUtils.formatMoney(userInfo.moneyOnHand)}. Keep \`/work\`ing!`);
 			return;
 		}
 
-		economyInfo.moneyOnHand -= moneyRequired;
+		userInfo.moneyOnHand -= moneyRequired;
 		await interaction.reply(`You have brought ${amountOfPlutonium} plutonium for ${scriptingUtils.formatMoney(moneyRequired)}.`);
 
-		fs.writeFileSync(path.join(__dirname, `../../userdata/economy/${interaction.user.id}`), JSON.stringify(economyInfo));
-		fs.writeFileSync(path.join(__dirname, `../../userdata/gacha/${interaction.user.id}`), JSON.stringify(userInfo));
+		saveData(userInfo, interaction.user.id);
+		fs.writeFileSync(path.join(__dirname, `../../userdata/gacha/${interaction.user.id}`), JSON.stringify(gachaInfo));
 	},
 };

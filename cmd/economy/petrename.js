@@ -14,7 +14,7 @@ module.exports = {
     async execute(interaction) {
         const {userInfo, notifications} = await economyUtils.prefix(interaction);
         const oldName = interaction.options.getString("oldname");
-        const newName = interaction.options.getString("newname");
+        const newName = interaction.options.getString("newname").replace(/[\u200B-\u200D\uFEFF]/g, ''); //remove zero width spaces from a string, just for justin :)
 
         let executedRename = false;
         async function executeRename(petObject) {
@@ -25,9 +25,15 @@ module.exports = {
                     return;
                 }
             }
+
+            if (!economyUtils.regexCheck(newName) || !economyUtils.mentionCheck(newName)) {
+                await interaction.reply(`${notifications}This name is invalid`);
+                return;
+            }
+
             //Can it pass the profanity check?
-            if (!economyUtils.profanityCheck(oldName)) {
-                await interaction.reply(`${notifications}This name has failed the profanity check`);
+            if (!economyUtils.profanityCheck(newName)) {
+                await interaction.reply(`${notifications}This name has failed the profanity check.`);
                 return;
             }
 

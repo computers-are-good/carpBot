@@ -19,6 +19,10 @@ module.exports = {
 	async execute(interaction) {
         const {userInfo, notifications} = await economyUtils.prefix(interaction);
         const selectedPet = interaction.options.getString("pet");
+
+        if (!selectedPet) {
+            await interaction.replY(`${notifications}Please select a pet!`)
+        }
         let toPet;
         if (userInfo.pets.length == 0) {
             await interaction.reply(`${notifications}Welcome to the CrapBot pets system! To get started, buy a pet with \`/petbuy\`.`);

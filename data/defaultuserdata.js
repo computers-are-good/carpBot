@@ -2,7 +2,7 @@ module.exports = {
     defaultUserData: {
         level: 1,
         username: "",
-        expRequired: 15,
+        expRequired: 10,
         unwitheringFlowers: 0,
         inventory: [],
         moneyOnHand: 0,

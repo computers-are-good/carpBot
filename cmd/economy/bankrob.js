@@ -53,7 +53,7 @@ module.exports = {
             saveData(userInfo, interaction.user.id);
         }
         function robberyFailed() {
-            let criminalDuration = 14400;
+            let criminalDuration = 900;
             //Birds reduce duration of "criminal"
             for (let pet of userInfo.pets) {
                 if (pet.id == 103) {

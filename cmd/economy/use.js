@@ -9,7 +9,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('use')
         .setDescription('Uses an item in your inventory!')
-        .addStringOption(option => option.setName("item").setDescription("Item to use"))
+        .addStringOption(option => option.setName("item").setDescription("Item to use").setRequired(true))
         .addStringOption(option => option.setName("quantity").setDescription("How many you want to use")),
     async execute(interaction) {
         const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`)

@@ -27,6 +27,6 @@ module.exports = {
     },
     saveData: function(userInfo, userId) {
         if (!validateData(userInfo)) throw new Error("User data is corrupt and contains either a null or a NaN value.")
-        fs.writeFileSync(path.join(__dirname, `../userdata/economy/${userId}`), JSON.stringify(userInfo));
+        fs.writeFileSync(path.join(__dirname, `../userdata/economy/${userId}`), JSON.stringify(userInfo, null, 4));
     }
 }

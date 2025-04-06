@@ -27,7 +27,7 @@ module.exports = {
                 userInfo.username = interaction.user.username;
                 let usernames = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/usernames.json`)).toString("UTF-8"));
                 usernames[interaction.user.id] = interaction.user.username;
-                fs.writeFileSync(path.join(__dirname, `../userdata/economy/${usernames}`), JSON.stringify(usernames));
+                fs.writeFileSync(path.join(__dirname, `../userdata/usernames.json`), JSON.stringify(usernames));
             }
             if (dataIsLocked(interaction.user.id)) {
                 rej(0);
@@ -300,12 +300,20 @@ module.exports = {
         if (userInfo.learned.includes("Haggling")) priceMultiplier -= 0.05;
         return Math.floor(shopItem.cost * priceMultiplier);
     },
-    profanityCheck: function (phrase) { //returning false means you have failed the profanity check (i.e. the phrase contains bad words)
+    profanityCheck: function(phrase) { //returning false means you have failed the profanity check (i.e. the phrase contains bad words)
         phrase = phrase.toLowerCase();
         for (let profanity in profanities) {
-            if (phrase.includes(profanity)) return false;
+            if (phrase.includes(profanities[profanity].toLowerCase())) return false;
         }
         return true;
+    },
+    regexCheck: function(phrase) {
+        const regex = /^[^#@]{0,30}$/;
+        return regex.test(phrase);
+    },
+    mentionCheck: function(phrase) { //returns false if the user has mentioned another user in their string
+        const regex = /<@[0-9]+>/;
+        return !regex.test(phrase);
     },
     inventoryHasItem: function (inventory, itemId, metadata) {
         for (let item in inventory) {
@@ -326,7 +334,10 @@ module.exports = {
         let canGrief = true;
         if (!fs.existsSync(path.join(__dirname, `../userdata/economy/${targetPlayerId}`))) {
             await interaction.reply(`${notifications}This user has not used CrapBot.`);
-            canGrief = false;
+            return {
+                canGrief: false,
+                targetUserData: {}
+            }
         }
 
         if (userInfo.passiveMode) {
@@ -349,6 +360,7 @@ module.exports = {
         }
     },
     notifyPlayer(userInfo, msg, hideable = false) { //hideable messages won't be displayed if the player logs on within a minute of the message being generated.
+        if (userInfo.notifications === '') userInfo.notifications = [];
         userInfo.notifications.push({
             msg: msg,
             timeDisplay: scriptingUtils.getTimestamp(),

@@ -47,7 +47,7 @@ module.exports = {
         const placesToDisplay = Math.min(5, leaderboard.users.length);
         for (let i = 0; i < placesToDisplay; i++) {
             let user = leaderboard.users[leaderboard.users.length - i - 1];
-            string += `\n${i + 1}.${user.username}: ${scriptingUtils.formatMoney(user.balance)}`
+            string += `\n${i + 1}. ${user.username}: ${scriptingUtils.formatMoney(user.balance)}`
         }
         await interaction.reply(string);
     },

@@ -12,7 +12,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('nuke')
         .setDescription('Nuke a star to get some anime girls! Totally not a form of gambling')
-        .addStringOption(option => option.setName("target").setDescription("Which star do you want to nuke?"))
+        .addStringOption(option => option.setName("target").setDescription("Which star do you want to nuke?").setRequired(true))
         .addStringOption(option => option.setName("times").setDescription("How many times do you want to nuke the star?")),
     async execute(interaction) {
         let userInfo = gachaUtils.prefix(interaction);

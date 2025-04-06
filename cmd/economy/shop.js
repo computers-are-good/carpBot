@@ -16,6 +16,16 @@ module.exports = {
         let objectsFittingCriteria = [];
         let stringsToDisplay = [];
         if (notifications) stringsToDisplay.push(notifications);
+
+        //show the available categories in the shop
+        let categories = [];
+        for (let item in shopItems) {
+            shopItems[item].category.forEach(e => {
+                if (!categories.includes(e)) {
+                    categories.push(e);
+                }
+            });
+        }
         for (let item in shopItems) {
             if (shopItems[item].category.includes("testing") || shopItems[item].displayInShop == false) continue;
             if (shopItems[item].oneOff && economyUtils.inventoryHasItem(userInfo.inventory, item)) continue;
@@ -25,6 +35,8 @@ module.exports = {
                 objectsFittingCriteria.push(shopItems[item]);
             }
         }
+        categories.sort((a, b) => a - b);
+        stringsToDisplay.push(`Item categories: ${categories.join(", ")}`)
         for (let i = 0; i < objectsFittingCriteria.length; i++) {
             let object = objectsFittingCriteria[i];
             let costs = [];

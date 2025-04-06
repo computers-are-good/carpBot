@@ -28,7 +28,7 @@ module.exports = {
         }
         let index = bannedList.indexOf(playerToUnban.id);
         if (index < 0) {
-            await interaction.reply("That user was not banned");
+            await interaction.reply("That user was not banned.");
             return;
         }
         bannedList.splice(index, 1);

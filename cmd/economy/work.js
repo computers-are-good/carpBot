@@ -21,7 +21,7 @@ module.exports = {
         let effect = hasEffect(userInfo, ["coffee", "greenTea", "redTea", "criminal"]);
 
         if (effect.criminal > 0) {
-            await interaction.reply(`${notifications}You are a criminal! Better lay low for a while (remaining: ${effect.effectDurations.criminal}s)`);
+            await interaction.reply(`${notifications}You are a criminal! Better lay low for a while (remaining: ${effect.criminal}s)`);
             return;
         }
         if (effect.coffee > 0) {

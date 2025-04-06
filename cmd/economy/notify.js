@@ -19,10 +19,16 @@ module.exports = {
 			await interaction.reply("That user does not exist!");
 			return;
 		}
+
+		if (!economyUtils.mentionCheck(msg)) {
+			await interaction.reply("Please do not mention someone in your notifications!");
+			return;
+		}
 		const userInfo = JSON.parse(fs.readFileSync(path.join(__dirname, `../../userdata/economy/${user.id}`), "UTF-8"));
+
 		economyUtils.notifyPlayer(userInfo, `${interaction.user.username}: ${msg}`);
 
-		saveData(userInfo, interaction.user.id);
+		saveData(userInfo, user.id);
 		await interaction.reply(`Success! ${user.username} should see the message when they next use CrapBot economy.`)
 	},
 };
