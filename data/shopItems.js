@@ -693,6 +693,7 @@ module.exports = {
             name: "Stone Sword",
             displayInInventory: true,
             displayInShop: true,
+            addToInventory: true,
             emoji: "⚔️",
             category: ["object", "equipment"],
             cost: 20000,
