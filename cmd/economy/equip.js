@@ -78,9 +78,12 @@ module.exports = {
         }
 
         //Do we have it in our inventory?
-        if (!economyUtils.inventoryHasItem(userInfo.inventory, equipmentId)) {
+        if (!(economyUtils.inventoryHasItem(userInfo.inventory, equipmentId))) {
             interaction.reply(`${notifications}You do not have a ${shopItems[equipmentId].name} in your inventory.`);
             return;
+        }
+        if (!userInfo.equipment[equipmentSlot] == 0) {
+            removeEquipmentStats(userInfo.combat, equipment[userInfo.equipment[equipmentSlot]].improvements)            
         }
         userInfo.equipment[equipmentSlot] = equipmentId;
         interaction.reply(`${notifications}Equipped ${shopItems[equipmentId].name}.`);
