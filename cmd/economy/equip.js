@@ -82,6 +82,9 @@ module.exports = {
             interaction.reply(`${notifications}You do not have a ${shopItems[equipmentId].name} in your inventory.`);
             return;
         }
+        if (!(userInfo.equipment[equipmentSlot] == 0)) {
+            removeEquipmentStats(userInfo.combat, equipment[userInfo.equipment[equipmentSlot]].improvements)            
+        }
         userInfo.equipment[equipmentSlot] = equipmentId;
         interaction.reply(`${notifications}Equipped ${shopItems[equipmentId].name}.`);
         applyEquipmentStats(userInfo.combat, equipment[equipmentId].improvements);
