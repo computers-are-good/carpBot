@@ -493,17 +493,17 @@ module.exports = {
             displayInInventory: true,
             cost: 10000,
             category: ['object', "consumable"],
-            description: "This can either give you $100 or give you 250 EXP",
+            description: "This can either give you $1000 or give you 250 EXP",
             emoji: "🪙",
             addToInventory: true,
             oneOff: false,
             displayInShop: false,
             scripts: {
                 onUse: function (userInfo, metadata, optionChosen) {
-                    if (optionChosen === "$100") userInfo.moneyOnHand += 10000;
+                    if (optionChosen === "$1000") userInfo.moneyOnHand += 100000;
                     if (optionChosen === "250 EXP") gainExp(userInfo, 250);
                     return {
-                        messageToUser: optionChosen === "$100" ? `You gained $100.` : gainExp(userInfo, 250)
+                        messageToUser: optionChosen === "$1000" ? `You gained $1000.` : gainExp(userInfo, 250)
                     }
                 },
                 canBuy: _ => false,

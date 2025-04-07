@@ -21,7 +21,7 @@ module.exports = {
         const selectedPet = interaction.options.getString("pet");
 
         if (!selectedPet) {
-            await interaction.replY(`${notifications}Please select a pet!`)
+            await interaction.reply(`${notifications}Please select a pet!`)
         }
         let toPet;
         if (userInfo.pets.length == 0) {
