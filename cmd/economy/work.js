@@ -29,10 +29,10 @@ module.exports = {
             expGained += userInfo.level;
         }
         if (effect.greenTea > 0) {
-            expGained = Math.ceil(expGained * 1.2);
+            expGained = Math.ceil(expGained * 1.15);
         }
         if (effect.redTea > 0) {
-            expGained = Math.ceil(expGained * 3);
+            expGained = Math.ceil(expGained * 1.3);
         }
 
         //Effects of pets
