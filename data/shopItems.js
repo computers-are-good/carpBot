@@ -527,9 +527,12 @@ module.exports = {
             scripts: {
                 onUse: function (userInfo, metadata, optionChosen) {
                     if (optionChosen === "$1000") userInfo.moneyOnHand += 100000;
-                    if (optionChosen === "2500 EXP") gainExp(userInfo, 2500);
+                    let expStr
+                    if (optionChosen === "2500 EXP") {
+                        expStr = gainExp(userInfo, 2500);
+                    }
                     return {
-                        messageToUser: optionChosen === "$1000" ? `You gained $1000.` : gainExp(userInfo, 2500)
+                        messageToUser: optionChosen === "$1000" ? `You gained $1000.` : expStr
                     }
                 },
                 canBuy: _ => false,
@@ -539,6 +542,38 @@ module.exports = {
                         options: ["$1000", "2500 EXP"],
                     }
                 }
+            }
+        },
+        2016: {
+            name: "Potion of Knowledge",
+            displayInInventory: true,
+            oneOff: false,
+            displayInShop: false,
+            cost: 1000000,
+            addToInventory: true,
+            category: ["object", "consumable"],
+            description: "Gain either 3000 EXP, or earn three times experience from working for 10 minutes",
+            emoji: '⚗️',
+            scripts: {
+                getInteractionOptions: _ => {
+                    return {
+                        msg: "What would you like?",
+                        options: ['3000 EXP', 'EXP Boost']
+                    }
+                 },
+                 onUse: function(userInfo, metadata, optionChosen) {
+                    let stringBack;
+                    if (optionChosen === "3000 EXP") {
+                        stringBack = gainExp(userInfo, 3000);
+                    }
+                    if (optionChosen === "EXP Boost") {
+                        grantEffect(userInfo, "potionOfKnowledge", 600);
+                        stringBack = "You will earn 3x EXP from working for the next 10 minutes."
+                    }
+                    return {
+                        messageToUser: stringBack
+                    }
+                 }
             }
         },
         3001: {

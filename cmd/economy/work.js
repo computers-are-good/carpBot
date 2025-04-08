@@ -18,7 +18,7 @@ module.exports = {
         let expGained = Math.ceil((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.4) * 2 + 4);
         let moneyGained = Math.ceil(((1.25 - Math.random() * 0.5) * Math.pow(userInfo.level, 1.35) + 1) * 100 * userInfo.permanentWorkMultiplier);
         if (economyUtils.inventoryHasItem(userInfo.inventory, 1009)) moneyGained += 5000;
-        let effect = hasEffect(userInfo, ["coffee", "greenTea", "redTea", "criminal"]);
+        let effect = hasEffect(userInfo, ["coffee", "greenTea", "redTea", "criminal", "potionOfKnowledge"]);
 
         if (effect.criminal > 0) {
             await interaction.reply(`${notifications}You are a criminal! Better lay low for a while (remaining: ${effect.criminal}s)`);
@@ -28,11 +28,16 @@ module.exports = {
             moneyGained += 150;
             expGained += userInfo.level;
         }
+
+        //EXP boosting effects
         if (effect.greenTea > 0) {
             expGained = Math.ceil(expGained * 1.15);
         }
         if (effect.redTea > 0) {
             expGained = Math.ceil(expGained * 1.3);
+        }
+        if (effect.potionOfKnowledge) {
+            expGained = Math.ceil(expGained * 3);
         }
 
         //Effects of pets
@@ -59,8 +64,10 @@ User ${userInfo.username} ${scriptingUtils.choice(jobs)}.
 Gained **${scriptingUtils.formatMoney(moneyGained)}**. ${effect.coffee ? `Coffee duration remaining: ${effect.coffee}s` : ""}
 Wallet: **${scriptingUtils.formatMoney(userInfo.moneyOnHand)}**\n`;
 
-        stringToWrite += `${msg} ${effect.greenTea > 0 ? ` Green tea duration remaining: ${effect.greenTea}s` : ""}${effect.redTea > 0 ? `, Red tea duration remaining: ${effect.redTea}s` : ""}`;
-
+        stringToWrite += `${msg}\n`;
+        stringToWrite += effect.greenTea > 0 ? `Green tea duration remaining: ${effect.greenTea}s\n` : "";
+        stringToWrite += effect.redTea > 0 ? `Red tea duration remaining: ${effect.redTea}s\n` : ""
+        stringToWrite += effect.potionOfKnowledge > 0 ? `Potion of knowledge duration remaining: ${effect.potionOfKnowledge}s\n` : "";
         saveData(userInfo, interaction.user.id);
 
         await interaction.reply(stringToWrite);
