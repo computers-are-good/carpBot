@@ -32,10 +32,11 @@ module.exports = {
             } else {
                 unwitheringFlowersGained = currentRaidData.playersAttackedTimes[id];
             }
-            playerNotification += ` You gained ${unwitheringFlowersGained} unwithering flowers and ${scriptingUtils.formatMoney(moneyGained)} `;
+            playerNotification += ` You gained ${unwitheringFlowersGained} unwithering flowers and ${scriptingUtils.formatMoney(moneyGained)}.`;
             playerData.unwitheringFlowers += unwitheringFlowersGained;
 
-            playerNotification += `You gained the following items: \n`;
+            let itemsObtained = `\nYou gained the following items: \n`;
+            let itemsTotalObtained = 0;
             const bossLoot = raidBossLoot[currentRaidData.currentMonster];
             for (const item of Object.keys(bossLoot)) {
                 const dmgReq = bossLoot[item];
@@ -43,10 +44,17 @@ module.exports = {
                 let quantityObtained = 0;
                 quantityObtained += Math.floor(dmgFromPlayer / dmgReq);
                 quantityObtained += Math.floor(dmgFromEveryone / (dmgReq * 1000));
-                economyUtils.addToInventory(playerData, item, quantityObtained);
-                playerNotification += `${itemData.emoji} ${itemData.name} x${quantityObtained}\n`;
+                if (quantityObtained > 0) {
+                    economyUtils.addToInventory(playerData, item, quantityObtained);
+                    itemsTotalObtained++;
+                    itemsObtained += `${itemData.emoji} ${itemData.name} x${quantityObtained}\n`;
+                }
             }
 
+            if (itemsTotalObtained > 0) {
+                itemsObtained += `(${itemsTotalObtained} items)`;
+                playerNotification += itemsObtained;
+            }
             economyUtils.notifyPlayer(playerData, playerNotification);
             fs.writeFileSync(path.join(__dirname, `../userdata/economy/${id}`), JSON.stringify(playerData));
         }

@@ -16,7 +16,7 @@ module.exports = {
         for (let i = 0; i < inventory.length; i++) {
             let inventoryObject = userInfo.inventory[i];
             let shopObject = shopItems[inventoryObject.Id];
-            if (!shopObject.displayInInventory) continue;
+            if (!shopObject.displayInInventory || inventory[i].quantity <= 0) continue;
             let metadataString = "\n`";
             if (shopObject.metadataToDisplay) {
                 for (let metadataTag of shopObject.metadataToDisplay) {
