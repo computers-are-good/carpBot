@@ -1,6 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
+const { getEquipmentString } = require(path.join(__dirname, "./equip"));
+
 const statDescriptions = {
 	block: "You can block this much damage from the enemy per turn",
 	attack: "Your attack is first blocked, before dealing damage to the enemy",
@@ -35,6 +37,8 @@ module.exports = {
 		for (let stat of ["block", "attack", "speed"]) {
 			stringToReply += `\`${stat}: ${userInfo.combat[stat]}\` (${statDescriptions[stat]})\n`;
 		}
+
+		stringToReply += `\n${getEquipmentString(userInfo)}`;
 
 		stringToReply += "\nProbabilities:\n";
 

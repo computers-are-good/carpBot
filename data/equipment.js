@@ -25,6 +25,32 @@ module.exports = {
             },
             slot: "sword"
         },
+        5010: {
+            improvements: {
+                attack: 10
+            },
+            slot: "sword"
+        },
+        5011: {
+            improvements: {
+                block: 6,
+            },
+            slot: "armor"
+        },
+        5012: {
+            improvements: {
+                block: 15,
+                speed: -10
+            },
+            slot: "armor"
+        },
+        5013: {
+            improvements: {
+                speed: 5,
+                block: 2
+            },
+            slot: "boots",
+        },
         5080: {
             improvements: {
                 attack: 3,

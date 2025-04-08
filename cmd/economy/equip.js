@@ -4,7 +4,7 @@ const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 const { equipment } = require(path.join(__dirname, "../../data/equipment"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
-const {capitaliseFirst} = require(path.join(__dirname, "../../utils/scripting"));
+const { capitaliseFirst } = require(path.join(__dirname, "../../utils/scripting"));
 
 function getEquipmentString(userInfo) {
     let stringToSend = "Your equipment:\n";
@@ -45,6 +45,7 @@ function removeEquipmentStats(combatData, improvements) {
 }
 
 module.exports = {
+    getEquipmentString,
     data: new SlashCommandBuilder()
         .setName('equip')
         .setDescription('Equips (or unequips) an item you have in your inventory')
@@ -94,7 +95,7 @@ module.exports = {
             return;
         }
         if (!(userInfo.equipment[equipmentSlot] == 0)) {
-            removeEquipmentStats(userInfo.combat, equipment[userInfo.equipment[equipmentSlot]].improvements)            
+            removeEquipmentStats(userInfo.combat, equipment[userInfo.equipment[equipmentSlot]].improvements)
         }
         userInfo.equipment[equipmentSlot] = equipmentId;
         interaction.reply(`${notifications}Equipped ${shopItems[equipmentId].name}.`);

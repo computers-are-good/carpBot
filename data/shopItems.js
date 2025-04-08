@@ -697,7 +697,43 @@ module.exports = {
             emoji: "⚔️",
             category: ["object", "equipment"],
             cost: 20000,
-            description: "It's bad. +5 to attack when equipped."
+            description: "It's bad and clunky. +5 to attack when equipped."
+        },
+        5010: {
+            name: "Iron sword",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "🗡️",
+            category: ["object", "equipment"],
+            cost: 150000,
+            description: "It's a perfectly average sword. +10 to attack when equipped."
+        },
+        5011: {
+            name: "Chainmail Armour",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "🧥",
+            cost: 200000,
+            description: "The local scrapyard connected their spare rusty chains around in the vague approxmiation of armour. +6 to block when equipped."
+        },
+        5012: {
+            name: "Iron armour",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "🧥",
+            cost: 500000,
+            description: "Forged at the one and only remaining local blacksmith. +15 to block but -10 to speed when equipped."
+        },
+        5013: {
+            name: "Hardened boots",
+            displayInInventory: true,
+            displayInShop: true,
+            addToInventory: true,
+            emoji: "👞",
+            description: "It's a pair of shoes, but someone slapped advanced carbon fibres on it to make it better. +5 to speed and +2 to block when equipped.",
         },
         5080: {
             name: "Bronze ring",
