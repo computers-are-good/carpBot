@@ -19,6 +19,12 @@ module.exports = {
             },
             slot: "boots"
         },
+        5004: {
+            improvements: {
+                attack: 5
+            },
+            slot: "sword"
+        },
         5080: {
             improvements: {
                 attack: 3,

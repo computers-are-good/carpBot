@@ -1,10 +1,31 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require("fs");
 const path = require('node:path');
 const economyUtils = require(path.join(__dirname, "../../utils/economy"));
 const { saveData } = require(path.join(__dirname, "../../utils/userdata"));
 const { equipment } = require(path.join(__dirname, "../../data/equipment"));
 const { shopItems } = require(path.join(__dirname, "../../data/shopItems"));
+const {capitaliseFirst} = require(path.join(__dirname, "../../utils/scripting"));
+
+function getEquipmentString(userInfo) {
+    let stringToSend = "Your equipment:\n";
+    for (let slot in userInfo.equipment) {
+        let item;
+        if (userInfo.equipment[slot] === 0) {
+            item = "(empty)";
+        } else {
+            let itemId = userInfo.equipment[slot];
+            item = shopItems[itemId].name;
+            let statsImproved = equipment[itemId].improvements;
+            let improvementStringToSend = "";
+            for (let stat of Object.keys(statsImproved)) {
+                improvementStringToSend += `${statsImproved[stat] > 0 ? `+` : "-"}${statsImproved[stat]} ${stat}`;
+            }
+            item += ` (${improvementStringToSend})`;
+        }
+        stringToSend += `${capitaliseFirst(slot)}: ${item}\n`;
+    }
+    return stringToSend;
+}
 
 function applyEquipmentStats(combatData, improvements) {
     for (let i in improvements) {
@@ -33,18 +54,8 @@ module.exports = {
         let chosenEquipment = interaction.options.getString("equipment");
 
         if (!chosenEquipment) { //if no equipment is specified, then list what the player has equipped.
-            let stringToSend = "Your equipment:\n";
-            for (let slot in userInfo.equipment) {
-                let item;
-                if (userInfo.equipment[slot] === 0) {
-                    item = "(empty)";
-                } else {
-                    let itemId = userInfo.equipment[slot];
-                    item = shopItems[itemId].name;
-                }
-                stringToSend += `${slot}: ${item}\n`;
-            }
-            interaction.reply(`${notifications}${stringToSend}`)
+
+            interaction.reply(`${notifications}${getEquipmentString(userInfo)}`)
             return;
         }
 

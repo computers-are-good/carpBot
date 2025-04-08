@@ -151,5 +151,10 @@ module.exports = {
       input = input.replaceAll(i, dictionary[i]);
     }
     return input;
-  }
+  },
+  capitaliseFirst(string) {
+    string = string.split('');
+    string[0] = string[0].toUpperCase();
+    return string.join('');
+  } 
 }
