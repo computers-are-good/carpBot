@@ -83,6 +83,34 @@ module.exports = {
         {
             question: "'True' starts with a t",
             correct: true
+        },
+        {
+            question: "A proton has 2 up quarks and 1 down quark",
+            correct: true
+        },
+        {
+            question: "If a unbiased d20 is rolled, the probability of getting a 20 is 5%",
+            correct: true
+        },
+        {
+            question: "Please selecte 'false' for this question.",
+            correct: false,
+        },
+        {
+            question: "In JavaScript, an object is defined using {}",
+            correct: true
+        },
+        {
+            question: "The integral of sin x is cos x + c",
+            correct: false
+        },
+        {
+            question: "Purple light has a lower frequency than red lights.",
+            correct: false
+        },
+        {
+            question: "Displacement is a vector quantity.",
+            correct: true
         }
     ]
 }
