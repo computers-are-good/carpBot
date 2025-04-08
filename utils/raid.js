@@ -14,11 +14,11 @@ module.exports = {
             let playerNotification = `You dealt ${dmgFromPlayer} damage to ${currentRaidData.currentMonster}. `;
             const dmgFromEveryone = currentRaidData.maxHealth - currentRaidData.combat.health;
             const playerData = JSON.parse(fs.readFileSync(path.join(__dirname, `../userdata/economy/${id}`), "UTF-8"));
-            let moneyGained = dmgFromPlayer * 100;
+            let moneyGained = Math.floor(dmgFromPlayer * 75);
             moneyGained += Math.floor(dmgFromEveryone / 10);
             playerData.moneyOnHand += moneyGained;
-            let expGained = dmgFromPlayer;
-            expGained += Math.floor(dmgFromEveryone / 1000);
+            let expGained = Math.floor(dmgFromPlayer / 2);
+            expGained += Math.floor(dmgFromEveryone / 100);
             playerNotification += gainExp(playerData, expGained);
 
             //unwithering flowers
@@ -32,7 +32,7 @@ module.exports = {
             } else {
                 unwitheringFlowersGained = currentRaidData.playersAttackedTimes[id];
             }
-            playerNotification += ` You gained ${unwitheringFlowersGained} unwithering flowers and ${scriptingUtils.formatMoney(moneyGained)}.`;
+            playerNotification += ` Gained ${unwitheringFlowersGained} unwithering flowers and ${scriptingUtils.formatMoney(moneyGained)}.`;
             playerData.unwitheringFlowers += unwitheringFlowersGained;
 
             let itemsObtained = `\nYou gained the following items: \n`;
