@@ -58,11 +58,9 @@ module.exports = {
         userInfo.lifetimeMoneyFromWorking += moneyGained;
         let msg = gainExp(userInfo, expGained);
 
-        let stringToWrite =
-            `${notifications}
-User ${userInfo.username} ${scriptingUtils.choice(jobs)}. 
-Gained **${scriptingUtils.formatMoney(moneyGained)}**. ${effect.coffee ? `Coffee duration remaining: ${effect.coffee}s` : ""}
-Wallet: **${scriptingUtils.formatMoney(userInfo.moneyOnHand)}**\n`;
+        let stringToWrite = `${notifications}User ${userInfo.username} ${scriptingUtils.choice(jobs)}. `
+        stringToWrite += `Gained **${scriptingUtils.formatMoney(moneyGained)}**. ${effect.coffee ? `Coffee duration remaining: ${effect.coffee}s` : ""}`
+        stringToWrite += `Wallet: **${scriptingUtils.formatMoney(userInfo.moneyOnHand)}**\n`;
 
         stringToWrite += `${msg}\n`;
         stringToWrite += effect.greenTea > 0 ? `Green tea duration remaining: ${effect.greenTea}s\n` : "";
