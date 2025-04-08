@@ -80,14 +80,14 @@ module.exports = {
                 if (userInfo.notifications.length > 5) {
                     for (let i = 0; i < 5; i++) {
                         const notification = userInfo.notifications[i];
-                        notifs += `${notification.timeDisplay} ${notification.msg}\n`;
+                        notifs += `[${notification.timeDisplay}]: ${notification.msg}\n`;
                     }
                     notifs += `(and ${userInfo.notifications.length - 5} more)`
                     userInfo.notifications.splice(0, 5);
                 } else {
                     for (let i = 0; i < userInfo.notifications.length; i++) {
                         const notification = userInfo.notifications[i];
-                        notifs += `${notification.timeDisplay} ${notification.msg}\n`;
+                        notifs += `[${notification.timeDisplay}]: ${notification.msg}\n`;
                     }
                     userInfo.notifications = [];
                 }
