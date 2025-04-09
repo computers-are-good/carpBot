@@ -1,5 +1,5 @@
 const path = require('node:path');
-const {addCombatProbability} = require(path.join(__dirname, "../utils/dungeon"))
+const {addCombatProbability} = require(path.join(__dirname, "../utils/combat"));
 
 module.exports = {
     learnList: [

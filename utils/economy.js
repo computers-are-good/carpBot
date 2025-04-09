@@ -257,6 +257,23 @@ module.exports = {
         }
         return userInfo;
     },
+    removeFromInventory: function(userInfo, itemId, quantity = 1) {
+        let itemInInventory;
+        let index;
+        for (let item in userInfo.inventory) {
+            if (userInfo.inventory[item].Id == itemId) {
+                itemInInventory = userInfo.inventory[item];
+                index = item;
+                break;
+            }
+        }
+        if (itemInInventory) {
+            itemInInventory.quantity -= quantity;
+            if (itemInInventory.quantity <= 0) {
+                userInfo.inventory.splice(index, 1)
+            }
+        }
+    },
     listAvailableDungeons: function (userInfo) {
         let availableDungeons = [];
         for (let i in dungeonList) {

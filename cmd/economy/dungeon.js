@@ -125,12 +125,12 @@ module.exports = {
                                 }
                             }
                         }
+                        saveData(userInfo, interaction.user.id);
                         await success.response.edit({ content: stringToSend, components: [] });
                     } else {
                         await success.response.edit({ content: `${notifications}Dungeon not completed.`, components: [] });
                     }
                     unlockData(interaction.user.id);
-                    saveData(userInfo, interaction.user.id);
 
                 },
                     fail => {

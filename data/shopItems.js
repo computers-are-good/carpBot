@@ -2,7 +2,7 @@ const path = require('node:path');
 const { gainExp } = require(path.join(__dirname, "../utils/levelup"));
 const { grantEffect, hasEffect } = require(path.join(__dirname, "../utils/effects"));
 const scriptingUtils = require(path.join(__dirname, "../utils/scripting"));
-const dungeonUtils = require(path.join(__dirname, "../utils/dungeon"));
+const {addCombatProbability} = require(path.join(__dirname, "../utils/combat"));
 /* 
 {
     name: Name of the item that will be displayed in /shop and /inventory,
@@ -588,7 +588,7 @@ module.exports = {
             scripts: {
                 canBuy: _ => false,
                 onUse: function (userData) {
-                    dungeonUtils.addCombatProbability(userData, "doublestrike", 0.01)
+                    addCombatProbability(userData, "doublestrike", 0.01)
                     return {
                         messageToUser: `Doublestrike chance increased (${(userData.combat.probabilities.doublestrike - 0.01) * 100}% -> ${userData.combat.probabilities.doublestrike * 100}%).`
                     };
@@ -607,7 +607,7 @@ module.exports = {
             scripts: {
                 canBuy: _ => false,
                 onUse: function (userData) {
-                    dungeonUtils.addCombatProbability(userData, "totalblock", 0.005)
+                    addCombatProbability(userData, "totalblock", 0.005);
                     return {
                         messageToUser: `Totalblock chance increased (${(userData.combat.probabilities.totalblock - 0.005) * 100}% -> ${userData.combat.probabilities.totalblock * 100}%).`
                     };

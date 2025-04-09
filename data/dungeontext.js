@@ -281,7 +281,11 @@ module.exports = {
             },
             {
                 type: "text",
-                content: "Under the words is a sign that says 'Just kill the monsters and get diamonds'."
+                content: "Under the words is a sign that says 'Please give me one jade to proceed'."
+            },
+            {
+                type: "itemRequired",
+                content: 4002
             },
             {
                 type: "prebattle",

@@ -3,7 +3,9 @@ const path = require('node:path');
 const scriptingUtils = require(path.join(__dirname, "/scripting"));
 const { hasEffect } = require(path.join(__dirname, "/effects"));
 const { monsters } = require(path.join(__dirname, "../data/monsters"));
-const { equipment } = require(path.join(__dirname, "../data/equipment"));
+const economyUtils = require(path.join(__dirname, "/economy"));
+const { shopItems } = require(path.join(__dirname, "../data/shopItems"));
+const {getCombatProbability} = require(path.join(__dirname, "/combat"));
 
 function battle(playerData, enemyData, maxRounds) {
     let player = playerData.combat;
@@ -54,8 +56,8 @@ function battle(playerData, enemyData, maxRounds) {
         fastest.shield = fastest.block;
         slowest.shield = slowest.block;
         attack(fastest, slowest);
-        if (roundCounter == 0) {}
-            attack(fastest, slowest);
+        if (roundCounter == 0) { }
+        attack(fastest, slowest);
 
         if (slowest.health <= 0) {
             slowest.health = 0;
@@ -76,27 +78,11 @@ function battle(playerData, enemyData, maxRounds) {
         }
         roundCounter++;
     }
-    
+
 }
 const probabilityCaps = {
     doublestrike: 0.7,
     totalblock: 0.5
-}
-function addCombatProbability(userData, name, probability) {
-    const combat = userData.combat.probabilities;
-    if (name in combat) {
-        combat[name] += probability;
-    } else {
-        combat[name] = probability;
-    }
-    if (combat[name] > probabilityCaps[name]) combat[name] = probabilityCaps[name];
-}
-function getCombatProbability(combatObj, probability) { //returns true if the effect should trigger. Returns false if otherwise
-    const prob = combatObj.probabilities;
-    if (!prob) return false;
-    if (!(probability in prob)) return false;
-    if (prob[probability] < Math.random()) return true;
-    return false;
 }
 
 function compareStatsString(playerStats, equipmentStats, enemyStats, roundsToCalculate = 999) {
@@ -106,7 +92,7 @@ function compareStatsString(playerStats, equipmentStats, enemyStats, roundsToCal
     let initialEnemyHealth = enemyStats.health;
     //simulate a battle with fake player and enemy stats
 
-    let won = battle({combat: playerStats, effects: []}, {combat: enemyStats}, roundsToCalculate);
+    let won = battle({ combat: playerStats, effects: [] }, { combat: enemyStats }, roundsToCalculate);
     let dmgDealtToEnemy = initialEnemyHealth - enemyStats.health;
     let dmgDealtToPlayer = initialPlayerHealth - playerStats.health;
 
@@ -122,8 +108,6 @@ You will deal around ${dmgDealtToEnemy} damage. You will take around ${dmgDealtT
 module.exports = {
     battle,
     compareStatsString,
-    addCombatProbability,
-    getCombatProbability,
     dungeon: async function (interaction, script, userInfo) {
         return new Promise(async (res, rej) => {
             let weAreFinished = false;
@@ -206,7 +190,7 @@ ${compareStatsString(playerStats, userInfo.equipment, enemyStats)}`;
                 try {
                     let buttons = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
                     if (buttons.customId === 'Previous') {
-                        await buttons.update({ content: "Dungeon stopped. Returning.", components: [] });
+                        await buttons.update({ content: "Dungeon stopped. Resetting your data and returning.", components: [] });
                         await scriptingUtils.wait(2000);
                         res({
                             completed: false,
@@ -231,7 +215,7 @@ ${compareStatsString(playerStats, userInfo.equipment, enemyStats)}`;
                                 let oldHealth = userInfo.combat.health;
                                 let won = battle(userInfo, { combat: enemyStats });
                                 if (!won) {
-                                    await buttons.update({ content: "Lost battle. Exiting dungeon...", components: [] });
+                                    await buttons.update({ content: "Lost battle. Resetting your data and exiting dungeon...", components: [] });
                                     await scriptingUtils.wait(2000);
                                     weAreFinished = true;
                                     res({
@@ -244,6 +228,21 @@ ${compareStatsString(playerStats, userInfo.equipment, enemyStats)}`;
                                         content: `Congratulations! You won!
 \`Health remaining: ${userInfo.combat.health} (took ${oldHealth - userInfo.combat.health} damage)\``, components: [row]
                                     })
+                                }
+                            } else if (script[itemIndex].type === "itemRequired") {
+                                const item = script[itemIndex].content;
+                                if (economyUtils.inventoryHasItem(userInfo.inventory, item)) {
+                                    economyUtils.removeFromInventory(userInfo, item);
+                                    await buttons.update({ content: `Used 1x ${shopItems[item].name}.`});
+                                } else {
+                                    await buttons.update({ content: `You do not have a ${shopItems[item].name}. Resetting your data and exiting dungeon...` , components: []});
+                                    await scriptingUtils.wait(2000);
+                                    weAreFinished = true;
+                                    res({
+                                        completed: false,
+                                        userInfo: userInfo,
+                                        response: response
+                                    });
                                 }
                             } else {
                                 let results = processCurrentIndex(itemIndex);

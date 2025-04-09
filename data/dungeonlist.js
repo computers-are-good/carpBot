@@ -140,7 +140,7 @@ module.exports = {
             }
         },
         "Path of Diamonds": {
-            content: "At the end of the Path of Jade, there appears to be another trail leading you on.",
+            content: "At the end of the Path of Jade, there appears to be another trail leading you on. **You need 1x Jade for this dungeon**",
             seriesName: "path",
             seriesNumber: 2,
             requirements: {
@@ -151,7 +151,7 @@ module.exports = {
                 item: [
                     {
                         id: 4001,
-                        quantity: [3,6],
+                        quantity: [4,7],
                         probability: 1
                     }
                 ]
