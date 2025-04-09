@@ -133,7 +133,7 @@ module.exports = {
                 item: [
                     {
                         id: 4001,
-                        quantity: [2,4],
+                        quantity: [3,6],
                         probability: 1
                     }
                 ]

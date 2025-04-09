@@ -231,56 +231,56 @@ module.exports = {
                 type: "prebattle",
                 content: {
                     name: "Snake",
-                    level: 2,
+                    level: 3,
                 }
             },
             {
                 type: "battle",
                 content: {
                     name: "Snake",
-                    level: 2,
+                    level: 3,
                 }
             },
             {
                 type: "prebattle",
                 content: {
                     name: "Goblin",
-                    level: 2,
+                    level: 3,
                 }
             },
             {
                 type: "battle",
                 content: {
                     name: "Goblin",
-                    level: 2,
+                    level: 3,
                 }
             },
             {
                 type: "prebattle",
                 content: {
                     name: "Snake",
-                    level: 2,
+                    level: 3,
                 }
             },
             {
                 type: "battle",
                 content: {
                     name: "Snake",
-                    level: 2,
+                    level: 3,
                 }
             },
             {
                 type: "prebattle",
                 content: {
                     name: "Rat",
-                    level: 4,
+                    level: 6,
                 }
             },
             {
                 type: "battle",
                 content: {
                     name: "Rat",
-                    level: 4,
+                    level: 6,
                 }
             },
             {
