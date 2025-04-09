@@ -11,7 +11,7 @@ module.exports = {
         .addStringOption(option => option.setName("category").setDescription("Category")),
     async execute(interaction) {
         const category = interaction.options.getString("category");
-        const {notifications, userInfo} = await economyUtils.prefix(interaction);
+        const { notifications, userInfo } = await economyUtils.prefix(interaction);
 
         let objectsFittingCriteria = [];
         let stringsToDisplay = [];
