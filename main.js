@@ -1,10 +1,10 @@
 //based off https://discordjs.guide/creating-your-bot/
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, GatewayIntentBits, Events, ActivityType} = require('discord.js');
+const { Client, Collection, GatewayIntentBits, Events, ActivityType } = require('discord.js');
 const { token } = require('./configs.json');
+const {daily} = require(path.join(__dirname, "/utils/daily"));
 const scriptingUtils = require(path.join(__dirname, "/utils/scripting"));
-const raidUtils = require(path.join(__dirname, "/utils/raid"));
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -54,17 +54,27 @@ for (const file of eventFiles) {
 	}
 }
 let curDate = scriptingUtils.getCurrentDay();
-client.on(Events.ClientReady, _ => {
-	setInterval(_ => {
+client.on(Events.ClientReady,  _ => {
+	setInterval(async _ => {
 		client.user.setActivity({ //modified from https://www.youtube.com/watch?v=QGJkr-zNlT0
 			name: scriptingUtils.choice(motd),
 			type: ActivityType.Playing
 		});
 		if (curDate !== scriptingUtils.getCurrentDay()) {
 			curDate = scriptingUtils.getCurrentDay();
-			raidUtils.getCurrentMonster();
+			await daily();
 		}
 	}, 60000);
+});
 
-})
+client.on(Events.InteractionCreate, async interaction => {
+	if (!interaction.isModalSubmit()) return;
+	if (interaction.customId === 'feedback') {
+		await interaction.reply('Your feedback was recorded.');
+		const feedbackText = interaction.fields.getTextInputValue('feedback');
+		const title = interaction.fields.getTextInputValue('title');
+		console.log({ feedbackText, title });
+	}
+});
+
 client.login(token);

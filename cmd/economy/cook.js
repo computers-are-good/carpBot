@@ -11,7 +11,6 @@ module.exports = {
         .setName('cook')
         .setDescription('Cooks food in your kitchen!'),
     async execute(interaction) {
-        const dataPath = path.join(__dirname, `../../userdata/economy/${interaction.user.id}`)
         const {userInfo, notifications} = await economyUtils.prefix(interaction);
 
         let hasSkill = userInfo.learned.includes("Cooking");
