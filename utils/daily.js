@@ -16,7 +16,7 @@ module.exports = {
                 const userData = fs.readFileSync(path.join(__dirname, `../userdata/economy/${e}`));
                 const parsedData = JSON.parse(userData);
                 parsedData.moneyBankAccount += Math.ceil(parsedData.moneyBankAccount * (ocr / 100 / 365));
-                if (parsedData.moneyBankAccount !== null)
+                if (parsedData.moneyBankAccount !== null)2
                     fs.writeFileSync(path.join(__dirname, `../userdata/economy/${e}`), JSON.stringify(parsedData, null, 4));
             });
             console.log(`Completed daily tasks for ${scriptingUtils.getCurrentDay()}.`);

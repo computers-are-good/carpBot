@@ -34,7 +34,7 @@ module.exports = {
 				break;
 			case "attack":
 				valueToIncrease = 2 * increaseMultiplier;
-				cost = Math.floor(Math.pow(userInfo.abilitiesImproved[category] + 0.5, 2.0) + 100) * 100;
+				cost = Math.floor(30 * Math.pow(userInfo.abilitiesImproved[category] + 0.5, 1.4) + 100) * 100;
 				break;
 			case "block":
 				valueToIncrease = 1 * increaseMultiplier;

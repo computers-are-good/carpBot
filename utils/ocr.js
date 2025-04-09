@@ -36,6 +36,9 @@ async function getOCR() {
 		let regex = /[0-9]+\.[0-9]+/
 		let extractedOCR = ocr.match(regex)[0];
 		let parsedOCR = parseFloat(extractedOCR);
+		if (isNaN(parsedOCR)) {
+			return 5;
+		}
 		return parsedOCR;
 	} catch (e) {
 		console.log(e);
