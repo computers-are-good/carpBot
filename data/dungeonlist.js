@@ -121,10 +121,28 @@ module.exports = {
                 }]
             }
         },
-        "Path of Diamonds": {
-            content: "You heard rumours about a monster-infested trail which promises to reward those who attempt it with fortunes",
+        "Path of Jade": {
+            content: "You heard rumours about a monster-infested trail which promises to reward those who attempt it with fortunes.",
             seriesName: "path",
             seriesNumber: 1,
+            requirements: {
+                level: 5
+            },
+            completeRewards: {
+                exp: 50,
+                item: [
+                    {
+                        id: 4002,
+                        quantity: [3,6],
+                        probability: 1
+                    }
+                ]
+            }
+        },
+        "Path of Diamonds": {
+            content: "At the end of the Path of Jade, there appears to be another trail leading you on.",
+            seriesName: "path",
+            seriesNumber: 2,
             requirements: {
                 level: 10
             },

@@ -218,6 +218,62 @@ module.exports = {
                 content: "You light up the fire and settle down next to it, preparing for whatever is coming the next morning."
             }
         ],
+        "Path of Jade": [
+            {
+                type: "text",
+                content: "Hidden in the green plains is a small path leading into the forest."
+            },
+            {
+                type: "text",
+                content: "You see monsters guarding the path, but perhaps there will be a reward at the end?"
+            },
+            {
+                type: "prebattle",
+                content: {
+                    name: "Rat",
+                    level: 4,
+                }
+            },
+            {
+                type: "battle",
+                content: {
+                    name: "Rat",
+                    level: 4,
+                }
+            },
+            {
+                type: "prebattle",
+                content: {
+                    name: "Rat",
+                    level: 4,
+                }
+            },
+            {
+                type: "battle",
+                content: {
+                    name: "Rat",
+                    level: 4,
+                }
+            },
+            {
+                type: "prebattle",
+                content: {
+                    name: "Squirrel",
+                    level: 2,
+                }
+            },
+            {
+                type: "battle",
+                content: {
+                    name: "Squirrel",
+                    level: 2,
+                }
+            },
+            {
+                type: "text",
+                content: "As you reach the end of the path, you find some jade stones lying around."
+            }
+        ],
         "Path of Diamonds": [
             {
                 type: "text",

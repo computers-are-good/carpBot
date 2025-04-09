@@ -690,9 +690,20 @@ module.exports = {
             addToInventory: true,
             emoji: "💎",
             category: ["object", "sellable"],
-            description: "It looks shiny. It should be sold",
+            description: "It looks shiny. It should be sold.",
             sellable: true,
             cost: 199900
+        },
+        4002: {
+            name: "Jade",
+            displayInInventory: true,
+            displayInShop: false,
+            addToInventory: true,
+            emoji: "🪨",
+            category: ["object", "sellable"],
+            description: "It looks shiny. It should be sold.",
+            sellable: true,
+            cost: 99900
         },
         5001: {
             name: "Wooden Sword",
