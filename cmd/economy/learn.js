@@ -21,11 +21,12 @@ module.exports = {
 		const { userInfo, notifications } = await economyUtils.prefix(interaction);
 		//if nothing specified for "skill", then display everything that can be learnt
 		let availableSkills = [];
-		for (let i in learnList) {
-			const skill = learnList[i];
+		const learnListCloned = scriptingUtils.deepClone(learnList);
+		for (let i in learnListCloned) {
+			const skill = learnListCloned[i];
 			if (skillLearnt(userInfo, skill.name)) continue;
 			if (skill.cost > userInfo.moneyOnHand + userInfo.moneyBankAccount) {
-				skill.description += " (too expensive)"
+				skill.description += " (too expensive)";
 				availableSkills.push(skill);
 			} else {
 				availableSkills.push(skill);
@@ -49,9 +50,9 @@ module.exports = {
 			economyUtils.displayList(interaction, listToDisplay);
 		} else {
 			let skill;
-			for (let i in learnList) {
-				if (learnList[i].name.toLowerCase() == selectedSkill.toLowerCase()) {
-					skill = learnList[i];
+			for (let i in learnListCloned) {
+				if (learnListCloned[i].name.toLowerCase() == selectedSkill.toLowerCase()) {
+					skill = learnListCloned[i];
 				}
 			}
 			if (!skill) {

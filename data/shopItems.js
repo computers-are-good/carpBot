@@ -601,7 +601,7 @@ module.exports = {
             displayInShop: false,
             emoji: "⚗️",
             canSell: false,
-            category: ["object", "raid"],
+            category: ["object", "raid", "consumable"],
             addToInventory: true,
             description: "Gives you a 0.5% chance of totalblock (negates damage for one turn)",
             scripts: {
@@ -620,7 +620,7 @@ module.exports = {
             displayInShop: false,
             emoji: "🍗",
             canSell: false,
-            category: ["object", "raid"],
+            category: ["object", "raid", "consumable"],
             addToInventory: true,
             description: "Permanently increases your attack by 35.",
             scripts: {
@@ -704,6 +704,105 @@ module.exports = {
             description: "It looks shiny. It should be sold.",
             sellable: true,
             cost: 99900
+        },
+        4003: {
+            name: "Shiny Rock",
+            displayInInventory: true,
+            displayInShop: false,
+            addToInventory: true,
+            sellable: false,
+            emoji:  "🪨",
+            category: ["object", "sellable"],
+            description: "Your pet found you this. It should be sold.",
+            cost: 1000
+        },
+        4004: {
+            name: "$10 banknote",
+            displayInInventory: true,
+            displayInShop: false,
+            sellable: false,
+            addToInventory: true,
+            emoji: "💵",
+            category: ["object", "consumable"],
+            cost: 1000,
+            description: "It's just $10. Gives you $10 when used.",
+            scripts: {
+                onUse: function(userInfo) {
+                    userInfo.moneyOnHand += 1000
+                }
+            }
+        },
+        4005: {
+            name: "$20 banknote",
+            displayInInventory: true,
+            displayInShop: false,
+            sellable: false,
+            addToInventory: true,
+            emoji: "💵",
+            category: ["object", "consumable"],
+            cost: 1000,
+            description: "It's just $20. Gives you $20 when used.",
+            scripts: {
+                onUse: function(userInfo) {
+                    userInfo.moneyOnHand += 2000;
+                }
+            }
+        },
+        4006: {
+            name: "$50 banknote",
+            displayInInventory: true,
+            displayInShop: false,
+            sellable: false,
+            addToInventory: true,
+            emoji: "💵",
+            category: ["object", "consumable"],
+            cost: 1000,
+            description: "It's just $50. Gives you $50 when used.",
+            scripts: {
+                onUse: function(userInfo) {
+                    userInfo.moneyOnHand += 5000;
+                }
+            }
+        },
+        4007: {
+            name: "Stick",
+            displayInInventory: true,
+            displayInShop: false,
+            sellable: true,
+            addToInventory: true,
+            emoji: "🌿",
+            cost: 100,
+            description: "You can find this on the street. You should sell it.",
+        },
+        4008: {
+            name: "Fish scales",
+            displayInInventory: true,
+            displayInShop: false,
+            sellable: true,
+            addToInventory: true,
+            emoji: "🎏",
+            cost: 5000,
+            description: "Your fish gave this to you as a gift!"
+        },
+        4009: {
+            name: "Rabbit's feet",
+            displayInInventory: true,
+            displayInShop: false,
+            sellable: true,
+            addToInventory: true,
+            emoji: "🐇",
+            cost: 50000,
+            description: "Rabbit :)"
+        },
+        4010: {
+            name: "Snake Scale",
+            displayInInventory: true,
+            displayInShop: false,
+            sellable: true,
+            addToInventory: true,
+            emoji: "🐍",
+            cost: 15000,
+            description: "Your snake shredded this."
         },
         5001: {
             name: "Wooden Sword",

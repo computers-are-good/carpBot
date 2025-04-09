@@ -36,5 +36,33 @@ module.exports = {
             description: "A pet snake will help you in battle! Gain a +10 to attack whenever you raise the bond level of your snake!",
             names: ["Frank"]
         }
+    },
+    petFoundItems: {
+        100: {
+            75: 4007,
+            150: 4003,
+            250: 4005,
+            500: 4002
+        },
+        101: {
+            75: 4007,
+            200: 4003,
+            300: 4006,
+            500: 4002
+        },
+        102: {
+            150: 4008
+        },
+        103: {
+            50: 4003,
+            100: 4004,
+            200: 4006
+        },
+        104: {
+            400: 4009
+        },
+        105: {
+            200: 4010
+        }
     }
 }
